@@ -114,6 +114,7 @@
     'Finding your location… The browser may ask for permission.': 'உங்கள் இருப்பிடத்தைத் தேடுகிறது… உலாவி அனுமதி கேட்கலாம்.',
     'Location is not available in this browser. Search for a city instead.': 'இந்த உலாவியில் இருப்பிடம் கிடைக்காது. அதற்குப் பதிலாக ஒரு நகரத்தைத் தேடவும்.',
     'Location permission was denied or blocked. Allow location for this site in the browser (the icon beside the address), then try again, or search for a city.': 'இருப்பிட அனுமதி மறுக்கப்பட்டது அல்லது தடுக்கப்பட்டது. உலாவியில் (முகவரிக்கு அருகில் உள்ள ஐகான்) இந்தத் தளத்திற்கு இருப்பிடத்தை அனுமதித்து மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
+    'Your device gave no position. On a computer, allow location for the browser in the system settings (Mac: System Settings → Privacy & Security → Location Services) and keep Wi‑Fi on. On a phone, switch on Location. Then try again, or search for a city.': 'உங்கள் சாதனம் இருப்பிடத்தைத் தரவில்லை. கணினியில், கணினி அமைப்புகளில் உலாவிக்கு இருப்பிடத்தை அனுமதிக்கவும் (Mac: System Settings → Privacy & Security → Location Services); Wi‑Fi இயக்கத்தில் இருக்கட்டும். தொலைபேசியில் Location-ஐ இயக்கவும். பிறகு மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
     'Could not get your location. Try again, or search for a city.': 'உங்கள் இருப்பிடத்தைப் பெற முடியவில்லை. மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
     'Finding your location took too long. Try again, or search for a city.': 'இருப்பிடத்தைத் தேட நீண்ட நேரமாகிறது. மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
     'My location': 'என் இருப்பிடம்',

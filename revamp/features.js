@@ -464,9 +464,13 @@
         var text = m.textContent;
         if (m.classList.contains('err')) {
           stopWatch();
-          pick(/denied|blocked/i.test(text)
+          // The engine's three cases: permission refused (1), no position from the device (2), timed out (3).
+          var why = /denied|blocked/i.test(text) ? 'denied' : /not available/i.test(text) ? 'unavailable' : 'other';
+          pick(why === 'denied'
             ? T('Location permission was denied or blocked. Allow location for this site in the browser (the icon beside the address), then try again, or search for a city.')
-            : T('Could not get your location. Try again, or search for a city.'), true);
+            : why === 'unavailable'
+              ? T('Your device gave no position. On a computer, allow location for the browser in the system settings (Mac: System Settings → Privacy & Security → Location Services) and keep Wi‑Fi on. On a phone, switch on Location. Then try again, or search for a city.')
+              : T('Could not get your location. Try again, or search for a city.'), true);
         } else if (/^Location set/.test(text)) {
           stopWatch();
           var name = (text.match(/^Location set: (.+?) · /) || [])[1] || T('My location');
