@@ -1,0 +1,22 @@
+
+/* v6.7 Trade Profit */
+#tpOut li.row.m3c{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;padding:8px 54px 8px 12px;align-items:center;min-height:0}
+#tpOut .m3n{grid-column:1;grid-row:1/3;font:500 13.5px/1.25 var(--sf)}
+#tpOut .m3n b{font-weight:700}
+#tpOut .m3n small{display:block;font:500 11px var(--sf);color:var(--muted)}
+#tpOut .m3t{grid-column:2;grid-row:1;text-align:right;font:700 13.5px var(--sf);font-variant-numeric:tabular-nums;white-space:nowrap}
+#tpOut .m3d{grid-column:2;grid-row:2;font:500 12px var(--sf);color:var(--muted);text-align:right;white-space:nowrap}
+#tpOut .m3r{grid-column:1/-1;font:500 11.5px/1.4 var(--sf);color:var(--muted);overflow-wrap:anywhere}
+#tpOut .m3r b{color:var(--ink);font-weight:700}
+#tpOut .m3x{display:none!important}
+#tpOut .m3c .rdate{display:none!important}
+#tpOut .m3hd{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:2px 54px 4px 12px;font:600 10.5px var(--sf);text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+#tpOut .stg{display:inline-block;font:700 10.5px var(--sf);padding:1px 7px;border-radius:999px;background:#1FA85C;color:#fff;margin-left:6px;vertical-align:1px}
+#tpOut .tpd{margin-top:4px}
+#tpOut .tpd summary{cursor:pointer;color:var(--accent);font-weight:600}
+#tpOut .tpd div{margin:2px 0}
+#tpEv h4{margin:10px 0 4px;font:700 14px var(--sf)}
+#tpEv table{font-size:11.5px}
+#tpEv .tblw{margin:4px 0 8px}
+#tpEv .okc{color:#1a8a4a;font-weight:700}
+#tpEv .nokc{color:#c62828;font-weight:700}

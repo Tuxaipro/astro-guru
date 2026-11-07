@@ -1,0 +1,626 @@
+/* GuruAgasthiya revamp: new app shell on top of the unchanged v7.7 engine.
+   Only moves and decorates existing elements (ids and listeners stay intact). */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  // Text with values goes through the translation layer (revamp/i18n.js); {name} marks a value.
+  function T(text, v) {
+    var t = window.rvT ? window.rvT(text) : text;
+    return t.replace(/\{(\w+)\}/g, function (m, k) { return v && v[k] != null ? v[k] : m; });
+  }
+  var stage = $('stage'), root = document.documentElement;
+  if (!stage) return;
+  document.body.classList.add('rv');
+
+  /* ---------- Layout follows the window, no phone mock-up ---------- */
+  var WIDE = 900;
+  function wantView() { return window.innerWidth >= WIDE ? 'desktop' : 'mobile'; }
+  function applyView() {
+    var v = wantView();
+    if (stage.dataset.view !== v) {
+      var b = stage.querySelector('.viewswitch button[data-v="' + v + '"]') || document.querySelector('.viewswitch button[data-v="' + v + '"]');
+      if (b) b.click(); else stage.dataset.view = v;
+    }
+    document.body.classList.toggle('rv-m', v === 'mobile');
+    placeNow();
+  }
+  var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(applyView, 120); });
+  // The old Mobile/Desktop switch could save "desktop" and widen a phone's viewport to 1100px,
+  // which would make the window look wide. Drop that choice and restore the device viewport first.
+  try { localStorage.removeItem('gaView2'); } catch (e) {}
+  var vpMeta = document.querySelector('meta[name=viewport]');
+  if (vpMeta && /width=1100/.test(vpMeta.getAttribute('content') || '')) {
+    vpMeta.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+  }
+  setTimeout(applyView, 300);
+
+  /* ---------- Tool groups ---------- */
+  var GROUPS = [
+    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'ftBtn'] },
+    { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'cuspBtn', 'acBtn'] },
+    { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['gpBtn', 'hqBtn', 'lostBtn'] },
+    { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'mkBtn', 'spBtn', 'ltBtn'] },
+    { id: 'sport', name: 'Sport', ta: 'விளையாட்டு', tools: ['ckBtn', 'raceBtn'] },
+    { id: 'research', name: 'Research', ta: 'ஆய்வு', tools: ['eqBtn'] },
+  ];
+  var nav = document.querySelector('nav.tools'), grid = nav && nav.querySelector('.tgrid');
+  var groupsEl = document.createElement('div');
+  groupsEl.className = 'rv-groups';
+  if (grid) {
+    var placed = {};
+    GROUPS.forEach(function (g) {
+      var sec = document.createElement('section');
+      sec.className = 'rv-group'; sec.dataset.g = g.id;
+      sec.innerHTML = '<h3 class="rv-gh">' + g.name + ' <span class="tm">' + g.ta + '</span></h3><div class="rv-gl"></div>';
+      var list = sec.lastChild;
+      g.tools.forEach(function (id) { var b = $(id); if (b) { list.appendChild(b); placed[id] = 1; } });
+      groupsEl.appendChild(sec);
+    });
+    // Anything not listed (future tools from a newer APK) lands in "More".
+    var rest = [].slice.call(grid.querySelectorAll('.tool')).filter(function (b) { return !placed[b.id] && b.id !== 'abBtn'; });
+    var about = $('abBtn');
+    var more = document.createElement('section');
+    more.className = 'rv-group'; more.dataset.g = 'more';
+    more.innerHTML = '<h3 class="rv-gh">More <span class="tm">மேலும்</span></h3><div class="rv-gl"></div>';
+    rest.forEach(function (b) { more.lastChild.appendChild(b); });
+    if (about) more.lastChild.appendChild(about);
+    groupsEl.appendChild(more);
+    grid.replaceWith(groupsEl);
+    var h = nav.querySelector('h2.sec'); if (h) h.remove();
+  }
+
+  /* ---------- Tool search ---------- */
+  var search = document.createElement('div');
+  search.className = 'rv-search';
+  search.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4 4"/></svg>' +
+    '<input type="search" id="rvFind" placeholder="Find a tool" aria-label="Find a tool" autocomplete="off">' +
+    '<kbd class="rv-kbd">/</kbd>';
+  var find = search.querySelector('input');
+  if (nav) nav.insertBefore(search, nav.firstChild);
+  var empty = document.createElement('p');
+  empty.className = 'rv-empty hide';
+  empty.textContent = 'No tool matches that. Try a word like muhurtham, chart or market.';
+  groupsEl.appendChild(empty);
+  function norm(s) { return (s || '').toLowerCase().replace(/[^a-z0-9஀-௿]+/g, ' '); }
+  find.addEventListener('input', function () {
+    var q = norm(find.value).trim(), any = false;
+    groupsEl.querySelectorAll('.rv-group').forEach(function (sec) {
+      var n = 0;
+      sec.querySelectorAll('.tool').forEach(function (b) {
+        var hit = !q || q.split(' ').every(function (w) { return norm(b.textContent + ' ' + (b.dataset.s || '')).indexOf(w) >= 0; });
+        b.classList.toggle('rv-hide', !hit); if (hit) n++;
+      });
+      sec.classList.toggle('rv-hide', !n); if (n) any = true;
+    });
+    empty.classList.toggle('hide', any);
+  });
+  find.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      var b = groupsEl.querySelector('.tool:not(.rv-hide)');
+      if (b) { b.click(); closeTools(); find.value = ''; find.dispatchEvent(new Event('input')); find.blur(); }
+    }
+    if (e.key === 'Escape') { find.value = ''; find.dispatchEvent(new Event('input')); find.blur(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    var t = e.target, typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if (!typing && (e.key === '/' || (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)))) {
+      e.preventDefault(); if (stage.dataset.view === 'mobile') openTools(); find.focus(); find.select();
+    }
+  });
+
+  /* ---------- Current tool highlight ---------- */
+  var current = 'homeBtn';
+  function mark(id) {
+    current = id;
+    document.querySelectorAll('.rv-groups .tool').forEach(function (b) {
+      var on = b.id === id; b.classList.toggle('rv-on', on);
+      if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll('.rv-groups .tool').forEach(function (b) {
+    b.addEventListener('click', function () { mark(b.id); if (stage.dataset.view === 'mobile') closeTools(); });
+  });
+  /* ---------- Desktop pages: "Now" (home) and "Lagna Timings"; other tools fill the same workspace ---------- */
+  var page = 'now';
+  try { if (localStorage.getItem('rvPage') === 'lagna') page = 'lagna'; } catch (e) {}
+  function pageBtn() { return page === 'now' ? 'rvNowBtn' : 'homeBtn'; }
+  function setPage(p) {
+    page = p;
+    document.body.classList.toggle('rv-p-now', p === 'now');
+    document.body.classList.toggle('rv-p-lagna', p === 'lagna');
+    try { localStorage.setItem('rvPage', p); } catch (e) {}
+    var sc = $('scroller'), ca = $('colA');
+    if (sc) sc.scrollTop = 0;
+    if (ca) ca.scrollTop = 0;
+    renderNext();
+  }
+  var nowBtn = document.createElement('button');
+  nowBtn.type = 'button'; nowBtn.id = 'rvNowBtn'; nowBtn.className = 'tool rv-nowbtn';
+  nowBtn.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>' +
+    '<span class="tx">Now<span class="tm">இப்போது</span></span>';
+  groupsEl.insertBefore(nowBtn, groupsEl.firstChild);
+  nowBtn.addEventListener('click', function () { setPage('now'); mark('rvNowBtn'); }); // the engine closes any open tool
+  var homeBtn = $('homeBtn');
+  if (homeBtn) homeBtn.addEventListener('click', function () { setPage('lagna'); });
+  // One tool at a time: the engine's own close list misses a few tools (Practical Electional, Horary),
+  // which would stay open underneath, so close every other open tool before the new one opens.
+  if (nav) nav.addEventListener('click', function (e) {
+    var b = e.target.closest('.tool'); if (!b) return;
+    var target = b.id.replace(/Btn$/, 'Panel');
+    document.querySelectorAll('.sheet:not(.hide)').forEach(function (s) {
+      if (s.id === target) return;
+      var x = s.querySelector('.sh-head .xbtn, [id$="Close"]'); if (x) x.click(); else s.classList.add('hide');
+    });
+  }, true);
+  // Tool names show as tooltips when the sidebar is narrowed to icons.
+  groupsEl.querySelectorAll('.tool').forEach(function (b) {
+    var t = b.querySelector('.tx'); if (t && !b.title) b.title = (t.firstChild && t.firstChild.textContent || t.textContent).trim();
+  });
+
+  /* ---------- Routes: every sidebar item is its own page, at #/<name> ----------
+     Tools render in the page area, in the normal flow of the page, instead of as panels over it.
+     The browser's back and forward buttons, reload and bookmarks all work. */
+  var ROUTES = {}, BTN_ROUTE = {};
+  function slugOf(t) { return t.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  groupsEl.querySelectorAll('.tool').forEach(function (b) {
+    var r = b.id === 'rvNowBtn' ? 'now' : b.id === 'homeBtn' ? 'lagna-timings' : slugOf(b.title || b.id);
+    ROUTES[r] = b.id; BTN_ROUTE[b.id] = r; b.dataset.route = r;
+  });
+  function isBase(r) { return r === 'now' || r === 'lagna-timings'; }
+  function baseRoute() { return page === 'lagna' ? 'lagna-timings' : 'now'; }
+  // Tools move into one page area; the timing-detail popup (chartPop) stays a popup.
+  var pagesEl = document.createElement('main');
+  pagesEl.id = 'rvPages'; pagesEl.className = 'rv-pages';
+  var appEl = document.querySelector('.app');
+  if (appEl) appEl.appendChild(pagesEl);
+  document.querySelectorAll('.sheet').forEach(function (sh) { if (sh.id !== 'chartPop') pagesEl.appendChild(sh); });
+  function openTool() {
+    var o = [].slice.call(pagesEl.querySelectorAll('.sheet:not(.hide)'));
+    return o.filter(function (x) { return !x.classList.contains('under'); }).pop() || o.pop() || null;
+  }
+  function routeOfSheet(sh) { return sh ? BTN_ROUTE[sh.id.replace(/Panel$/, 'Btn')] : null; }
+  var route = null, routing = false;
+  function readRoute() { var h = decodeURIComponent(location.hash.replace(/^#\/?/, '')); return ROUTES[h] ? h : null; }
+  function setUrl(r, push) {
+    var url = '#/' + r; if (location.hash === url) return;
+    if (push) history.pushState({ rv: 1 }, '', url); else history.replaceState(history.state, '', url);
+  }
+  function titleOf(r) {
+    var b = $(ROUTES[r]), t = b && b.querySelector('.tx');
+    var name = t ? ((t.firstChild && t.firstChild.textContent) || t.textContent).trim() : '';
+    return (name ? name + ' · ' : '') + 'GuruAgasthiya';
+  }
+  function show(r) {
+    var changed = r !== route; route = r;
+    if (isBase(r)) {
+      routing = true; closeSheets(); routing = false;
+      document.body.classList.remove('rv-p-tool');
+      setPage(r === 'now' ? 'now' : 'lagna');
+    } else {
+      var id = ROUTES[r], panel = $(id.replace(/Btn$/, 'Panel'));
+      if (panel && panel.classList.contains('hide')) { routing = true; $(id).click(); routing = false; }
+      document.body.classList.add('rv-p-tool');
+      if (changed) { var sc = $('scroller'); if (sc) sc.scrollTop = 0; }
+    }
+    mark(ROUTES[r]); document.title = titleOf(r); syncTabs();
+    if (stage.dataset.view === 'mobile') closeTools();
+  }
+  function go(r) { setUrl(r, true); show(r); }
+  // A click in the sidebar moves to that tool's address (the engine opens the tool as usual).
+  groupsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.tool'); if (!b || routing) return;
+    var r = BTN_ROUTE[b.id]; if (r) go(r);
+  });
+  window.addEventListener('popstate', function () { show(readRoute() || baseRoute()); });
+  window.addEventListener('hashchange', function () { var r = readRoute(); if (r && r !== route) show(r); });
+  // Tools also open and close from inside the engine (✕, Esc, Astro Map from Birth Chart):
+  // the address follows whichever tool is showing, or the page underneath when none is.
+  function discOpen() { var d = $('gaDisc'); return !!(d && !d.classList.contains('hide')); }
+  new MutationObserver(function () {
+    if (routing || discOpen()) return;
+    var sh = openTool(), r = routeOfSheet(sh);
+    if (r && r !== route) { setUrl(r, false); show(r); }
+    else if (!sh && route && !isBase(route)) {
+      // ✕ or Esc closed the tool: return to the page underneath (Now or Lagna Timings).
+      setUrl(baseRoute(), false); show(baseRoute());
+    }
+    syncTabs();
+  }).observe(pagesEl, { subtree: true, attributes: true, attributeFilter: ['class'] });
+
+  /* "Next timings" card on the Now page, read from the Lagna Timings list. */
+  var nextCard = document.createElement('section');
+  nextCard.id = 'rvNext'; nextCard.className = 'rv-next';
+  nextCard.setAttribute('aria-labelledby', 'rvNextH');
+  nextCard.innerHTML = '<div class="rv-next-head"><h2 id="rvNextH">Next timings <span class="tm">அடுத்த நேரங்கள்</span></h2><span class="rv-next-sub"></span></div>' +
+    '<ol class="rv-next-list"></ol><button type="button" class="rv-next-all">See all Lagna timings</button>';
+  if ($('colA') && $('nowcard')) $('colA').insertBefore(nextCard, $('nowcard').nextSibling);
+  nextCard.querySelector('.rv-next-all').addEventListener('click', function () { if (homeBtn) homeBtn.click(); });
+  // Text of an element without its bilingual copies (.tm, .ta), which the language setting shows or hides.
+  function txt(el) {
+    if (!el) return '';
+    var c = el.cloneNode(true);
+    c.querySelectorAll('.tm,.ta,.tt').forEach(function (x) { x.remove(); });
+    return c.textContent.replace(/\s+/g, ' ').trim();
+  }
+  function renderNext() {
+    if (page !== 'now' || stage.dataset.view !== 'desktop') return;
+    var rows = [].slice.call(document.querySelectorAll('#list > li.row'));
+    var t = Date.now(), i = rows.findIndex(function (r) { return +r.dataset.e > t; });
+    var ol = nextCard.querySelector('.rv-next-list'), sub = nextCard.querySelector('.rv-next-sub');
+    var day = txt($('fsDate')).replace(/ · from.*/, ''), live = i >= 0 && +rows[i].dataset.ms <= t;
+    if (!rows.length) { ol.innerHTML = ''; sub.textContent = T('Open Lagna Timings and choose a day.'); return; }
+    if (i < 0) i = 0;
+    sub.textContent = live ? day : T('The list is set to {day}. Change the day in Lagna Timings.', { day: day });
+    ol.innerHTML = '';
+    rows.slice(i, i + 6).forEach(function (r, k) {
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'rv-next-row' + (k === 0 && live ? ' rv-cur' : '');
+      var tags = [].slice.call(r.querySelectorAll('.pill')).map(txt).filter(Boolean).slice(0, 2);
+      b.innerHTML = '<span class="rv-nt"><b></b><small></small></span><span class="rv-nl"><b></b><small></small></span>';
+      b.querySelector('.rv-nt b').textContent = txt(r.querySelector('.t b'));
+      b.querySelector('.rv-nt small').textContent = k === 0 && live ? T('now') : txt(r.querySelector('.t span'));
+      b.querySelector('.rv-nl b').textContent = txt(r.querySelector('.l .n'));
+      b.querySelector('.rv-nl small').textContent = [txt(r.querySelector('.l .c')).replace(/ ascendant.*/, '')].concat(tags).join(' · ');
+      b.addEventListener('click', function () {
+        if (homeBtn) homeBtn.click();
+        setTimeout(function () {
+          r.scrollIntoView({ block: 'center' });
+          r.classList.remove('rv-flash'); void r.offsetWidth; r.classList.add('rv-flash');
+          r.focus({ preventScroll: true });
+        }, 80);
+      });
+      b.querySelectorAll('b,small').forEach(function (x) { x.setAttribute('data-rvtr', ''); });
+      li.appendChild(b); ol.appendChild(li);
+    });
+  }
+  var nt;
+  if ($('list')) new MutationObserver(function () { clearTimeout(nt); nt = setTimeout(renderNext, 150); }).observe($('list'), { childList: true });
+  setInterval(renderNext, 20000);
+  document.addEventListener('rv-lang', renderNext);
+
+  /* Lagna Timings has no chart beside it. Tapping a row still sets the chart to that time,
+     so the chart slides in from the right only then. */
+  var colBEl = $('colB');
+  function peek(on) {
+    document.body.classList.toggle('rv-peek', on);
+    if (on && colBEl) colBEl.scrollTop = 0;
+  }
+  if (colBEl) {
+    var peekX = document.createElement('button');
+    peekX.type = 'button'; peekX.className = 'rv-x rv-peek-x'; peekX.setAttribute('aria-label', 'Close chart');
+    peekX.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg>';
+    peekX.addEventListener('click', function () { peek(false); });
+    colBEl.insertBefore(peekX, colBEl.firstChild);
+  }
+  if ($('list')) $('list').addEventListener('click', function (e) {
+    if (page !== 'lagna' || stage.dataset.view !== 'desktop') return;
+    if (e.target.closest('button,details,summary,a,input,select') || !e.target.closest('li.row')) return;
+    peek(true);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('rv-peek') && !document.querySelector('.sheet:not(.hide)')) peek(false);
+  });
+  if (nav) nav.addEventListener('click', function (e) { if (e.target.closest('.tool')) peek(false); });
+
+  /* The engine's live muhurtham alert (bottom corner) shows as one line; tap it for the details. */
+  var live = $('gaMpLive');
+  if (live) {
+    live.classList.add('rv-chiplive');
+    live.setAttribute('title', T('Tap for details'));
+    live.addEventListener('click', function (e) {
+      if (e.target.closest('.galx')) return;
+      live.classList.toggle('rv-open');
+    });
+  }
+
+  /* Sidebar narrows to icons (desktop). */
+  var brand = document.querySelector('.side .brand');
+  if (brand) {
+    var sideBtn = document.createElement('button');
+    sideBtn.type = 'button'; sideBtn.className = 'rv-sidebtn';
+    sideBtn.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="13" rx="2.5"/><path d="M7.5 3.5v13"/></svg>';
+    brand.appendChild(sideBtn);
+    var setSide = function (min) {
+      document.body.classList.toggle('rv-side-min', min);
+      sideBtn.setAttribute('aria-label', T(min ? 'Show tool names' : 'Show icons only'));
+      sideBtn.title = sideBtn.getAttribute('aria-label');
+      sideBtn.setAttribute('aria-pressed', String(min));
+      try { min ? localStorage.setItem('rvSideMin', '1') : localStorage.removeItem('rvSideMin'); } catch (e) {}
+    };
+    var min0 = false; try { min0 = localStorage.getItem('rvSideMin') === '1'; } catch (e) {}
+    setSide(min0);
+    sideBtn.addEventListener('click', function () { setSide(!document.body.classList.contains('rv-side-min')); });
+    // Searching needs the names, so "/" opens the sidebar again.
+    find.addEventListener('focus', function () { if (document.body.classList.contains('rv-side-min')) setSide(false); });
+  }
+
+  setPage(page);
+  mark(pageBtn());
+  // Start on the address in the link, or on the last page used.
+  setTimeout(function () {
+    var r = readRoute(); if (!r) { r = baseRoute(); setUrl(r, false); } show(r);
+    // The new layout is in place: reveal the page (it was kept behind a splash so the original layout never shows).
+    requestAnimationFrame(function () { root.classList.remove('rv-boot'); });
+  }, 0);
+
+  /* ---------- "Rising now" leads the page ---------- */
+  var nowcard = $('nowcard'), colA = $('colA'), colB = $('colB');
+  if (nowcard) {
+    var k = nowcard.querySelector('.k');
+    if (k) k.innerHTML = '<span class="rv-pulse" aria-hidden="true"></span>Rising now <span class="tm">இப்போது உதயம்</span>';
+  }
+  function placeNow() {
+    if (!nowcard) return;
+    var host = colA; // desktop pages place it with CSS; on phones it sits under the heading
+    if (!host) return;
+    var after = host.querySelector('.a-head');
+    var ref = after ? after.nextSibling : host.firstChild;
+    if (nowcard.parentNode !== host || nowcard.previousSibling !== after) host.insertBefore(nowcard, ref);
+  }
+
+  /* ---------- Phone: bottom tab bar ---------- */
+  var tabs = document.createElement('nav');
+  tabs.className = 'rv-tabs';
+  tabs.setAttribute('aria-label', 'Main');
+  var TABS = [
+    { id: 'now', label: 'Now', icon: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>' },
+    { id: 'timings', label: 'Timings', icon: '<path d="M4 6h16M4 12h16M4 18h10"/>' },
+    { id: 'chart', label: 'Chart', icon: '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 4l16 16M20 4 4 20"/>' },
+    { id: 'tools', label: 'Tools', icon: '<rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/>' },
+  ];
+  tabs.innerHTML = TABS.map(function (t) {
+    return '<button type="button" data-t="' + t.id + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + t.icon + '</svg><span>' + t.label + '</span></button>';
+  }).join('');
+  $('screen').appendChild(tabs);
+  var scroller = $('scroller');
+  function scrollToEl(el) {
+    if (!el || !scroller) return;
+    var top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 64;
+    scroller.scrollTo({ top: Math.max(0, top), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }
+  function closeSheets() {
+    document.querySelectorAll('.sheet:not(.hide)').forEach(function (s) {
+      var c = s.querySelector('[id$="Close"], .close, button[aria-label="Close"]'); if (c) c.click();
+    });
+  }
+  function openTools() { stage.classList.add('rv-tools-open'); syncTabs(); }
+  function closeTools() { stage.classList.remove('rv-tools-open'); syncTabs(); }
+  var activeTab = 'now';
+  function syncTabs() {
+    var t = stage.classList.contains('rv-tools-open') || document.body.classList.contains('rv-p-tool') ? 'tools' : activeTab;
+    tabs.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.t === t)); });
+  }
+  tabs.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    var t = b.dataset.t;
+    if (t === 'tools') { stage.classList.contains('rv-tools-open') ? closeTools() : openTools(); return; }
+    closeTools(); if (route && !isBase(route)) { setUrl('now', true); show('now'); } activeTab = t;
+    if (t === 'now') scroller.scrollTo({ top: 0, behavior: 'smooth' });
+    if (t === 'timings') scrollToEl($('mainForm'));
+    if (t === 'chart') scrollToEl($('chartPanel'));
+    syncTabs();
+  });
+  var toolsHead = document.createElement('div');
+  toolsHead.className = 'rv-tools-head';
+  toolsHead.innerHTML = '<h2>All tools</h2><button type="button" class="rv-x" aria-label="Close tools"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button>';
+  toolsHead.querySelector('button').addEventListener('click', closeTools);
+  if (nav) nav.insertBefore(toolsHead, nav.firstChild);
+  var toolsScrim = document.createElement('div');
+  toolsScrim.className = 'rv-tools-scrim';
+  toolsScrim.addEventListener('click', closeTools);
+  $('screen').appendChild(toolsScrim);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stage.classList.contains('rv-tools-open')) closeTools(); });
+
+  /* ---------- Settings: language, chart colour, appearance ---------- */
+  var side = document.querySelector('.side');
+  var rows = side ? [].slice.call(side.querySelectorAll(':scope > .langrow')) : [];
+  var intro = side && side.querySelector(':scope > p.sub');
+  var GEAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="2.6"/><path d="M10 2.5v2.2M10 15.3v2.2M2.5 10h2.2M15.3 10h2.2M4.7 4.7l1.6 1.6M13.7 13.7l1.6 1.6M4.7 15.3l1.6-1.6M13.7 6.3l1.6-1.6"/></svg>';
+  if (side && rows.length) {
+    // Settings open in a popup dialog.
+    var setBtn = document.createElement('button');
+    setBtn.type = 'button'; setBtn.className = 'rv-settings rv-setbtn';
+    setBtn.setAttribute('aria-haspopup', 'dialog');
+    setBtn.innerHTML = GEAR + '<span>Settings</span>';
+    side.insertBefore(setBtn, side.querySelector('.sidefoot') || null);
+
+    var dlg = document.createElement('dialog');
+    dlg.className = 'rv-dialog'; dlg.id = 'rvSettings';
+    dlg.setAttribute('aria-labelledby', 'rvSetT');
+    dlg.innerHTML =
+      '<div class="rv-dlg-head"><span class="rv-dlg-ic">' + GEAR + '</span><h2 id="rvSetT">Settings <span class="tm">அமைப்புகள்</span></h2>' +
+      '<button type="button" class="rv-x" data-close aria-label="Close settings"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15"/></svg></button></div>' +
+      '<div class="rv-dlg-body">' +
+        '<section class="rv-set-sec"><h3>Appearance</h3><div class="rv-seg3" role="group" aria-label="Appearance">' +
+          '<button type="button" data-ap="">Match device</button><button type="button" data-ap="light">Light</button><button type="button" data-ap="dark">Dark</button>' +
+        '</div></section>' +
+        '<section class="rv-set-sec rv-set-rows"><h3>Language and charts</h3></section>' +
+      '</div>' +
+      '<div class="rv-dlg-foot"><span class="rv-dlg-ver"></span><button type="button" class="rv-done" data-close>Done</button></div>';
+    var rowsHost = dlg.querySelector('.rv-set-rows');
+    rows.forEach(function (r) { rowsHost.appendChild(r); });
+    var ver = document.querySelector('.brand .ver');
+    dlg.querySelector('.rv-dlg-ver').textContent = 'GuruAgasthiya ' + (ver ? ver.textContent.trim() : '');
+    document.body.appendChild(dlg);
+
+    function setAppear(v) {
+      if (v) root.setAttribute('data-theme', v); else root.removeAttribute('data-theme');
+      try { v ? localStorage.setItem('rvAppear', v) : localStorage.removeItem('rvAppear'); } catch (e) {}
+      dlg.querySelectorAll('[data-ap]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.ap === v)); });
+    }
+    var ap0 = ''; try { ap0 = localStorage.getItem('rvAppear') || ''; } catch (e) {}
+    setAppear(ap0);
+    dlg.querySelectorAll('[data-ap]').forEach(function (b) { b.addEventListener('click', function () { setAppear(b.dataset.ap); }); });
+
+    function openSettings() {
+      if (stage.dataset.view === 'mobile') closeTools();
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      setBtn.setAttribute('aria-expanded', 'true');
+    }
+    function closeSettings() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+    dlg.addEventListener('close', function () { setBtn.setAttribute('aria-expanded', 'false'); setBtn.focus(); });
+    setBtn.addEventListener('click', openSettings);
+    dlg.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', closeSettings); });
+    // A click on the dimmed backdrop (outside the panel) closes it.
+    dlg.addEventListener('click', function (e) {
+      if (e.target !== dlg) return;
+      var r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeSettings();
+    });
+  }
+  if (intro) intro.classList.add('rv-intro');
+
+  /* ---------- Long explanations fold behind "Read more" ---------- */
+  var LONG = 240;
+  function fold(el) {
+    if (el.dataset.rvFold) return;
+    el.dataset.rvFold = '1';
+    if ((el.textContent || '').length < LONG) return;
+    el.classList.add('rv-folded');
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'rv-more'; b.setAttribute('aria-expanded', 'false');
+    b.textContent = 'Read more';
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = el.classList.toggle('rv-folded') === false;
+      b.setAttribute('aria-expanded', String(open));
+      b.textContent = T(open ? 'Show less' : 'Read more');
+    });
+    el.insertAdjacentElement('afterend', b);
+    var cs = getComputedStyle(el); // line the button up with the text it folds
+    b.style.marginLeft = (parseFloat(cs.marginLeft) || 0) + (parseFloat(cs.paddingLeft) || 0) + 'px';
+    // The engine shows and hides some notes by id; keep the button in step.
+    new MutationObserver(function () { b.classList.toggle('hide', el.classList.contains('hide')); })
+      .observe(el, { attributes: true, attributeFilter: ['class'] });
+    b.classList.toggle('hide', el.classList.contains('hide'));
+  }
+  var FOLD_SEL = '.legend, .gmnote, .sheet .sub, .sheet .note, .sheet .intro, .sheet p.hint';
+  function foldAll(rootEl) { (rootEl || document).querySelectorAll(FOLD_SEL).forEach(fold); }
+  foldAll();
+  var ft;
+  new MutationObserver(function () { clearTimeout(ft); ft = setTimeout(function () { foldAll(); }, 250); })
+    .observe(document.body, { childList: true, subtree: true });
+
+  /* ---------- Sheets: the tool's icon leads its header ---------- */
+  document.querySelectorAll('.sheet').forEach(function (s) {
+    s.classList.add('rv-drawer');
+    var btn = $(s.id.replace(/Panel$/, 'Btn')), head = s.querySelector('.sh-head');
+    var ic = btn && btn.querySelector('.ic svg');
+    if (head && ic && !head.querySelector('.rv-shic')) {
+      var box = document.createElement('span');
+      box.className = 'rv-shic'; box.setAttribute('aria-hidden', 'true');
+      box.appendChild(ic.cloneNode(true));
+      head.insertBefore(box, head.firstChild);
+    }
+  });
+
+  /* ---------- Place picker folds to one line: "Tiruchirappalli · 10.816, 78.697 · Change" ---------- */
+  // Fields are found by their control ids first, since labels change with the chosen language.
+  var IDRE = { City: /(city|^place)$/i, Recent: /recent/i, Latitude: /lat$/i, Longitude: /lon$/i, Time: /tz$/i, Country: /(country|state|city|^place)$/i };
+  function cellBy(group, re) {
+    var key = (re.source.match(/[A-Z][a-z]+/) || [''])[0], idre = IDRE[key];
+    var cells = [].slice.call(group.querySelectorAll('.cell'));
+    return (idre && cells.find(function (c) {
+      return [].some.call(c.querySelectorAll('input,select'), function (x) { return idre.test(x.id); });
+    })) || cells.find(function (c) {
+      var l = c.querySelector('.cl'); return l && re.test(l.textContent);
+    });
+  }
+  function ctrlVal(cell) {
+    if (!cell) return '';
+    var sel = cell.querySelector('select');
+    if (sel && sel.selectedIndex >= 0) return (sel.options[sel.selectedIndex].text || '').trim();
+    var inp = cell.querySelector('input'); return inp ? (inp.value || '').trim() : '';
+  }
+  var PIN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
+  var places = [];
+  document.querySelectorAll('.sheet .group').forEach(function (g) {
+    if (!g.querySelector('.cell.search') || g.closest('details.rv-place')) return;
+    // Take the following place groups too (country/state/city, then coordinates), up to the latitude group.
+    var extra = [], coords = null, n = g.nextElementSibling;
+    while (n && !coords) {
+      if (n.classList.contains('group')) {
+        if (cellBy(n, /Latitude/i)) { coords = n; extra.push(n); break; }
+        if (cellBy(n, /Country|State|City|Town|Place/i)) { extra.push(n); n = n.nextElementSibling; continue; }
+        break;
+      }
+      if (n.tagName === 'DETAILS' || n.classList.contains('btns')) break;
+      n = n.nextElementSibling;
+    }
+    if (!coords) extra = [];
+    var det = document.createElement('details');
+    det.className = 'rv-place';
+    det.innerHTML = '<summary><span class="rv-pin">' + PIN + '</span><span class="rv-place-t"><b></b><span></span></span><span class="rv-place-c">Change</span></summary>';
+    g.parentNode.insertBefore(det, g);
+    det.appendChild(g);
+    extra.forEach(function (x) { det.appendChild(x); });
+    var placeGroups = [g].concat(extra.filter(function (x) { return x !== coords; }));
+    var p = { det: det, place: { querySelectorAll: function (s) { return placeGroups.reduce(function (a, x) { return a.concat([].slice.call(x.querySelectorAll(s))); }, []); }, querySelector: function (s) { return g.querySelector(s); } }, coords: coords };
+    places.push(p);
+    det.addEventListener('toggle', function () {
+      det.querySelector('.rv-place-c').textContent = T(det.open ? 'Done' : 'Change');
+      if (det.open) { var s = g.querySelector('.cell.search input'); if (s) s.focus(); }
+      updatePlace(p);
+    });
+    det.addEventListener('change', function () { updatePlace(p); });
+    det.addEventListener('input', function () { updatePlace(p); });
+    updatePlace(p);
+  });
+  function updatePlace(p) {
+    var name = ctrlVal(cellBy(p.place, /City|Town/i)) || ctrlVal(cellBy(p.place, /Recent/i)) || '';
+    if (/^(choose|select|—|-|all )/i.test(name)) name = ctrlVal(cellBy(p.place, /Recent/i)) || name;
+    var c = p.coords || p.place, lat = ctrlVal(cellBy(c, /Latitude/i)), lon = ctrlVal(cellBy(c, /Longitude/i));
+    var tz = ctrlVal(cellBy(c, /Time Zone/i));
+    p.det.querySelector('.rv-place-t b').textContent = name || T('Choose a place');
+    p.det.querySelector('.rv-place-t span').textContent =
+      [lat && lon ? lat + ', ' + lon : '', tz].filter(Boolean).join(' · ') || T('Search any city or town');
+  }
+  // The engine fills places in code (recent places, "use my location"), so refresh while a tool is open.
+  setInterval(function () {
+    places.forEach(function (p) { if (!p.det.open && p.det.offsetParent) updatePlace(p); });
+  }, 1200);
+
+  /* ---------- Timing rows: show the date chip only where the date changes ---------- */
+  function dedupeDates() {
+    document.querySelectorAll('ul').forEach(function (ul) {
+      var prev = null;
+      for (var li = ul.firstElementChild; li; li = li.nextElementSibling) {
+        if (!li.classList.contains('row')) continue;
+        var d = li.querySelector(':scope > .rdate span');
+        var t = d ? d.textContent : null;
+        li.classList.toggle('rv-same', !!t && t === prev);
+        if (t) prev = t;
+      }
+      // A list under a dated section heading does not need the first chip either.
+      var first = ul.querySelector(':scope > li.row'), sec = ul.previousElementSibling;
+      if (first && sec && sec.classList.contains('lf-sec') && sec.querySelector('h3')) {
+        var fd = first.querySelector(':scope > .rdate span');
+        if (fd && /\d/.test(sec.textContent) && fd.textContent.indexOf(sec.querySelector('h3').textContent.trim().split(' ')[0]) >= 0) first.classList.add('rv-same');
+      }
+    });
+  }
+  var dt;
+  new MutationObserver(function () { clearTimeout(dt); dt = setTimeout(dedupeDates, 120); })
+    .observe(document.body, { childList: true, subtree: true });
+  dedupeDates();
+
+  /* ---------- Disclaimer: once per day ----------
+     The engine shows it before every tool. After it is accepted, it is accepted
+     again automatically for the rest of that calendar day, before the box is painted. */
+  var disc = $('gaDisc'), discOk = $('gaDiscOk'), DKEY = 'rvDiscDay';
+  function today() { var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function acceptedToday() { try { return localStorage.getItem(DKEY) === today(); } catch (e) { return false; } }
+  if (disc && discOk) {
+    var auto = false;
+    discOk.addEventListener('click', function () {
+      if (!auto) { try { localStorage.setItem(DKEY, today()); } catch (e) {} }
+    });
+    new MutationObserver(function () {
+      if (!disc.classList.contains('hide') && acceptedToday()) { auto = true; discOk.click(); auto = false; }
+    }).observe(disc, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  applyView();
+  syncTabs();
+})();

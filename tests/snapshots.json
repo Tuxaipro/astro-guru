@@ -1,0 +1,94 @@
+{
+  "lagna-timings: Chennai 15 Jan 2026 from 00:00": {
+    "count": 251,
+    "first": [
+      "00:00:00 Mercury/Mars/Jupiter",
+      "00:01:23 Mercury/Mars/Saturn",
+      "00:10:03 Venus/Mars/Mercury",
+      "00:17:49 Venus/Mars/Ketu",
+      "00:21:02 Venus/Mars/Venus"
+    ],
+    "last": [
+      "23:42:01 Mercury/Mars/Rahu",
+      "23:50:11 Mercury/Mars/Jupiter",
+      "23:57:27 Mercury/Mars/Saturn"
+    ],
+    "dates": []
+  },
+  "lagna-timings across midnight: Chennai 15 Jan 2026 from 22:00": {
+    "count": 251,
+    "first": [
+      "22:00:00 Sun/Sun/Mars",
+      "22:01:26 Sun/Sun/Rahu",
+      "22:04:34 Mercury/Sun/Rahu",
+      "22:09:30 Mercury/Sun/Jupiter",
+      "22:16:40 Mercury/Sun/Saturn"
+    ],
+    "last": [
+      "21:49:53 +1d Sun/Sun/Moon",
+      "21:54:22 +1d Sun/Sun/Mars",
+      "21:57:30 +1d Sun/Sun/Rahu"
+    ],
+    "dates": []
+  },
+  "birth-chart: Chennai 15 Jun 1990 10:30": {
+    "born": "Birth chartBorn: 15 Jun 1990, 10:30:00 local time (UTC+5:30, Asia/Kolkata)Place: entered coordinates · 13.0827, 80.2707Ayanamsa: KP (Krishnamurti) (23°37′39″)Lagna: Leo 5°30′ · சிம்ம லக்னம்",
+    "planets": [
+      "Lagnaலக்னம் | Leo 5°30′47″சிம்மம் | Magha · 2மகம் | Ketuகேது | Marsசெவ்வாய்",
+      "Sunசூரியன் | Gemini 0°13′24″மிதுனம் | Mrigashira · 3மிருகசீரிடம் | Marsசெவ்வாய் | Mercuryபுதன்",
+      "Moonசந்திரன் | Aquarius 17°50′55″கும்பம் | Shatabhisha · 4சதயம் | Rahuராகு | Sunசூரியன்",
+      "Marsசெவ்வாய் | Pisces 17°12′14″மீனம் | Revati · 1ரேவதி | Mercuryபுதன் | Mercuryபுதன்",
+      "Mercuryபுதன் | Taurus 11°33′53″ரிஷபம் | Rohini · 1ரோகிணி | Moonசந்திரன் | Marsசெவ்வாய்",
+      "Jupiterகுரு | Gemini 22°11′56″மிதுனம் | Punarvasu · 1புனர்பூசம் | Jupiterகுரு | Saturnசனி",
+      "Venusசுக்கிரன் | Aries 24°48′25″மேஷம் | Bharani · 4பரணி | Venusசுக்கிரன் | Mercuryபுதன்",
+      "Saturnசனி | Capricorn 0°25′17″மகரம் | Uttara Ashadha · 2உத்திராடம் | Sunசூரியன் | Rahuராகு",
+      "Rahuராகு | Capricorn 16°04′56″மகரம் | Shravana · 2திருவோணம் | Moonசந்திரன் | Saturnசனி",
+      "Ketuகேது | Cancer 16°04′56″கடகம் | Pushya · 4பூசம் | Saturnசனி | Jupiterகுரு"
+    ]
+  },
+  "edge: New York 14 Mar 2021 02:30 (clocks jump 02:00 to 03:00, this time does not exist)": {
+    "born": "Birth chartBorn: 14 Mar 2021, 02:30:00 local time (UTC-4:00, America/New_York)Place: entered coordinates · 40.7128, -74.006Ayanamsa: KP (Krishnamurti) (24°03′25″)Lagna: Sagittarius 0°16′ · தனுசு லக்னம்",
+    "planets": [
+      "Lagnaலக்னம் | Sagittarius 0°16′33″தனுசு | Mula · 1மூலம் | Ketuகேது | Ketuகேது",
+      "Sunசூரியன் | Aquarius 29°50′24″கும்பம் | Purva Bhadrapada · 3பூரட்டாதி | Jupiterகுரு | Moonசந்திரன்",
+      "Moonசந்திரன் | Pisces 9°25′49″மீனம் | Uttara Bhadrapada · 2உத்திரட்டாதி | Saturnசனி | Venusசுக்கிரன்",
+      "Marsசெவ்வாய் | Taurus 11°51′32″ரிஷபம் | Rohini · 1ரோகிணி | Moonசந்திரன் | Marsசெவ்வாய்",
+      "Mercuryபுதன் | Aquarius 3°46′13″கும்பம் | Dhanishta · 4அவிட்டம் | Marsசெவ்வாய் | Venusசுக்கிரன்",
+      "Jupiterகுரு | Capricorn 25°30′19″மகரம் | Dhanishta · 1அவிட்டம் | Marsசெவ்வாய் | Rahuராகு",
+      "Venusசுக்கிரன் | Aquarius 26°49′08″கும்பம் | Purva Bhadrapada · 3பூரட்டாதி | Jupiterகுரு | Venusசுக்கிரன்",
+      "Saturnசனி | Capricorn 15°45′51″மகரம் | Shravana · 2திருவோணம் | Moonசந்திரன் | Saturnசனி",
+      "Rahuராகு | Taurus 20°58′43″ரிஷபம் | Rohini · 4ரோகிணி | Moonசந்திரன் | Venusசுக்கிரன்",
+      "Ketuகேது | Scorpio 20°58′43″விருச்சிகம் | Jyeshtha · 2கேட்டை | Mercuryபுதன் | Venusசுக்கிரன்"
+    ]
+  },
+  "edge: New York 7 Nov 2021 01:30 (clocks fall back, this time happens twice)": {
+    "born": "Birth chartBorn: 07 Nov 2021, 01:30:00 local time (UTC-4:00, America/New_York)Place: entered coordinates · 40.7128, -74.006Ayanamsa: KP (Krishnamurti) (24°03′58″)Lagna: Leo 8°22′ · சிம்ம லக்னம்",
+    "planets": [
+      "Lagnaலக்னம் | Leo 8°22′19″சிம்மம் | Magha · 3மகம் | Ketuகேது | Jupiterகுரு",
+      "Sunசூரியன் | Libra 20°57′20″துலாம் | Vishakha · 1விசாகம் | Jupiterகுரு | Jupiterகுரு",
+      "Moonசந்திரன் | Scorpio 23°50′36″விருச்சிகம் | Jyeshtha · 3கேட்டை | Mercuryபுதன் | Marsசெவ்வாய்",
+      "Marsசெவ்வாய் | Libra 11°04′23″துலாம் | Swati · 2சுவாதி | Rahuராகு | Saturnசனி",
+      "Mercuryபுதன் | Libra 7°59′14″துலாம் | Swati · 1சுவாதி | Rahuராகு | Rahuராகு",
+      "Jupiterகுரு | Capricorn 28°55′34″மகரம் | Dhanishta · 2அவிட்டம் | Marsசெவ்வாய் | Saturnசனி",
+      "Venusசுக்கிரன் | Sagittarius 7°36′57″தனுசு | Mula · 3மூலம் | Ketuகேது | Jupiterகுரு",
+      "Saturnசனி | Capricorn 13°25′35″மகரம் | Shravana · 2திருவோணம் | Moonசந்திரன் | Rahuராகு",
+      "Rahuராகு | Taurus 8°22′08″ரிஷபம் | Krittika · 4கார்த்திகை | Sunசூரியன் | Venusசுக்கிரன்",
+      "Ketuகேது | Scorpio 8°22′08″விருச்சிகம் | Anuradha · 2அனுஷம் | Saturnசனி | Venusசுக்கிரன்"
+    ]
+  },
+  "edge: Chennai 1 Sep 1942 12:00 (India war time, UTC+6:30)": {
+    "born": "Birth chartBorn: 01 Sep 1942, 12:00:00 local time (UTC+6:30, Asia/Kolkata)Place: entered coordinates · 13.0827, 80.2707Ayanamsa: KP (Krishnamurti) (22°57′36″)Lagna: Libra 27°41′ · துலா லக்னம்",
+    "planets": [
+      "Lagnaலக்னம் | Libra 27°41′30″துலாம் | Vishakha · 3விசாகம் | Jupiterகுரு | Venusசுக்கிரன்",
+      "Sunசூரியன் | Leo 15°11′18″சிம்மம் | Purva Phalguni · 1பூரம் | Venusசுக்கிரன் | Venusசுக்கிரன்",
+      "Moonசந்திரன் | Aries 29°21′44″மேஷம் | Krittika · 1கார்த்திகை | Sunசூரியன் | Rahuராகு",
+      "Marsசெவ்வாய் | Leo 26°37′02″சிம்மம் | Purva Phalguni · 4பூரம் | Venusசுக்கிரன் | Ketuகேது",
+      "Mercuryபுதன் | Virgo 8°17′04″கன்னி | Uttara Phalguni · 4உத்திரம் | Sunசூரியன் | Venusசுக்கிரன்",
+      "Jupiterகுரு | Gemini 24°52′01″மிதுனம் | Punarvasu · 2புனர்பூசம் | Jupiterகுரு | Mercuryபுதன்",
+      "Venusசுக்கிரன் | Cancer 25°29′33″கடகம் | Ashlesha · 3ஆயில்யம் | Mercuryபுதன் | Rahuராகு",
+      "Saturnசனி | Taurus 19°02′40″ரிஷபம் | Rohini · 3ரோகிணி | Moonசந்திரன் | Mercuryபுதன்",
+      "Rahuராகு | Leo 11°00′13″சிம்மம் | Magha · 4மகம் | Ketuகேது | Saturnசனி",
+      "Ketuகேது | Aquarius 11°00′13″கும்பம் | Shatabhisha · 2சதயம் | Rahuராகு | Saturnசனி"
+    ]
+  }
+}

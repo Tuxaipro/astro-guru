@@ -1,0 +1,878 @@
+/* GuruAgasthiya revamp: design layer loaded after the v7.7 styles.
+   Palette: panchangam ink and turmeric. Indigo ink carries text and actions;
+   turmeric is kept for the one live thing, the sign rising now. */
+
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/plex-sans-400.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/plex-sans-500.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/plex-sans-600.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Sans";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/plex-sans-700.woff2) format("woff2")}
+
+/* ---------- Tokens ---------- */
+:root{
+  --sf:"IBM Plex Sans","Mukta Malar","Noto Sans Tamil","Tamil Sangam MN",system-ui,sans-serif;
+  --sfd:var(--sf); --sans:var(--sf); --serif:var(--sf); --ta:var(--sf);
+  --tamil:"Mukta Malar","Noto Sans Tamil","Tamil Sangam MN",sans-serif;
+
+  --rv-ink:#1A1D3A; --rv-indigo:#3B3FB6; --rv-turmeric:#E39B0B; --rv-kumkum:#C8323A; --rv-leaf:#1E8A5A;
+  --bg:#F4F5F9; --surface:#FFFFFF; --surface-elev:#FFFFFF; --sheet-bg:#F4F5F9;
+  --fill:rgba(59,63,182,.08); --fill2:rgba(26,29,58,.05);
+  --ink:#1A1D3A; --ink2:#3A3E5C; --muted:#5E6280; --muted2:#7D8099;
+  --line:rgba(26,29,58,.10); --line-strong:rgba(26,29,58,.18);
+  --accent:#3B3FB6; --accent-fill:#3B3FB6; --accent-ink:#FFFFFF; --tint:rgba(59,63,182,.09);
+  --track:#D5D7E3; --zebra:#F7F8FB; --zebra-sh:#F1F2F7; --thead:#F7F8FB; --thead-sh:#EEF0F6;
+  --now:#B87700; --now-bg:rgba(227,155,11,.13);
+  --bad:#C8323A; --green:#1E8A5A; --greenlo:rgba(30,138,90,.11); --greenhi:rgba(30,138,90,.30);
+  --glass:rgba(244,245,249,.86); --side:#FFFFFF;
+  --shadow:none; --stage:var(--bg);
+  --rv-hero:#1A1D3A; --rv-hero-ink:#F4F5F9; --rv-hero-muted:#A9ACC8; --rv-hero-hi:#F2B53A;
+  --rv-r-lg:16px; --rv-r:12px; --rv-r-sm:9px;
+  --rv-side:252px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1020; --surface:#161A2E; --surface-elev:#1C2139; --sheet-bg:#121629;
+    --fill:rgba(141,145,255,.14); --fill2:rgba(220,224,255,.06);
+    --ink:#ECEEFA; --ink2:#C9CCE2; --muted:#9A9EBD; --muted2:#7E82A1;
+    --line:rgba(220,224,255,.09); --line-strong:rgba(220,224,255,.16);
+    --accent:#9A9DFF; --accent-fill:#5A5EE0; --accent-ink:#FFFFFF; --tint:rgba(141,145,255,.16);
+    --track:#2E3350; --zebra:#1A1F36; --zebra-sh:#20263F; --thead:#1C2139; --thead-sh:#232944;
+    --now:#F2B53A; --now-bg:rgba(242,181,58,.15);
+    --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34);
+    --glass:rgba(13,16,32,.84); --side:#11152A; --stage:var(--bg);
+    --rv-hero:#1C2139; --rv-hero-ink:#ECEEFA; --rv-hero-muted:#9A9EBD; --rv-hero-hi:#F2B53A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1020; --surface:#161A2E; --surface-elev:#1C2139; --sheet-bg:#121629;
+  --fill:rgba(141,145,255,.14); --fill2:rgba(220,224,255,.06);
+  --ink:#ECEEFA; --ink2:#C9CCE2; --muted:#9A9EBD; --muted2:#7E82A1;
+  --line:rgba(220,224,255,.09); --line-strong:rgba(220,224,255,.16);
+  --accent:#9A9DFF; --accent-fill:#5A5EE0; --accent-ink:#FFFFFF; --tint:rgba(141,145,255,.16);
+  --track:#2E3350; --zebra:#1A1F36; --zebra-sh:#20263F; --thead:#1C2139; --thead-sh:#232944;
+  --now:#F2B53A; --now-bg:rgba(242,181,58,.15);
+  --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34);
+  --glass:rgba(13,16,32,.84); --side:#11152A; --stage:var(--bg);
+  --rv-hero:#1C2139; --rv-hero-ink:#ECEEFA; --rv-hero-muted:#9A9EBD; --rv-hero-hi:#F2B53A;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{color-scheme:light}
+
+/* ---------- Base type ---------- */
+body.rv{font:400 15px/1.5 var(--sf);letter-spacing:0;font-feature-settings:"kern"}
+body.rv h1,body.rv h2,body.rv h3{letter-spacing:-.012em}
+body.rv li.row,body.rv #nowMeta,body.rv #chartTime,body.rv .lf-time,body.rv table,body.rv input,body.rv .cnt,body.rv #slScale,body.rv #slTime{font-variant-numeric:tabular-nums}
+body.rv :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+body.rv ::selection{background:rgba(227,155,11,.35)}
+
+/* No phone mock-up and no view switch: the layout follows the window. */
+body.rv .viewswitch,body.rv #toDesk,body.rv .tiptool{display:none!important}
+body.rv .stage[data-view="mobile"]{background:var(--bg)}
+body.rv .stage[data-view="mobile"] .screen{max-width:none;box-shadow:none}
+@media (min-width:640px){body.rv .stage[data-view="mobile"] .app{max-width:600px;margin:0 auto}}
+
+/* ---------- Buttons and fields ---------- */
+body.rv button{font-family:var(--sf);letter-spacing:0}
+body.rv .btns button,body.rv .row2 button,body.rv .pb button,body.rv .ch-b>button,body.rv #fsEdit{
+  border-radius:var(--rv-r-sm);background:var(--fill);color:var(--accent);font-weight:600;box-shadow:none}
+body.rv button.primary,body.rv .btns button.primary,body.rv .pb button.primary{background:var(--accent-fill);color:var(--accent-ink)}
+body.rv button.primary:hover{filter:brightness(1.08)}
+body.rv .group{border-radius:var(--rv-r);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv .cell .cl{color:var(--ink2);font-weight:500}
+body.rv .cell .cl small{color:var(--muted2)}
+body.rv input[type="checkbox"][role="switch"]:checked,body.rv #almOn:checked{background-color:var(--rv-leaf)}
+body.rv .panel{border-radius:var(--rv-r-lg)}
+body.rv .msg{color:var(--muted)}
+
+/* ---------- Sidebar ---------- */
+body.rv .stage[data-view="desktop"] .side{background:var(--side);border-right:1px solid var(--line);padding:22px 14px 28px;align-items:stretch}
+body.rv .stage[data-view="desktop"] .brand{flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;margin:0 6px 18px}
+body.rv .brand .logo{width:36px;height:36px;border-radius:10px;object-fit:cover}
+body.rv .stage[data-view="desktop"] .brand h1{display:block!important;font:600 18px/1.15 var(--sf);letter-spacing:-.01em}
+body.rv .brand .ver{font:500 11.5px/1 var(--sf);color:var(--muted);background:var(--fill2);border-radius:999px;padding:3px 7px;margin-left:6px;vertical-align:2px}
+body.rv .rv-intro{display:none}
+
+body.rv .rv-search{position:relative;display:flex;align-items:center;margin:0 0 14px}
+body.rv .rv-search svg{position:absolute;left:11px;width:16px;height:16px;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;pointer-events:none}
+body.rv .rv-search input{width:100%;height:38px;padding:0 34px 0 34px;border-radius:var(--rv-r-sm);border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);font:400 14.5px var(--sf);-webkit-appearance:none;appearance:none}
+body.rv .rv-search input::-webkit-search-cancel-button{display:none}
+body.rv .rv-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+body.rv .rv-kbd{position:absolute;right:9px;font:500 11px/1 var(--sf);color:var(--muted);border:1px solid var(--line-strong);border-radius:5px;padding:3px 6px}
+body.rv .rv-search input:focus+.rv-kbd{display:none}
+
+body.rv .rv-group{margin:0 0 14px}
+body.rv .rv-gh{margin:0 8px 4px;font:600 12.5px/1.4 var(--sf);color:var(--muted);letter-spacing:.01em}
+body.rv .rv-gh .tm{font:500 12px/1.4 var(--tamil);color:var(--muted2);margin-left:4px}
+body.rv .rv-gl{display:flex;flex-direction:column;gap:1px}
+body.rv .rv-hide{display:none!important}
+body.rv .rv-empty{margin:4px 8px;color:var(--muted);font-size:13.5px}
+
+/* Tools read as a list of names, with quiet line icons. */
+body.rv .stage .rv-groups .tool,body.rv .stage .rv-groups .tool.home{
+  display:flex!important;flex-direction:row;align-items:center;gap:10px;min-height:0;padding:7px 8px;border-radius:var(--rv-r-sm);
+  background:transparent;box-shadow:none;color:var(--ink);justify-content:flex-start;width:100%;text-align:left}
+body.rv .stage .rv-groups .tool:hover{background:var(--fill2)}
+body.rv .stage .rv-groups .tool::after{display:none}
+body.rv .stage .rv-groups .tool .ic{width:28px;height:28px;border-radius:8px;background:var(--fill2);flex:none}
+body.rv .stage .rv-groups .tool .ic svg{width:16px;height:16px;stroke:var(--ink2);stroke-width:1.7}
+body.rv .stage .rv-groups .tool .tx{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;font:500 14px/1.25 var(--sf)}
+body.rv .stage .rv-groups .tool .tx .tm{display:block;font:500 12px/1.4 var(--tamil);color:var(--muted2);margin-top:1px}
+body.rv .stage .rv-groups .tool.rv-on{background:var(--tint)}
+body.rv .stage .rv-groups .tool.rv-on .ic{background:var(--accent-fill)}
+body.rv .stage .rv-groups .tool.rv-on .ic svg{stroke:#fff}
+body.rv .stage .rv-groups .tool.rv-on .tx{color:var(--accent);font-weight:600}
+@media (max-height:900px){body.rv .stage[data-view="desktop"] .rv-groups .tool .tx .tm{display:none}}
+
+body.rv .rv-settings{margin:6px 0 0;border-top:1px solid var(--line);padding-top:10px}
+body.rv .rv-settings summary{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:var(--rv-r-sm);cursor:pointer;font:500 14px var(--sf);color:var(--ink2);list-style:none}
+body.rv .rv-settings summary::-webkit-details-marker{display:none}
+body.rv .rv-settings summary:hover{background:var(--fill2)}
+body.rv .rv-settings summary svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linecap:round}
+body.rv .rv-set-body{padding:6px 4px 2px}
+body.rv .rv-set-body .langrow{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:0 0 10px}
+body.rv .rv-set-body .langrow label{font:500 12.5px var(--sf);color:var(--muted)}
+body.rv .rv-set-body select{width:100%;height:36px;border-radius:var(--rv-r-sm);border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);padding:0 10px;font:400 14px var(--sf)}
+
+body.rv .side>.brand{order:0}
+body.rv .side>nav.tools{order:1}
+body.rv .side>.rv-settings{order:2}
+body.rv .side>.sidefoot{order:3}
+body.rv .stage[data-view="desktop"] .side>.rv-settings{margin-top:auto}
+
+/* ---------- Columns ---------- */
+body.rv .stage[data-view="desktop"] .col{padding:26px var(--rv-pad) 48px}
+body.rv .stage[data-view="desktop"] .col-a{border-right:1px solid var(--line)}
+body.rv .a-head h2,body.rv .b-head h2{font:600 24px/1.2 var(--sf);letter-spacing:-.015em}
+
+/* ---------- Rising now: the one bold element ---------- */
+body.rv .nowcard{position:relative;overflow:hidden;background:var(--rv-hero);color:var(--rv-hero-ink);border-radius:var(--rv-r-lg);
+  padding:18px 20px 16px;margin:0 0 18px;box-shadow:none;border:0}
+body.rv .nowcard::before{content:"";position:absolute;inset:auto -60px -120px auto;width:260px;height:260px;border-radius:50%;
+  border:1px solid rgba(242,181,58,.22);box-shadow:0 0 0 28px rgba(242,181,58,.05),0 0 0 56px rgba(242,181,58,.03);pointer-events:none}
+body.rv .nowcard .k{display:flex;align-items:center;gap:8px;font:600 13px/1.3 var(--sf);color:var(--rv-hero-hi);letter-spacing:.01em;text-transform:none}
+body.rv .nowcard .k .tm{font:500 12.5px/1.3 var(--tamil);color:var(--rv-hero-muted)}
+body.rv .nowcard .k::before{display:none}
+body.rv .rv-pulse{width:8px;height:8px;border-radius:50%;background:var(--rv-hero-hi);box-shadow:0 0 0 0 rgba(242,181,58,.6);animation:rvPulse 2.4s ease-out infinite}
+@keyframes rvPulse{0%{box-shadow:0 0 0 0 rgba(242,181,58,.55)}70%,100%{box-shadow:0 0 0 9px rgba(242,181,58,0)}}
+body.rv .nowcard .big{font:600 clamp(26px,3.2vw,34px)/1.12 var(--sf);letter-spacing:-.02em;color:#fff;margin:8px 0 2px}
+body.rv .nowcard .ta{font:500 15px/1.5 var(--tamil);color:var(--rv-hero-hi)}
+body.rv .nowcard .meta{font:400 13.5px/1.5 var(--sf);color:var(--rv-hero-muted);margin-top:8px}
+body.rv .nowcard .meta b,body.rv .nowcard .meta strong{color:var(--rv-hero-ink)}
+
+/* ---------- Timing lists ---------- */
+body.rv .seg{background:var(--fill2);border-radius:var(--rv-r);padding:3px;gap:3px}
+body.rv .seg button{border-radius:var(--rv-r-sm);font:600 13px/1.3 var(--sf);color:var(--ink2);background:transparent}
+body.rv .seg button span{font:500 11.5px/1.35 var(--tamil);color:var(--muted)}
+body.rv .seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(26,29,58,.06)}
+body.rv #list,body.rv #gmpList,body.rv #anaList,body.rv #rulList{border-radius:var(--rv-r);box-shadow:0 0 0 1px var(--line)}
+body.rv li.row.now{background:var(--now-bg)}
+
+/* ---------- Chart panel ---------- */
+body.rv .panel.chart{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv .chead h2{font:600 20px/1.2 var(--sf)}
+
+/* ---------- Long text folds ---------- */
+body.rv .rv-folded{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body.rv .stage[data-view="mobile"] #nowcard{order:3}
+body.rv.rv-m #gaMpLive{bottom:calc(78px + env(safe-area-inset-bottom,0px))!important}
+body.rv .rv-more{display:inline-block;min-height:0!important;height:auto!important;margin:2px 0 8px;padding:2px 0!important;box-shadow:none!important;background:none;border:0;color:var(--accent);font:600 13px/1.4 var(--sf);cursor:pointer}
+body.rv .rv-more:hover{text-decoration:underline}
+body.rv .legend{color:var(--muted);line-height:1.55}
+body.rv details.howto{border-radius:var(--rv-r);background:var(--fill2)}
+
+/* ---------- Tools open as a drawer on the right (desktop) ---------- */
+body.rv .scrim{background:rgba(13,16,32,.38)}
+/* Tools fill the workspace beside the sidebar (desktop), replacing the page underneath. */
+body.rv .stage[data-view="desktop"] .sheet,body.rv .stage[data-view="desktop"] .sheet.wide{
+  top:0;bottom:0;left:var(--rv-side);right:0;width:auto;max-height:none;border-radius:0;transform:none;margin:0;
+  border:0;box-shadow:none;background:var(--bg);padding:0 var(--rv-pad) 48px;animation:rvDrawer .22s ease-out}
+body.rv .stage[data-view="desktop"] #chartPop{left:calc(var(--rv-side) + 8%);box-shadow:-30px 0 80px rgba(13,16,32,.22);border-left:1px solid var(--line-strong);background:var(--sheet-bg,var(--surface))}
+body.rv .stage[data-view="desktop"] .scrim{display:none}
+@keyframes rvDrawer{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+body.rv .stage[data-view="desktop"] .sh-head{margin:0 calc(-1 * var(--rv-pad)) 8px;padding:24px var(--rv-pad) 16px;border-bottom:1px solid var(--line);background:var(--bg)}
+body.rv .sh-head h2{font:600 22px/1.2 var(--sf);letter-spacing:-.015em}
+body.rv .sh-head .tt{font:500 14px/1.5 var(--tamil);color:var(--muted)}
+body.rv .xbtn{background:var(--fill2);color:var(--ink2)}
+body.rv .xbtn:hover{background:var(--fill)}
+
+/* ---------- Phone ---------- */
+body.rv .stage[data-view="mobile"] .navbar{background:var(--glass);border-bottom:1px solid var(--line)}
+body.rv .stage[data-view="mobile"] .navbar .nt{font:600 16px var(--sf)}
+body.rv .stage[data-view="mobile"] .jumpbar{display:none!important}
+body.rv .stage[data-view="mobile"] .brand h1{font:600 30px/1.1 var(--sf);letter-spacing:-.02em}
+body.rv .stage[data-view="mobile"] .scroller{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+body.rv .stage[data-view="mobile"] .side .rv-settings{border-top:0;padding-top:0;margin:-4px 0 14px}
+
+body.rv .rv-tabs{display:none}
+body.rv .stage[data-view="mobile"] .rv-tabs{position:fixed;left:0;right:0;bottom:0;z-index:45;display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));background:var(--glass);border-top:1px solid var(--line);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%)}
+body.rv .stage[data-view="mobile"].sheet-open .rv-tabs{display:none}
+body.rv .rv-tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:48px;padding:4px 0;background:none;border:0;border-radius:10px;color:var(--muted);font:500 11.5px/1 var(--sf)}
+body.rv .rv-tabs svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body.rv .rv-tabs button[aria-pressed="true"]{color:var(--accent)}
+body.rv .rv-tabs button[aria-pressed="true"] svg{stroke-width:2.1}
+
+/* Phone: all tools live in a bottom sheet opened from the Tools tab. */
+body.rv .rv-tools-head{display:none}
+body.rv .rv-tools-scrim{display:none}
+body.rv .stage[data-view="mobile"] nav.tools{position:fixed;left:0;right:0;bottom:0;z-index:44;max-height:82%;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--sheet-bg);border-radius:20px 20px 0 0;padding:0 16px calc(90px + env(safe-area-inset-bottom,0px));
+  transform:translateY(105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s .32s;box-shadow:0 -20px 60px rgba(13,16,32,.25);margin:0}
+body.rv .stage[data-view="mobile"].rv-tools-open nav.tools{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+body.rv .stage[data-view="mobile"] .rv-tools-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;margin:0 -16px 10px;padding:16px 16px 10px;background:var(--sheet-bg)}
+body.rv .stage[data-view="mobile"] .rv-tools-head h2{margin:0;font:600 20px/1.2 var(--sf)}
+body.rv .rv-x{width:34px;height:34px;min-height:0;padding:0;border-radius:50%;display:grid;place-items:center;background:var(--fill2);border:0;color:var(--ink2)}
+body.rv .rv-x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+body.rv .stage[data-view="mobile"] .rv-tools-scrim{display:block;position:fixed;inset:0;z-index:43;background:rgba(13,16,32,.38);opacity:0;pointer-events:none;transition:opacity .25s}
+body.rv .stage[data-view="mobile"].rv-tools-open .rv-tools-scrim{opacity:1;pointer-events:auto}
+body.rv .stage[data-view="mobile"] .rv-groups .rv-gl{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+body.rv .stage[data-view="mobile"] .rv-groups .tool{background:var(--surface)!important;box-shadow:0 0 0 1px var(--line)!important;padding:10px!important;align-items:flex-start!important}
+body.rv .stage[data-view="mobile"] .rv-groups .tool.rv-on{background:var(--tint)!important}
+body.rv .stage[data-view="mobile"] .rv-kbd{display:none}
+@media (max-width:360px){body.rv .stage[data-view="mobile"] .rv-groups .rv-gl{grid-template-columns:1fr}}
+
+/* Phone sheets fill the screen below the status bar. */
+body.rv .stage[data-view="mobile"] .sheet{left:0;right:0;bottom:0;top:calc(var(--sat) + 8px);border-radius:20px 20px 0 0}
+
+/* ---------- First-run disclaimer ---------- */
+body.rv .gadisc .gc{background:var(--surface);color:var(--ink);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line),0 30px 80px rgba(13,16,32,.3)}
+body.rv .gadisc .gc h2{font:600 20px/1.25 var(--sf)}
+body.rv .gadisc .gt,body.rv .gadisc .gta{color:var(--muted);border-color:var(--line)}
+body.rv #gaDiscOk{background:var(--accent-fill);color:var(--accent-ink);border-radius:var(--rv-r-sm);font:600 15px var(--sf)}
+
+@media (prefers-reduced-motion:reduce){body.rv .rv-pulse{animation:none}}
+@media print{body.rv .rv-tabs,body.rv .rv-tools-scrim,body.rv .rv-more{display:none!important}body.rv .rv-folded{display:block;-webkit-line-clamp:unset}}
+
+/* =====================================================================
+   Part 2: shared parts inside every tool (forms, place, actions, results)
+   ===================================================================== */
+
+/* ---------- Form groups become cards of stacked fields ---------- */
+body.rv .sheet .group,body.rv #mainForm .group{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px 16px;
+  background:var(--surface);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line);padding:16px;overflow:visible}
+body.rv .stage[data-view="desktop"] .sheet .group:not(:has(.search)){grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+body.rv #mainForm .group{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));padding:14px;gap:12px}
+body.rv .sheet .group>.cell,body.rv #mainForm .group>.cell,
+body.rv .stage[data-view="desktop"] .sheet .group:not(:has(.search))>.cell,
+body.rv .stage[data-view="desktop"] .sheet .group:not(:has(.search))>.cell:nth-child(odd){
+  display:flex;flex-direction:column;align-items:stretch;gap:6px;min-height:0;padding:0;box-shadow:none;background:none}
+body.rv .sheet .group>.cell::before,body.rv #mainForm .group>.cell::before{display:none}
+body.rv .stage[data-view="desktop"] .sheet .group:not(:has(.search))>.cell:last-child:nth-child(odd){grid-column:auto}
+body.rv .group>.cell .cl{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 6px;font:500 13px/1.35 var(--sf);color:var(--ink2)}
+body.rv .group>.cell .cl small{display:inline;font:400 12px/1.35 var(--sf);color:var(--muted2)}
+body.rv .group>.cell .cl b{font-weight:500}
+body.rv .group>.cell>input:not([type=checkbox]):not([type=radio]),body.rv .group>.cell>select,
+body.rv .group>.cell .msel select,body.rv .group>.cell>textarea,body.rv .group>.cell>span>input,body.rv .group>.cell>div>input:not([type=checkbox]){
+  width:100%;min-height:40px;height:auto;padding:8px 12px;border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);
+  background-color:var(--bg);color:var(--ink);font:400 15px/1.3 var(--sf);text-align:left;-webkit-appearance:none;appearance:none;box-shadow:none}
+body.rv .group>.cell>select,body.rv .group>.cell .msel select{padding-right:30px;background-position:right 11px center}
+body.rv .group>.cell>input:focus,body.rv .group>.cell>select:focus,body.rv .group>.cell .msel select:focus,body.rv .group>.cell>textarea:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint);color:var(--ink)}
+body.rv .group>.cell input[type=date]::-webkit-date-and-time-value{text-align:left}
+body.rv .group>.cell .msel{display:grid;grid-template-columns:.8fr 1.4fr 1fr;gap:6px;justify-content:stretch}
+body.rv .group>.cell .msel select{width:100%}
+/* switches and checkboxes stay on one line with their label */
+body.rv .group>.cell:has(>input[type=checkbox]){flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+body.rv .group>.cell:has(>input[type=checkbox])>span:empty{display:none}
+/* the place search spans the card */
+body.rv .group>.cell.search{grid-column:1/-1;padding:0}
+body.rv .group>.cell.search input{padding-left:36px!important;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%237D8099' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='8.5' cy='8.5' r='5.5'/%3E%3Cpath d='m13 13 4 4'/%3E%3C/svg%3E") no-repeat 11px center/16px}
+body.rv .sheet .group+.group,body.rv .sheet details+.group,body.rv .sheet .group+details{margin-top:12px}
+
+/* ---------- Place picker folds into one summary line ---------- */
+body.rv details.rv-place{margin-top:12px;border-radius:var(--rv-r-lg);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv details.rv-place>summary{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;list-style:none}
+body.rv details.rv-place>summary::-webkit-details-marker{display:none}
+body.rv .rv-pin{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--tint);color:var(--accent)}
+body.rv .rv-pin svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.rv .rv-place-t{flex:1;min-width:0;display:flex;flex-direction:column}
+body.rv .rv-place-t b{font:600 15px/1.3 var(--sf);color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.rv .rv-place-t span{font:400 12.5px/1.4 var(--sf);color:var(--muted);font-variant-numeric:tabular-nums}
+body.rv .rv-place-c{flex:none;font:600 13.5px var(--sf);color:var(--accent);padding:6px 10px;border-radius:8px;background:var(--fill)}
+body.rv details.rv-place[open]>summary .rv-place-c{background:transparent}
+body.rv details.rv-place>.group{margin:0;box-shadow:none;border-top:1px solid var(--line);border-radius:0;background:transparent}
+body.rv details.rv-place>.group:last-child{border-radius:0 0 var(--rv-r-lg) var(--rv-r-lg)}
+
+/* ---------- Tool header and "How it works" ---------- */
+body.rv .sh-head{align-items:center}
+body.rv .sh-head>div{display:flex;flex-direction:column}
+body.rv .rv-shic{display:none}
+body.rv .sh-head .rv-shic{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--accent-fill);flex:none;margin-right:12px}
+body.rv .sh-head .rv-shic svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.rv .sh-head{justify-content:flex-start}
+body.rv .sh-head .xbtn{margin-left:auto}
+body.rv details.howto{background:transparent;box-shadow:none;border:1px dashed var(--line-strong);border-radius:var(--rv-r);padding:0 14px;margin-top:6px}
+body.rv details.howto summary{min-height:42px;font:600 14px var(--sf);color:var(--ink2)}
+body.rv details.howto summary::before{content:"i";display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;font:700 11px/1 Georgia,serif;font-style:italic;flex:none}
+body.rv details.howto summary .tt{color:var(--muted);font:500 12.5px var(--tamil)}
+body.rv details.howto[open]{background:var(--surface);border-style:solid;border-color:var(--line)}
+
+/* ---------- Actions: the main button stays in reach ---------- */
+body.rv .sheet>.btns:has(>.primary){position:sticky;bottom:-40px;z-index:4;margin:16px -32px -40px;padding:14px 32px 18px;
+  background:color-mix(in srgb,var(--sheet-bg) 92%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+body.rv .stage[data-view="mobile"] .sheet>.btns:has(>.primary){margin:16px -18px -28px;padding:12px 18px calc(14px + env(safe-area-inset-bottom,0px));bottom:-28px}
+body.rv .sheet>.btns:has(>.primary)+*{margin-top:40px}
+body.rv .btns{gap:8px}
+body.rv .btns button{min-height:42px;border-radius:var(--rv-r-sm);font:600 14.5px var(--sf);background:var(--fill);color:var(--accent)}
+body.rv .btns button.primary{min-height:46px;font-size:15.5px;border-radius:var(--rv-r);background:var(--accent-fill);color:var(--accent-ink)}
+body.rv .btns button .tm{font-weight:500;opacity:.85}
+body.rv .msg:empty{display:none}
+body.rv .msg.err,body.rv .err{color:var(--bad)}
+
+/* ---------- Results: context, verdicts, sections ---------- */
+body.rv .lf-time{background:var(--fill2);border-radius:var(--rv-r);padding:12px 14px;color:var(--ink2);font-size:13.5px;line-height:1.6}
+body.rv .lf-time b{color:var(--ink);font-weight:600}
+body.rv .lf-verdict{position:relative;background:var(--surface);box-shadow:0 0 0 1px var(--line);border-radius:var(--rv-r-lg);padding:16px 18px 16px 22px;overflow:hidden}
+body.rv .lf-verdict::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent-fill)}
+body.rv .lf-verdict.good::before,body.rv .lf-verdict.yes::before{background:var(--green)}
+body.rv .lf-verdict.mixed::before{background:var(--rv-turmeric)}
+body.rv .lf-verdict.hard::before,body.rv .lf-verdict.bad::before,body.rv .lf-verdict.no::before{background:var(--bad)}
+body.rv .lf-verdict b{font:600 20px/1.3 var(--sf);letter-spacing:-.01em}
+body.rv .lf-verdict .ta{color:var(--muted)!important;font-weight:500}
+body.rv .lf-sec{margin-top:22px}
+body.rv .lf-sec h3{font:600 15.5px/1.35 var(--sf);margin:0 0 8px;color:var(--ink)}
+body.rv .lf-sec h3 .ta{color:var(--muted);font-weight:500}
+body.rv .lf-item{border-top:1px solid var(--line);font-size:14.5px}
+body.rv .lf-item .ta{color:var(--muted)}
+body.rv .lf-item.good::before{color:var(--green)}
+body.rv .lf-item.badc::before{color:var(--bad)}
+body.rv .lf-note{color:var(--muted)}
+
+/* ---------- Tags ---------- */
+body.rv .pill{font:600 11.5px/1.35 var(--sf);background:var(--fill);color:var(--accent);border-radius:999px;padding:3px 9px;letter-spacing:0}
+body.rv .pill.gain{background:rgba(227,155,11,.17);color:#7A4E00}
+body.rv .pill.nt{background:var(--fill2);color:var(--ink2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.rv .pill.gain{color:#F2B53A}}
+:root[data-theme="dark"] body.rv .pill.gain{color:#F2B53A}
+body.rv .pill .tm{font-weight:500}
+
+/* ---------- Timing rows (Lagna, 3 11, Fortuna, Cricket, Electional and more) ---------- */
+body.rv #list,body.rv #gmpList,body.rv #anaList,body.rv #rulList,body.rv .sheet ul.list,body.rv .sheet ul.ckl{
+  list-style:none;margin:8px 0 0;padding:0;background:var(--surface);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line);overflow:hidden}
+body.rv li.row:not(.m3c){display:grid;grid-template-columns:104px minmax(0,1fr) 36px;gap:3px 16px;padding:13px 12px 13px 22px;align-items:start}
+body.rv li.row+li.row{box-shadow:inset 0 1px 0 var(--line)}
+body.rv li.row::before{left:9px;top:15px;bottom:15px;width:3px;background:hsl(var(--h) 42% var(--l));opacity:.8}
+body.rv li.row.now{background:var(--now-bg)}
+body.rv li.row.now::before{background:var(--rv-turmeric);opacity:1;width:4px}
+body.rv li.row:not(.m3c)>.rdate{grid-column:1/3;justify-self:start;margin-bottom:4px}
+body.rv li.row.rv-same>.rdate{display:none}
+body.rv li.row:not(.m3c)>.t,body.rv li.row:not(.m3c)>.t2{grid-column:1;grid-row:span 2;display:flex;flex-direction:column;gap:1px}
+body.rv li.row:not(.m3c)>.l{grid-column:2;display:flex;flex-direction:column;gap:2px}
+body.rv li.row:not(.m3c)>.p{grid-column:2;display:flex;flex-wrap:wrap;gap:2px 14px;font:400 12.5px/1.45 var(--sf);color:var(--muted);margin-top:2px}
+body.rv li.row:not(.m3c)>.rbell{position:static;grid-column:3;grid-row:1/span 2;align-self:start;width:34px;height:34px}
+body.rv li.row:not(.m3c)>.whybtn,body.rv li.row:not(.m3c)>.chk,body.rv li.row:not(.m3c)>.stl,body.rv li.row:not(.m3c)>.mmcu{grid-column:2/-1}
+body.rv .row .t b{font:600 16px/1.3 var(--sf);font-variant-numeric:tabular-nums;color:var(--ink)}
+body.rv .row .t span{font:400 12.5px/1.3 var(--sf);color:var(--muted);font-variant-numeric:tabular-nums}
+body.rv .row.now .t b{color:var(--now)}
+body.rv .row .t2 div{display:flex;justify-content:flex-start;align-items:baseline;gap:8px;line-height:1.45}
+body.rv .row .t2 span{width:34px;font:500 11.5px var(--sf);color:var(--muted)}
+body.rv .row .t2 b{font:600 15px var(--sf);font-variant-numeric:tabular-nums}
+body.rv .row .l .n{font:600 15.5px/1.3 var(--sf);color:var(--ink)}
+body.rv .row .l .ta{font:500 13px/1.45 var(--tamil);color:var(--ink2)}
+body.rv .row .l .c{font:400 12.5px/1.45 var(--sf);color:var(--muted)}
+body.rv .row .l .pl{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0 2px}
+body.rv .row .l .pl .pill,body.rv .row .l>.pill{margin:0}
+body.rv .row .l>.pill{align-self:flex-start;margin-top:4px}
+body.rv .rdate{font:500 12px var(--sf);border-radius:999px}
+body.rv .rbell{background:var(--fill2);color:var(--ink2)}
+body.rv .rbell.done{background:var(--accent-fill);color:#fff}
+body.rv .rbell.past{opacity:.3}
+body.rv .whybtn{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:3px 10px 3px 8px;margin-top:6px;border-radius:999px;background:var(--fill2);color:var(--ink2);font:600 12.5px var(--sf)}
+body.rv .whybtn[aria-expanded="true"]{background:var(--tint);color:var(--accent)}
+body.rv .row .chk{font-size:13px;line-height:1.6;color:var(--ink2);background:var(--fill2);border-radius:var(--rv-r-sm);padding:10px 12px;margin-top:6px}
+body.rv .row.bad .chk{color:var(--bad)}
+body.rv .stl{margin:6px 0 0}
+body.rv .stl span{border-left:2px solid var(--rv-turmeric);background:transparent;padding:1px 10px;margin:3px 0;color:var(--ink2);font:400 12.5px/1.5 var(--sf)}
+body.rv .stl b{font-weight:600;color:var(--ink)}
+body.rv #list,body.rv #gmpList,body.rv #anaList,body.rv #rulList,body.rv .sheet ul.list,body.rv .sheet ul.ckl{container:rvlist/inline-size}
+/* Narrow lists: times on one line on top, lords get the full width */
+@container rvlist (max-width:520px){
+  body.rv li.row:not(.m3c){grid-template-columns:minmax(0,1fr) 34px;gap:4px 10px;padding:12px 10px 12px 20px}
+  body.rv li.row:not(.m3c)>.rdate{grid-column:1}
+  body.rv li.row:not(.m3c)>.t,body.rv li.row:not(.m3c)>.t2{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+  body.rv li.row:not(.m3c)>.rbell{grid-column:2;grid-row:1}
+  body.rv li.row:not(.m3c)>.l,body.rv li.row:not(.m3c)>.p,body.rv li.row:not(.m3c)>.whybtn,body.rv li.row:not(.m3c)>.chk,body.rv li.row:not(.m3c)>.stl,body.rv li.row:not(.m3c)>.mmcu{grid-column:1/-1}
+  body.rv .row .t2 div{gap:6px}
+  body.rv .row .t2 span{width:auto}
+  body.rv .row .l .n{font-size:15px}
+}
+
+/* compact rows used by 3 11, Trade Profit and Market Transit tables */
+body.rv li.row.m3c{box-shadow:inset 0 1px 0 var(--line)}
+
+/* ---------- Timings: count bar and mode tabs ---------- */
+body.rv #results .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 0}
+body.rv #results .cnt{font:600 15px/1.35 var(--sf);color:var(--ink)}
+body.rv #results .bar select{height:38px;border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);background-color:var(--surface);color:var(--ink);padding:0 30px 0 12px;font:500 14px var(--sf)}
+body.rv .seg button{min-height:52px;padding:8px 10px;text-align:left;line-height:1.3}
+body.rv .gmnote{font-size:13.5px;line-height:1.6;color:var(--muted)}
+body.rv .opt{border-radius:var(--rv-r);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv .cond{border-radius:var(--rv-r-lg);background:var(--surface);box-shadow:0 0 0 1px var(--line);padding:16px 18px}
+body.rv .cond h3{font:600 15.5px var(--sf)}
+body.rv .cond li{color:var(--ink2);line-height:1.6;margin:6px 0}
+body.rv .cond li .ta{color:var(--muted)}
+body.rv #mainForm .fsum{background:var(--surface);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line)}
+body.rv #mainForm .fsum b{font:600 17px var(--sf)}
+body.rv #mainForm .fsum span{color:var(--muted)}
+body.rv .lf-time:empty{display:none}
+
+/* ---------- Tables ---------- */
+body.rv .tscroll{border-radius:var(--rv-r);box-shadow:0 0 0 1px var(--line);background:var(--surface);overflow:auto}
+body.rv table.ctab,body.rv .sheet table{border-collapse:collapse;width:100%;font:400 13.5px/1.45 var(--sf);font-variant-numeric:tabular-nums}
+body.rv table.ctab th,body.rv .sheet table th{position:sticky;top:0;background:var(--thead);color:var(--muted);font:600 12px/1.3 var(--sf);text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-strong)}
+body.rv table.ctab td,body.rv .sheet table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+body.rv table.ctab tr:last-child td{border-bottom:0}
+
+/* ---------- Transit chart toolbar ---------- */
+body.rv .chead{display:flex;flex-direction:column;gap:12px}
+body.rv .ch-b{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+body.rv .ch-b>button{min-height:36px;padding:0 14px;font:600 13.5px var(--sf)}
+body.rv .ch-b .livetog{display:inline-flex;align-items:center;gap:10px;min-height:36px;padding:0 6px 0 12px;border-radius:var(--rv-r-sm);background:var(--fill2);box-shadow:none;margin:0;width:auto}
+body.rv .ch-b .livetog span{display:flex;flex-direction:column;font:600 13px/1.15 var(--sf);color:var(--ink2)}
+body.rv .ch-b .livetog small{font:500 11px var(--tamil);color:var(--muted)}
+body.rv .ch-b .livetog select{height:30px;border:0;background-color:transparent;color:var(--ink);font:500 13.5px var(--sf);padding:0 26px 0 4px}
+body.rv .ch-b .livetog input[type=checkbox]{transform:scale(.85);transform-origin:right center}
+body.rv #chartTime{color:var(--muted)}
+
+/* ---------- Birth chart actions ---------- */
+body.rv .btns.bpact{position:static;margin:14px 0;padding:0;background:none;border:0}
+body.rv .btns.bpact button{flex:0 1 auto;min-height:38px;font-size:13.5px!important}
+body.rv #mainForm.collapsed>.group,body.rv #mainForm.collapsed>.btns{display:none}
+
+body.rv .group>.cell select,body.rv .group>.cell input{text-align:left;text-align-last:left;direction:ltr}
+body.rv .group>.cell input::-webkit-datetime-edit{padding:0}
+body.rv .group>.cell input::-webkit-date-and-time-value{text-align:left}
+body.rv .group>.cell:has(.msel){grid-column:span 2}
+body.rv .group>.cell .msel{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+@media (max-width:520px){body.rv .group>.cell:has(.msel){grid-column:1/-1}}
+body.rv .group>.cell .msel select{padding:8px 22px 8px 9px;background-position:right 7px center}
+body.rv .group>.cell:has(.msel>select:nth-child(4)){grid-column:span 3}
+@media (max-width:760px){body.rv .group>.cell:has(.msel){grid-column:1/-1}}
+body.rv .stage[data-view="mobile"] .sheet .group,body.rv .stage[data-view="mobile"] #mainForm .group{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:14px}
+
+/* ---------- Settings popup ---------- */
+body.rv .rv-setbtn{display:flex;align-items:center;gap:8px;width:100%;min-height:0;padding:8px;border:0;border-radius:var(--rv-r-sm);background:none;color:var(--ink2);font:500 14px var(--sf);cursor:pointer;justify-content:flex-start;box-shadow:none}
+body.rv .rv-setbtn:hover{background:var(--fill2)}
+body.rv .rv-setbtn svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linecap:round}
+body.rv .stage[data-view="mobile"] .rv-setbtn{width:auto;padding:6px 10px 6px 6px;margin:-4px 0 14px}
+
+body.rv dialog.rv-dialog{width:min(460px,calc(100% - 32px));max-height:min(660px,calc(100% - 48px));padding:0;border:0;border-radius:18px;
+  background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line),0 30px 90px rgba(13,16,32,.35);overflow:hidden}
+body.rv dialog.rv-dialog[open]{display:flex;flex-direction:column;animation:rvDlg .22s cubic-bezier(.2,.8,.2,1)}
+body.rv dialog.rv-dialog::backdrop{background:rgba(13,16,32,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+@keyframes rvDlg{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+body.rv .rv-dlg-head{display:flex;align-items:center;gap:12px;padding:18px 18px 14px 20px;border-bottom:1px solid var(--line)}
+body.rv .rv-dlg-ic{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:var(--accent-fill);flex:none}
+body.rv .rv-dlg-ic svg{width:19px;height:19px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round}
+body.rv .rv-dlg-head h2{flex:1;margin:0;font:600 19px/1.25 var(--sf)}
+body.rv .rv-dlg-head h2 .tm{display:block;font:500 12.5px/1.4 var(--tamil);color:var(--muted)}
+body.rv .rv-dlg-body{overflow-y:auto;padding:6px 20px 8px}
+body.rv .rv-set-sec{padding:14px 0}
+body.rv .rv-set-sec+.rv-set-sec{border-top:1px solid var(--line)}
+body.rv .rv-set-sec h3{margin:0 0 10px;font:600 13px/1.3 var(--sf);color:var(--muted)}
+body.rv .rv-set-rows .langrow{display:flex;flex-direction:column;align-items:stretch;gap:5px;margin:0 0 12px}
+body.rv .rv-set-rows .langrow:last-child{margin-bottom:0}
+body.rv .rv-set-rows .langrow label{font:500 13.5px var(--sf);color:var(--ink2)}
+body.rv .rv-set-rows select{width:100%;height:40px;border-radius:var(--rv-r-sm);border:1px solid var(--line-strong);background-color:var(--bg);color:var(--ink);padding:0 30px 0 12px;font:400 15px var(--sf);flex:none!important}
+body.rv .rv-set-rows select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+body.rv .rv-seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;border-radius:var(--rv-r);background:var(--fill2)}
+body.rv .rv-seg3 button{min-height:38px;padding:0 8px;border:0;border-radius:var(--rv-r-sm);background:transparent;color:var(--ink2);font:600 13.5px var(--sf);cursor:pointer;box-shadow:none}
+body.rv .rv-seg3 button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(13,16,32,.08)}
+body.rv .rv-dlg-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px 16px;border-top:1px solid var(--line)}
+body.rv .rv-dlg-ver{font:400 12.5px var(--sf);color:var(--muted)}
+body.rv .rv-done{min-height:40px;padding:0 22px;border:0;border-radius:var(--rv-r-sm);background:var(--accent-fill);color:var(--accent-ink);font:600 14.5px var(--sf);cursor:pointer}
+/* Phone: the popup rises from the bottom */
+@media (max-width:600px){
+  body.rv dialog.rv-dialog{width:100%;max-width:100%;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:85vh}
+  body.rv dialog.rv-dialog[open]{animation:rvDlgUp .28s cubic-bezier(.2,.8,.2,1)}
+  body.rv .rv-dlg-foot{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+}
+@keyframes rvDlgUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+body.rv .rv-seg3 button[aria-pressed="true"]{background:var(--accent-fill);color:var(--accent-ink);box-shadow:none}
+
+/* =====================================================================
+   Part 3: added features
+   ===================================================================== */
+/* lightest text darkened to pass contrast on white (about 5:1) */
+:root:not([data-theme="dark"]){--muted2:#696D88}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--muted2:#8A8EAD}}
+:root[data-theme="dark"]{--muted2:#8A8EAD}
+
+/* Toast */
+body.rv .rv-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:100000;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  max-width:min(520px,calc(100% - 32px));padding:11px 16px;border-radius:12px;background:var(--rv-ink);color:#fff;font:500 14px/1.45 var(--sf);box-shadow:0 12px 40px rgba(13,16,32,.3);transition:opacity .2s,transform .2s}
+body.rv .rv-toast.on{opacity:1;transform:translate(-50%,0)}
+body.rv.rv-m .rv-toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+:root[data-theme="dark"] body.rv .rv-toast{background:#ECEEFA;color:#1A1D3A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.rv .rv-toast{background:#ECEEFA;color:#1A1D3A}}
+
+/* Copying / printing: hide controls inside results */
+body.rv-copying .whybtn,body.rv-copying .rbell,body.rv-copying .rv-more,body.rv-copying li.row button{display:none!important}
+#rvPrintRoot{font:400 11pt/1.5 "IBM Plex Sans","Mukta Malar",sans-serif;color:#111}
+#rvPrintRoot h1{font:600 18pt/1.2 "IBM Plex Sans",sans-serif;margin:0 0 4px}
+#rvPrintRoot .rv-print-meta{color:#555;margin:0 0 14px}
+#rvPrintRoot li.row{break-inside:avoid}
+#rvPrintRoot ul{list-style:none;padding:0}
+
+/* Result action bar */
+body.rv .rv-actions{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 6px}
+body.rv .rv-actions.hide,body.rv .rv-actions .hide{display:none}
+body.rv .rv-actions button,body.rv .rv-chip{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 12px 0 10px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink2);font:600 13px var(--sf);cursor:pointer;box-shadow:none}
+body.rv .rv-actions button:hover,body.rv .rv-chip:hover{border-color:var(--accent);color:var(--accent)}
+body.rv .rv-actions svg,body.rv .rv-chip svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+body.rv .rv-actions-main{margin-top:10px}
+body.rv .rv-actions-main [data-a="now"]{display:none}
+
+/* Timings list chips */
+body.rv .rv-listtools{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 0}
+body.rv .rv-chip[aria-pressed="true"]{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--accent-ink)}
+body.rv .rv-shown{font:500 12.5px var(--sf);color:var(--muted)}
+body.rv #results.rv-tagged #list>li.row:not(:has(.pill)){display:none}
+body.rv li.row.rv-flash{animation:rvFlash 1.6s ease-out}
+@keyframes rvFlash{0%,30%{background:color-mix(in srgb,var(--rv-turmeric) 30%,transparent)}100%{background:transparent}}
+
+/* Keyboard focus on rows */
+body.rv li.row[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:8px}
+
+/* Saved people (Fortuna) and Birth Chart's saved list */
+body.rv .rv-people{display:flex;flex-direction:column;gap:6px;margin:12px 0 0;padding:14px 16px;border-radius:var(--rv-r-lg);background:var(--tint)}
+body.rv .rv-people label{font:600 13px var(--sf);color:var(--accent)}
+body.rv .rv-people select{min-height:40px;border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);background-color:var(--surface);color:var(--ink);padding:0 30px 0 12px;font:400 15px var(--sf)}
+body.rv #bpSaved:not(:empty){margin:12px 0 0;padding:12px 14px;border-radius:var(--rv-r-lg);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv #bpSaved .legend{margin:0 0 6px;font:600 13px var(--sf);color:var(--ink2);-webkit-line-clamp:unset;display:block}
+body.rv #bpSaved .bpsv{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+body.rv #bpSaved .bpsv span{flex:1;min-width:0;font:400 13.5px/1.4 var(--sf);color:var(--ink)}
+body.rv #bpSaved .bpsv button{min-height:30px;padding:0 12px;border-radius:999px;font:600 12.5px var(--sf);background:var(--fill);color:var(--accent);border:0}
+body.rv #bpSaved .bpsv button+button{background:transparent;color:var(--bad)}
+
+/* Question log */
+body.rv details.rv-log{margin:20px 0 0;border-radius:var(--rv-r-lg);background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+body.rv details.rv-log>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer;list-style:none}
+body.rv details.rv-log>summary::-webkit-details-marker{display:none}
+body.rv .rv-log-t{font:600 15px var(--sf);color:var(--ink)}
+body.rv .rv-log-n{font:500 13px var(--sf);color:var(--muted)}
+body.rv .rv-log-b{padding:0 16px 14px}
+body.rv .rv-log-empty{margin:0;color:var(--muted);font-size:13.5px;line-height:1.55}
+body.rv .rv-log-b ul{list-style:none;margin:0;padding:0}
+body.rv .rv-log-b li{padding:12px 0;border-top:1px solid var(--line)}
+body.rv .rv-log-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px}
+body.rv .rv-log-h b{font:600 14px/1.4 var(--sf)}
+body.rv .rv-lean{font:600 12px/1.3 var(--sf);padding:3px 9px;border-radius:999px;background:var(--fill2);color:var(--ink2)}
+body.rv .rv-lean-yes{background:var(--greenlo);color:var(--green)}
+body.rv .rv-lean-no{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
+body.rv .rv-lean-mixed{background:var(--now-bg);color:var(--now)}
+body.rv .rv-log-m{font:400 12.5px var(--sf);color:var(--muted);margin-top:3px}
+body.rv .rv-log-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+body.rv .rv-log-a label{display:flex;align-items:center;gap:6px;font:500 12.5px var(--sf);color:var(--ink2)}
+body.rv .rv-log-a select,body.rv .rv-log-a input{min-height:32px;border:1px solid var(--line-strong);border-radius:8px;background-color:var(--bg);color:var(--ink);padding:0 10px;font:400 13.5px var(--sf)}
+body.rv .rv-log-a select{padding-right:26px}
+body.rv .rv-log-a input{flex:1;min-width:120px}
+body.rv .rv-log-a button{min-height:32px;padding:0 10px;border:0;background:none;color:var(--bad);font:600 12.5px var(--sf);cursor:pointer}
+
+/* Horary verdict matches the other verdict cards */
+body.rv .hqv{position:relative;background:var(--surface);box-shadow:0 0 0 1px var(--line);border-radius:var(--rv-r-lg);padding:16px 18px 16px 22px;overflow:hidden;border:0}
+body.rv .hqv::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--rv-turmeric)}
+body.rv .hqv.yes::before{background:var(--green)}
+body.rv .hqv.no::before{background:var(--bad)}
+body.rv .hqv .hqvq{font:500 13.5px/1.5 var(--sf);color:var(--muted)}
+body.rv .hqv .hqvt{font:600 20px/1.3 var(--sf);color:var(--ink);margin:4px 0 8px}
+body.rv .hqv .hqvm{display:flex;flex-wrap:wrap;gap:4px 14px;font:400 13px var(--sf);color:var(--muted)}
+
+/* Alarm note */
+body.rv .rv-anote{margin:10px 0 4px;padding:12px 14px;border-radius:var(--rv-r);background:var(--fill2);font:400 13.5px/1.55 var(--sf);color:var(--ink2)}
+body.rv .rv-anote p{margin:0}
+body.rv .rv-anote-b{margin-top:8px;font-size:13px;color:var(--muted)}
+body.rv .rv-anote-b button{min-height:34px;padding:0 14px;border-radius:999px;border:0;background:var(--accent-fill);color:var(--accent-ink);font:600 13px var(--sf);cursor:pointer}
+body.rv .rv-ok{color:var(--green);font-weight:600}
+
+/* First-run setup */
+body.rv .rv-setup-logo{width:40px;height:40px;border-radius:12px;object-fit:cover;flex:none}
+body.rv .rv-setup-lead{margin:12px 0 0;color:var(--ink2);font-size:14.5px;line-height:1.55}
+body.rv .rv-setup-place{display:flex;gap:8px}
+body.rv .rv-setup-place input{flex:1;min-width:0;height:42px;border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);background:var(--bg);color:var(--ink);padding:0 12px;font:400 15px var(--sf)}
+body.rv .rv-setup-place input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+body.rv .rv-setup-place button{flex:none;height:42px;padding:0 12px;border:0;border-radius:var(--rv-r-sm);background:var(--fill);color:var(--accent);font:600 13.5px var(--sf);cursor:pointer}
+body.rv .rv-setup-res{list-style:none;margin:6px 0 0;padding:0;border-radius:var(--rv-r-sm);overflow:hidden}
+body.rv .rv-setup-res:not(:empty){box-shadow:0 0 0 1px var(--line)}
+body.rv .rv-setup-res button{display:flex;flex-direction:column;align-items:flex-start;width:100%;padding:9px 12px;border:0;border-top:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 14px var(--sf);text-align:left;cursor:pointer}
+body.rv .rv-setup-res li:first-child button{border-top:0}
+body.rv .rv-setup-res button:hover{background:var(--fill2)}
+body.rv .rv-setup-res span{font:400 12.5px var(--sf);color:var(--muted)}
+body.rv .rv-setup-pick:not(:empty){margin:8px 0 0;font:600 13.5px var(--sf);color:var(--green)}
+body.rv .rv-skip{min-height:40px;padding:0 12px;border:0;background:none;color:var(--muted);font:600 14px var(--sf);cursor:pointer}
+body.rv .rv-dlg-foot .rv-skip{margin-right:auto}
+body.rv #rvSettings .rv-dlg-foot{flex-wrap:wrap}
+body.rv .rv-dst{margin:12px 0;padding:12px 14px 12px 16px;border-radius:var(--rv-r);background:var(--now-bg);border-left:4px solid var(--rv-turmeric);font:400 13.5px/1.6 var(--sf);color:var(--ink)}
+body.rv .rv-dst b{font-weight:600}
+
+/* ==========================================================================
+   Part 4: two-column desktop. Sidebar | one workspace showing a single page:
+   "Now" (rising now, transit chart, next timings), "Lagna Timings" (list and chart),
+   or a tool. Phones keep their own layout.
+   ========================================================================== */
+body.rv{--rv-pad:clamp(24px,2.6vw,40px)}
+body.rv .rv-next,body.rv .rv-nowbtn,body.rv .rv-sidebtn{display:none}
+body.rv .stage[data-view="desktop"] .rv-nowbtn{display:flex!important;margin:0 0 12px}
+body.rv .stage[data-view="desktop"] .side{position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto;align-self:start;grid-row:1/span 3}
+
+/* Lagna Timings page: the list alone, at a readable width. The transit chart lives on the Now page. */
+body.rv.rv-p-lagna .stage[data-view="desktop"] .app{grid-template-columns:var(--rv-side) minmax(0,1fr);grid-auto-rows:min-content;height:auto;min-height:100%}
+body.rv.rv-p-lagna .stage[data-view="desktop"] #nowcard,
+body.rv.rv-p-lagna .stage[data-view="desktop"] .col-b{display:none!important}
+body.rv.rv-p-lagna .stage[data-view="desktop"] .col{overflow:visible;height:auto;max-width:960px;width:100%}
+body.rv.rv-p-lagna .stage[data-view="desktop"] .col-a{border-right:0}
+
+/* Now page: rising now across the top, then the chart beside the next timings. */
+body.rv.rv-p-now .stage[data-view="desktop"] .app{height:auto;min-height:100%;align-content:start;
+  grid-template-columns:var(--rv-side) minmax(0,1fr) minmax(300px,380px);grid-template-rows:auto auto 1fr;column-gap:24px;padding-right:var(--rv-pad)}
+body.rv.rv-p-now .stage[data-view="desktop"] .col{display:contents}
+body.rv.rv-p-now .stage[data-view="desktop"] .col-a>*:not(#nowcard):not(#rvNext),
+body.rv.rv-p-now .stage[data-view="desktop"] .col-b>*:not(#chartPanel){display:none!important}
+body.rv.rv-p-now .stage[data-view="desktop"] #nowcard{grid-column:2/4;grid-row:1;margin:26px 0 20px}
+body.rv.rv-p-now .stage[data-view="desktop"] #chartPanel{grid-column:2;grid-row:2;margin:0 0 48px;min-width:0}
+body.rv.rv-p-now .stage[data-view="desktop"] .rv-next{display:block;grid-column:3;grid-row:2;align-self:start;position:sticky;top:20px}
+@media (max-width:1279px){
+  body.rv.rv-p-now .stage[data-view="desktop"] .app{grid-template-columns:var(--rv-side) minmax(0,1fr)}
+  body.rv.rv-p-now .stage[data-view="desktop"] #nowcard{grid-column:2;margin-bottom:16px}
+  body.rv.rv-p-now .stage[data-view="desktop"] .rv-next{grid-column:2;grid-row:2;position:static;margin:0 0 18px;max-width:900px}
+  body.rv.rv-p-now .stage[data-view="desktop"] #chartPanel{grid-column:2;grid-row:3;max-width:900px}
+}
+
+/* Next timings card */
+body.rv .rv-next{background:var(--surface);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line);padding:16px 10px 10px}
+body.rv .rv-next-head{padding:0 8px 8px}
+body.rv .rv-next-head h2{font:600 17px/1.3 var(--sf);margin:0}
+body.rv .rv-next-head h2 .tm{font:500 12.5px/1.3 var(--tamil);color:var(--muted);margin-left:4px}
+body.rv .rv-next-sub{display:block;font:400 13px/1.45 var(--sf);color:var(--muted);margin-top:2px}
+body.rv .rv-next-list{list-style:none;margin:0;padding:0}
+body.rv .rv-next-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;width:100%;text-align:left;padding:9px 8px;border:0;border-radius:var(--rv-r-sm);background:none;color:var(--ink);cursor:pointer;min-height:0}
+body.rv .rv-next-row:hover{background:var(--fill2)}
+body.rv .rv-next-row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+body.rv .rv-next-row b{display:block;font:600 14.5px/1.3 var(--sf);font-variant-numeric:tabular-nums}
+body.rv .rv-next-row small{display:block;font:400 12.5px/1.35 var(--sf);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.rv .rv-next-row.rv-cur{background:var(--now-bg)}
+body.rv .rv-next-row.rv-cur .rv-nt b,body.rv .rv-next-row.rv-cur .rv-nt small{color:var(--now)}
+body.rv .rv-next-all{display:block;width:100%;margin:6px 0 0;padding:10px 8px;border:0;border-top:1px solid var(--line);border-radius:0 0 var(--rv-r-sm) var(--rv-r-sm);background:none;color:var(--accent);font:600 14px var(--sf);text-align:left;cursor:pointer;min-height:0}
+body.rv .rv-next-all:hover{background:var(--fill2)}
+
+/* Sidebar can narrow to icons. */
+body.rv .stage[data-view="desktop"] .rv-sidebtn{display:grid;place-items:center;margin-left:auto;width:32px;height:32px;min-height:0;padding:0;border:0;border-radius:var(--rv-r-sm);background:none;color:var(--muted);cursor:pointer;flex:none}
+body.rv .rv-sidebtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
+body.rv .rv-sidebtn:hover{background:var(--fill2);color:var(--ink)}
+body.rv.rv-side-min{--rv-side:72px}
+body.rv.rv-side-min .stage[data-view="desktop"] .side{padding:18px 10px 22px}
+body.rv.rv-side-min .stage[data-view="desktop"] .brand{flex-direction:column;gap:12px;margin:0 0 14px}
+body.rv.rv-side-min .stage[data-view="desktop"] .brand h1{display:none!important}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-sidebtn{margin:0}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-search input{width:40px;margin:0 auto;padding:0;color:transparent;cursor:pointer}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-search input::placeholder{color:transparent}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-search{justify-content:center}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-search svg{left:50%;transform:translateX(-50%)}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-kbd,
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-gh,
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-groups .tool .tx,
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-setbtn span,
+body.rv.rv-side-min .stage[data-view="desktop"] .sidefoot{display:none!important}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-groups .tool{justify-content:center;padding:6px}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-group{border-top:1px solid var(--line);padding-top:8px;margin-bottom:8px}
+body.rv.rv-side-min .stage[data-view="desktop"] .rv-setbtn{justify-content:center}
+body.rv .stage[data-view="mobile"] .rv-groups .rv-nowbtn{display:none!important}
+
+/* Lagna Timings: the chart slides in from the right after a row is tapped. */
+body.rv .rv-peek-x{display:none}
+body.rv.rv-p-lagna.rv-peek .stage[data-view="desktop"] .col-b{display:block!important;position:fixed;top:0;right:0;bottom:0;z-index:30;
+  width:min(760px,58%);max-width:none;height:auto;overflow-y:auto;padding:20px var(--rv-pad) 40px;background:var(--bg);
+  border-left:1px solid var(--line-strong);box-shadow:-30px 0 80px rgba(13,16,32,.22);animation:rvPeek .24s cubic-bezier(.2,.8,.2,1)}
+body.rv.rv-p-lagna.rv-peek .stage[data-view="desktop"] .col-b>.empty{display:none}
+body.rv.rv-p-lagna.rv-peek .stage[data-view="desktop"] .rv-peek-x{display:grid;margin:0 0 8px auto}
+@keyframes rvPeek{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+
+/* Tamil mode: a paragraph shows its Tamil copy in place of the English text (see i18n.js). */
+body.rv[data-lang="ta"] .rv-ta-only{font-size:0!important}
+body.rv[data-lang="ta"] .rv-ta-only>*:not(.rv-ta-twin):not(input){display:none!important}
+body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-twin{display:inline!important;font-size:var(--rv-fs,14px)!important;line-height:1.55}
+/* the engine wraps some copies in an inner Tamil span that it hides in single-language modes */
+body.rv[data-lang="ta"] .rv-ta-twin .tm,body.rv[data-lang="ta"] .rv-ta-twin .tam60{display:inline!important}
+body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-keep{display:inline!important;font-size:var(--rv-fs,14px)!important;margin-right:6px}
+
+/* ==========================================================================
+   Part 5: forms and sizes in every tool (desktop workspace).
+   One centred content column per tool, a full-width header and button bar,
+   switches on one line with their label, and even option tiles.
+   ========================================================================== */
+body.rv{--rv-cw:1040px}
+body.rv .stage[data-view="desktop"] .sheet{
+  --rv-sx:max(var(--rv-pad),calc((100vw - var(--rv-side) - var(--rv-cw)) / 2));
+  padding:0 var(--rv-sx) 40px}
+body.rv .stage[data-view="desktop"] .sheet.wide{--rv-cw:1180px}
+body.rv .stage[data-view="desktop"] .sheet .sh-head{margin:0 calc(-1 * var(--rv-sx)) 12px;padding:22px var(--rv-sx) 16px}
+body.rv .stage[data-view="desktop"] .sheet>.btns:has(>.primary){margin:18px calc(-1 * var(--rv-sx)) -40px;padding:14px var(--rv-sx) 18px;bottom:-40px}
+
+/* Space between the blocks of a form */
+body.rv .stage[data-view="desktop"] .sheet>.group,body.rv .stage[data-view="desktop"] .sheet>details,
+body.rv .stage[data-view="desktop"] .sheet>.rv-people{margin-top:12px;margin-bottom:0}
+body.rv .stage[data-view="desktop"] .sheet>p.sub,body.rv .stage[data-view="desktop"] .sheet>.sub{margin:6px 0 10px;max-width:72ch}
+body.rv .sheet .group{gap:16px 18px}
+
+/* Switches and tick boxes: label and control on one line, across the card */
+body.rv .stage .sheet .group>label.cell:has(>input[type=checkbox]),
+body.rv .stage .sheet .group>.cell:has(>input[type=checkbox]),
+body.rv .stage #mainForm .group>.cell:has(>input[type=checkbox]),
+body.rv .stage #alarmPanel>label.cell:has(>input[type=checkbox]){
+  display:flex!important;flex-direction:row!important;align-items:center;justify-content:space-between;gap:16px;
+  grid-column:1/-1!important;padding:2px 0;min-height:40px}
+body.rv .stage .group>.cell:has(>input[type=checkbox])>.cl{flex:1 1 auto;min-width:0}
+body.rv .stage .group>.cell:has(>input[type=checkbox])>span:not(.cl):empty,
+body.rv .stage .group>.cell:has(>input[type=checkbox])>span[style*="flex:1"]{display:none}
+body.rv .stage .group>.cell:has(>input[type=checkbox])>input{flex:none;margin:0}
+/* a run of switches reads as one list */
+body.rv .stage .sheet .group>.cell:has(>input[type=checkbox])+.cell:has(>input[type=checkbox]){border-top:1px solid var(--line);padding-top:12px}
+
+/* Option tiles (Fortuna purposes, lottery places, astrocartography lines): even sizes */
+body.rv #ftPurp{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+body.rv #ftPurp .ftp{min-height:64px;align-items:flex-start;padding:12px 14px;border-radius:var(--rv-r);gap:12px}
+body.rv #ftPurp .ftp>span{font:500 14px/1.35 var(--sf)}
+body.rv #ftPurp .ftp small{display:block;margin-top:3px;font:400 12.5px/1.4 var(--sf);color:var(--muted)}
+body.rv .lwpl{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+body.rv .acopts{display:flex;flex-wrap:wrap;gap:6px 14px}
+
+/* Buttons: one height per kind */
+body.rv .sheet .btns button{min-height:44px}
+body.rv .sheet .btns button.primary{min-height:48px}
+body.rv .sheet .btns:has(>.primary){display:flex;flex-wrap:wrap}
+body.rv .sheet .btns:has(>.primary)>button{flex:1 1 180px}
+body.rv .sheet .btns:has(>.primary)>button.primary{flex:1 1 100%}
+
+/* Results keep to the same column; tables can scroll sideways instead of squeezing */
+body.rv .stage[data-view="desktop"] .sheet [id$="Out"]{max-width:100%}
+body.rv .sheet .tblwrap,body.rv .sheet [id$="Out"]>div:has(>table){overflow-x:auto}
+
+/* Fields keep their own height; in a row of fields the boxes line up at the bottom
+   even when one label carries a longer hint. */
+body.rv .group>.cell:not(:has(>input[type=checkbox]))>.cl{margin-bottom:auto}
+body.rv .group>.cell>input:not([type=checkbox]):not([type=radio]),body.rv .group>.cell>select,
+body.rv .group>.cell>.msel,body.rv .group>.cell>span:has(>input),body.rv .group>.cell>div:has(>input){flex:none!important}
+body.rv .group>.cell>input:not([type=checkbox]):not([type=radio]):not([type=range]),body.rv .group>.cell>select:not([multiple]):not([size]){height:40px;min-height:40px}
+body.rv .group>.cell>input#hqNum{width:100%!important;height:40px!important;min-height:40px!important;font:500 15px/1.3 var(--sf)!important;text-align:left!important;padding:8px 12px!important}
+
+/* ---------- Fixes from the Tamil-mode review ---------- */
+/* Pinned button bar: stick to the bottom edge, never pull the next block underneath it */
+body.rv .stage[data-view="desktop"] .sheet>.btns:has(>.primary){bottom:0;margin-bottom:0}
+body.rv .stage[data-view="mobile"] .sheet>.btns:has(>.primary){bottom:0;margin-bottom:0}
+body.rv .sheet>.btns:has(>.primary)+*{margin-top:16px}
+/* Buttons keep one height wherever they sit (inside fold-out sections too) */
+body.rv .sheet .btns{align-items:center;align-content:flex-start}
+body.rv .sheet .btns>button{box-sizing:border-box;height:auto!important;min-height:44px!important;padding-top:10px!important;padding-bottom:10px!important;line-height:1.3}
+body.rv .sheet .btns>button.primary{min-height:48px!important}
+/* A field never grows past its cell */
+body.rv .group>.cell{min-width:0}
+body.rv .group>.cell>select,body.rv .group>.cell>input:not([type=checkbox]):not([type=radio]){width:100%!important;max-width:100%;min-width:0!important;box-sizing:border-box}
+/* Toolbars that mix a button with selects (Cuspal chart, Birth Chart): the button keeps its own width */
+body.rv .sheet .btns:has(select)>button{flex:0 0 auto;padding-left:20px!important;padding-right:20px!important}
+body.rv .sheet .btns:has(select){flex-wrap:wrap;gap:8px}
+/* Square charts stay at a readable size and centre in the column */
+body.rv .stage[data-view="desktop"] #cuspChart{max-width:680px;max-height:680px;margin-left:auto;margin-right:auto}
+/* The pinned bar sticks inside the scroll area's padding, so a bottom padding left a strip of
+   form showing below it. The sheet has no bottom padding; the last block carries the space. */
+body.rv .stage .sheet{padding-bottom:0!important}
+body.rv .stage .sheet>.btns:has(>.primary){bottom:0!important;margin-bottom:0!important}
+body.rv .stage .sheet>:last-child:not(.btns){margin-bottom:32px}
+
+/* ==========================================================================
+   Part 6: every tool is a page (#/route) in the normal flow, not a panel over the page.
+   ========================================================================== */
+body.rv .rv-pages{display:none}
+body.rv.rv-p-tool .rv-pages{display:block;min-width:0}
+body.rv .rv-pages>.sheet{position:static!important;inset:auto!important;transform:none!important;width:auto!important;
+  max-height:none!important;height:auto!important;margin:0!important;border-radius:0!important;box-shadow:none!important;
+  border:0!important;overflow:visible!important;animation:none!important;z-index:auto!important;background:transparent!important;opacity:1!important;pointer-events:auto!important}
+body.rv .rv-pages>.sheet.hide,body.rv .rv-pages>.sheet.under{display:none!important}
+body.rv.rv-p-tool .scrim{display:none!important}
+
+/* Desktop: sidebar | the tool page, scrolling with the window */
+body.rv.rv-p-tool .stage[data-view="desktop"] .app{grid-template-columns:var(--rv-side) minmax(0,1fr)!important;grid-template-rows:auto!important;height:auto!important;min-height:100%;padding:0!important;column-gap:0!important}
+body.rv.rv-p-tool .stage[data-view="desktop"] .col{display:none!important}
+body.rv.rv-p-tool .stage[data-view="desktop"] .rv-pages{grid-column:2;grid-row:1}
+body.rv.rv-p-tool .stage[data-view="desktop"] .side{grid-row:1}
+body.rv .stage[data-view="desktop"] .rv-pages>.sheet{
+  --rv-sx:max(var(--rv-pad),calc((100vw - var(--rv-side) - var(--rv-cw)) / 2));
+  padding:0 var(--rv-sx) 56px!important}
+/* the page header stays in view while the page scrolls */
+body.rv .rv-pages>.sheet>.sh-head{position:sticky;top:0;z-index:6;background:var(--bg)}
+body.rv .stage[data-view="desktop"] .rv-pages>.sheet>.sh-head{margin:0 calc(-1 * var(--rv-sx)) 14px!important;padding:20px var(--rv-sx) 14px!important}
+
+/* Phone: the tool page replaces the home content; the tab bar stays */
+body.rv.rv-p-tool .stage[data-view="mobile"] .app>.side,
+body.rv.rv-p-tool .stage[data-view="mobile"] .app>.col{display:none!important}
+body.rv.rv-p-tool .stage[data-view="mobile"] .rv-tabs{display:grid!important}
+body.rv .stage[data-view="mobile"] .rv-pages>.sheet{padding:0 0 calc(96px + env(safe-area-inset-bottom,0px))!important}
+body.rv .stage[data-view="mobile"] .rv-pages>.sheet>.sh-head{margin:0 -16px 12px!important;padding:14px 16px 12px!important;top:var(--rv-nav-h,0px)}
+
+/* Main buttons sit in the flow after the form: nothing is pinned, so nothing can slide under them */
+body.rv .rv-pages .sheet>.btns:has(>.primary){position:static!important;margin:20px 0 0!important;padding:0!important;
+  background:none!important;border:0!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;bottom:auto!important}
+body.rv .rv-pages .sheet>.btns:has(>.primary)+*{margin-top:16px!important}
+
+/* ==========================================================================
+   Part 7: one button system.
+   Primary: filled, 48px. Secondary: tinted, 44px. Small (toolbars, list and result actions): tinted, 36px.
+   Segmented choices: one track, 40px. All rectangles share one corner radius.
+   ========================================================================== */
+body.rv{--btn-r:10px}
+/* Primary */
+body.rv button.primary,body.rv .btns>button.primary,body.rv .rv-done{
+  box-sizing:border-box;min-height:48px!important;padding:12px 20px!important;border:0!important;border-radius:var(--btn-r)!important;
+  background:var(--accent-fill)!important;color:var(--accent-ink)!important;font:600 15px/1.3 var(--sf)!important;box-shadow:none!important}
+body.rv button.primary:hover,body.rv .rv-done:hover{filter:brightness(1.08)}
+/* Secondary */
+body.rv .btns>button:not(.primary),body.rv .rv-skip,body.rv .rv-anote-b button,body.rv #rvSetupLoc{
+  box-sizing:border-box;min-height:44px!important;padding:10px 18px!important;border:0!important;border-radius:var(--btn-r)!important;
+  background:var(--fill)!important;color:var(--accent)!important;font:600 14.5px/1.3 var(--sf)!important;box-shadow:none!important}
+body.rv .btns>button:not(.primary):hover,body.rv .rv-skip:hover{filter:brightness(1.12)}
+body.rv .btns>button .tm{font-weight:500;opacity:.85}
+/* Small */
+body.rv .rv-actions button,body.rv .rv-chip,body.rv .ch-b>button,body.rv #fsEdit,body.rv .row2>button,body.rv .clfs,
+body.rv .rv-place-c,body.rv .rv-log-a button{
+  box-sizing:border-box;display:inline-flex!important;align-items:center;justify-content:center;gap:6px;
+  min-height:36px!important;height:auto!important;padding:7px 14px!important;border:0!important;border-radius:var(--btn-r)!important;
+  background:var(--fill)!important;color:var(--accent)!important;font:600 13.5px/1.25 var(--sf)!important;box-shadow:none!important;width:auto}
+body.rv .rv-actions button svg,body.rv .rv-chip svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7}
+body.rv .rv-chip[aria-pressed="true"]{background:var(--accent-fill)!important;color:var(--accent-ink)!important}
+/* Segmented choices (timing list modes, clock face, 3 11 tabs, appearance) */
+body.rv .seg,body.rv .clseg,body.rv .m3tabs,body.rv .rv-seg3{background:var(--fill2)!important;border-radius:calc(var(--btn-r) + 3px)!important;padding:3px!important;gap:3px!important;border:0!important}
+body.rv .seg>button,body.rv .clseg>button,body.rv .m3tabs>button,body.rv .rv-seg3>button{
+  min-height:40px!important;border-radius:var(--btn-r)!important;border:0!important;background:transparent!important;color:var(--ink2)!important;box-shadow:none!important;font:600 13.5px/1.25 var(--sf)!important}
+body.rv .seg>button[aria-pressed="true"],body.rv .clseg>button.on,body.rv .m3tabs>button.on,body.rv .rv-seg3>button[aria-pressed="true"]{
+  background:var(--surface)!important;color:var(--accent)!important;box-shadow:0 0 0 1px var(--line),0 1px 2px rgba(13,16,32,.12)!important}
+/* Keyboard focus looks the same everywhere */
+body.rv button:focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px}
+
+/* ---------- Audit fixes ---------- */
+/* Live muhurtham alert: a one-line chip in the corner; tap to read the details */
+body.rv #gaMpLive.rv-chiplive{max-width:min(360px,calc(100vw - 32px));padding:10px 40px 10px 14px!important;border-radius:14px!important;cursor:pointer;
+  right:16px!important;left:auto!important;bottom:16px!important;box-shadow:0 10px 30px rgba(13,16,32,.28)!important}
+body.rv #gaMpLive.rv-chiplive:not(.rv-open)>span{display:none!important}
+body.rv #gaMpLive.rv-chiplive>b{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13.5px}
+body.rv #gaMpLive.rv-chiplive .galx{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;min-height:0!important;padding:0!important;border-radius:50%!important}
+body.rv #gaMpLive.rv-chiplive.rv-open .galx{top:8px;transform:none}
+body.rv.rv-m #gaMpLive.rv-chiplive{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important;right:12px!important}
+/* Results scrolled into view land below the page's sticky header */
+body.rv .rv-pages .sheet [id]{scroll-margin-top:96px}
+/* Phones: one field per row, so long choices (November, KP (Krishnamurti)) are not cut */
+@media (max-width:480px){
+  body.rv .stage[data-view="mobile"] .sheet .group{grid-template-columns:minmax(0,1fr)!important}
+  body.rv .stage[data-view="mobile"] .sheet .group>.cell{grid-column:1/-1!important}
+}
+/* Day · Month · Year pickers: the month gets the room it needs */
+body.rv .group>.cell .msel:has(>select:nth-child(3):last-child){grid-auto-flow:row!important;grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr) minmax(0,1fr)!important}
+
+/* Live Transit Clock: the APK's "Install on iPhone, Android and Windows" help is removed (it points to
+   downloads this web version does not have). Hidden rather than deleted, as the engine still uses #clInstall. */
+body.rv details.howto:has(#clInstall){display:none!important}
+
+/* Lagna Timings: the same centred column as the tool pages (1040px of content, centred in the workspace) */
+body.rv.rv-p-lagna .stage[data-view="desktop"] .col-a{justify-self:center;width:100%;max-width:calc(var(--rv-cw) + 2 * var(--rv-pad))!important;margin:0 auto}
+/* the timings list already has "Jump to now" beside "Tagged timings only" */
+body.rv .rv-actions-main [data-a="now"]{display:none!important}

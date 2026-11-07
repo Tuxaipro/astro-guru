@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>(function(){var d=document.documentElement;d.classList.add('rv-boot');try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);}catch(e){}addEventListener('load',function(){setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>
+<style>html.rv-boot{background:#F4F5F9}html.rv-boot[data-theme=dark]{background:#0D1020}@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020}}html.rv-boot body{background:transparent!important}html.rv-boot body>*{visibility:hidden!important}html.rv-boot body::before{content:"GuruAgasthiya";position:fixed;inset:0;display:grid;place-items:center;font:600 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:#8B8FAE}</style>
+<title>GuruAgasthiya 7.7</title>
+<meta name="application-name" content="GuruAgasthiya">
+<meta name="apple-mobile-web-app-title" content="GuruAgasthiya">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/jpeg" href="icons/icon-e91d9fb0e2.jpg?v=e91d9fb0e2">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-c196121c49.jpg?v=c196121c49">
+<link rel="stylesheet" href="css/fonts.css?v=381a182188">
+<link rel="stylesheet" href="css/01-style.css?v=ff5090519b">
+<link rel="stylesheet" href="css/02-v6-0-coloured-charts-language-selector-c.css?v=71745fd9da">
+<link rel="stylesheet" href="css/03-v6-3-3-11-muhurtham.css?v=955376df1c">
+<link rel="stylesheet" href="css/04-v6-7-trade-profit.css?v=897f0b33f5">
+<link rel="stylesheet" href="css/05-v6-8-market-transit.css?v=8842a41518">
+<link rel="stylesheet" href="css/06-v7-0-live-transit-clock.css?v=d903450017">
+<link rel="stylesheet" href="css/07-style.css?v=5a414fd055">
+<link rel="stylesheet" href="css/08-style.css?v=32328dce29">
+<link rel="stylesheet" href="css/09-style.css?v=2482aedf55">
+<link rel="stylesheet" href="css/10-style.css?v=048738167a">
+<link rel="stylesheet" href="revamp/revamp.css?v=d4691fdd93">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+<div class="stage" id="stage" data-view="desktop">
+ <div class="viewswitch" role="group" aria-label="Choose a view">
+  <button type="button" data-v="mobile" aria-pressed="false"><svg viewBox="0 0 16 16"><rect x="4.2" y="1.2" width="7.6" height="13.6" rx="2"/><path d="M7 3h2"/></svg>Mobile</button>
+  <button type="button" data-v="desktop" aria-pressed="true"><svg viewBox="0 0 16 16"><rect x="1.5" y="2.5" width="13" height="8.5" rx="1.3"/><path d="M5.5 14h5M8 11v3"/></svg>Desktop</button>
+ </div>
+
+ <div class="device" id="device">
+  <div class="screen" id="screen">
+   <div class="scroller" id="scroller">
+    <header class="navbar" id="navbar"><span class="nt">GuruAgasthiya</span><button type="button" class="nvb" id="toDesk" aria-label="Switch to Desktop view"><svg viewBox="0 0 16 16"><rect x="1.5" y="2.5" width="13" height="8.5" rx="1.3"/><path d="M5.5 14h5M8 11v3"/></svg></button>
+     <nav class="jumpbar hide" id="jumpbar" aria-label="Jump to"><button type="button" data-j="nowcard">Chart</button><button type="button" data-j="results">Timings</button><button type="button" data-j="tools">Tools</button></nav></header>
+    <div class="app">
+
+     <aside class="side">
+      <div class="brand"><h1 id="bigTitle">GuruAgasthiya<span class="ver">v7.7</span></h1><img class="logo" alt="Guru Agasthiya" width="44" height="44" src="img/guru-agasthiya-3682e3db0f.jpg"></div>
+      <div class="langrow"><label for="gaLang">Language</label><select id="gaLang" class="langsel"></select></div>
+      <div class="langrow"><label for="gaTheme">Chart Colour</label><select id="gaTheme" class="stysel" style="flex:1"><option value="pro">Scientific (mono)</option><option value="classic">Classic (v5.9 blue)</option><option value="colour">Colourful</option></select></div>
+      <p class="sub">KP lagna sub-lord timings for any day and place. See when the rising degree passes through each of the 249 sub-lord divisions.</p>
+
+      <nav class="tools" aria-label="Tools">
+       <h2 class="sec">Tools</h2>
+       <div class="tgrid">
+        <button type="button" class="tool home" id="homeBtn" data-s="Timings"><span class="ic" style="--c:#007AFF"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span><span class="tx">Lagna Timings<span class="tm">லக்ன நேரங்கள்</span></span></button>
+        <button type="button" class="tool" id="gpBtn" data-s="Prasnam"><span class="ic" style="--c:#FF9500"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15.2l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M18.5 15.5l.8 2 2 .8-2 .7-.8 2-.7-2-2-.7 2-.8z"/></svg></span><span class="tx">GMP Prasnam<span class="tm">ஜிஎம்பி பிரசன்னம்</span></span></button>
+        <button type="button" class="tool" id="m3Btn" data-s="3 11 Muhurtham 311 GMP"><span class="ic" style="--c:#7C4DFF"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 7v5l3.4 2"/><path d="M4.2 5.2l2.4-1.8M19.8 5.2l-2.4-1.8"/></svg></span><span class="tx">3 11 Muhurtham<span class="tm">3 11 முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="bpBtn" data-s="Birth"><span class="ic" style="--c:#AF52DE"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><path d="M3.5 7.8h17M3.5 16.2h17M7.8 3.5v17M16.2 3.5v17"/></svg></span><span class="tx">Birth Chart<span class="tm">பிறப்பு ஜாதகம்</span></span></button>
+        <button type="button" class="tool" id="acBtn" data-s="Map"><span class="ic" style="--c:#32ADE6"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.7 5.2 3.7 8.5s-1.2 6.1-3.7 8.5c-2.5-2.4-3.7-5.2-3.7-8.5s1.2-6.1 3.7-8.5z"/></svg></span><span class="tx">Astrocartography<span class="tm">ஜோதிட வரைபடம்</span></span></button>
+        <button type="button" class="tool" id="cmBtn" data-s="Chandra"><span class="ic" style="--c:#5E5CE6"><svg viewBox="0 0 24 24"><path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1z"/></svg></span><span class="tx">Chandra Muhurtham<span class="tm">சந்திர முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="rangeBtn" data-s="Range"><span class="ic" style="--c:#FF3B30"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="3"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg></span><span class="tx">Date-Range Muhurtham<span class="tm">தேதி வரம்பு முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="mmBtn" data-s="Money"><span class="ic" style="--c:#28A86B"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.6 7.6h6.8M8.6 10.6h6.8M10.4 7.6c3.4 0 3.4 4.6 0 4.6H9.2l5 4.6"/></svg></span><span class="tx">Money Manifestation<span class="tm">பணம் ஈர்ப்பு</span></span></button>
+        <button type="button" class="tool" id="ltBtn" data-s="Lottery"><span class="ic" style="--c:#D69E00"><svg viewBox="0 0 24 24"><path d="M3.5 7.5h17v3a1.7 1.7 0 0 0 0 3.4v3h-17v-3a1.7 1.7 0 0 0 0-3.4z"/><path d="M14.5 8.5v1.4M14.5 11.6v1.4M14.5 14.4v1.4"/></svg></span><span class="tx">Lottery Rules<span class="tm">லாட்டரி விதிகள்</span></span></button>
+        <button type="button" class="tool" id="ckBtn" data-s="Cricket"><span class="ic" style="--c:#FF6B35"><svg viewBox="0 0 24 24"><path d="M15.2 3.8l5 5-8.6 8.6-2.6-1.8-1.8-2.6z"/><path d="M7.2 13l-3.4 3.4 3.8 3.8 3.4-3.4"/><circle cx="18" cy="18" r="2.2"/></svg></span><span class="tx">Cricket Wicket<span class="tm">கிரிக்கெட் விக்கெட்</span></span></button>
+        <button type="button" class="tool" id="cuspBtn" data-s="Cusps"><span class="ic" style="--c:#30B0C7"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17M6 6l12 12M18 6L6 18"/></svg></span><span class="tx">Cuspal Chart<span class="tm">பாவ கஸ்ப் விவரம்</span></span></button>
+        <button type="button" class="tool" id="lostBtn" data-s="Lost"><span class="ic" style="--c:#A2845E"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg></span><span class="tx">Lost &amp; Found<span class="tm">தொலைந்த பொருள் மீட்பு</span></span></button>
+        <button type="button" class="tool" id="raceBtn" data-s="Race"><span class="ic" style="--c:#34C759"><svg viewBox="0 0 24 24"><path d="M6 21V4M6 4h11l-2 4 2 4H6"/></svg></span><span class="tx">Horse Race<span class="tm">குதிரைப் பந்தயம்</span></span></button>
+        <button type="button" class="tool" id="mpBtn" data-s="Money profit"><span class="ic" style="--c:#FF9F0A"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 16.5v-9M8.6 10.8L12 7.4l3.4 3.4"/></svg></span><span class="tx">Money Profit Muhurtham<span class="tm">பண லாப முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="tpBtn" data-s="Trade Profit Nifty Sensex"><span class="ic" style="--c:#1FA85C"><svg viewBox="0 0 24 24"><path d="M3.5 17.5l5-5.5 3.5 3.5 7.5-8.5"/><path d="M15.2 7h4.3v4.3"/><path d="M3.5 20.5h17"/></svg></span><span class="tx">Trade Profit<span class="tm">வர்த்தக லாபம்</span></span></button>
+        <button type="button" class="tool" id="mkBtn" data-s="Market Transit Candles Nifty Sensex Patterns"><span class="ic" style="--c:#6C4BD6"><svg viewBox="0 0 24 24"><path d="M6 4v3M6 15v4M5 7h2v8H5zM12 6v3M12 17v3M11 9h2v8h-2zM18 3v4M18 13v4M17 7h2v6h-2z"/></svg></span><span class="tx">Market Transit<span class="tm">சந்தை கோசாரம்</span></span></button>
+        <button type="button" class="tool" id="clBtn" data-s="Live Transit Clock Widget Analog Digital Ascendant Alarm Muhurtham"><span class="ic" style="--c:#E0A100"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6.5V12l3.6 2.2M12 3v1.6M12 19.4V21M3 12h1.6M19.4 12H21"/></svg></span><span class="tx">Live Transit Clock<span class="tm">நேரடி லக்ன கடிகாரம் · அலாரம்</span></span></button>
+        <button type="button" class="tool" id="spBtn" data-s="Speculation"><span class="ic" style="--c:#AF52DE"><svg viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="9" cy="15" r="1"/><circle cx="15" cy="15" r="1"/></svg></span><span class="tx">Speculation Research<span class="tm">ஊக ஆய்வு</span></span></button>
+        <button type="button" class="tool" id="eqBtn" data-s="Earthquake"><span class="ic" style="--c:#FF453A"><svg viewBox="0 0 24 24"><path d="M2.5 12h4l2-5.5 3.2 11 2.6-8.5 1.6 3H21.5"/></svg></span><span class="tx">Earthquake Research<span class="tm">நில அதிர்வு ஆய்வு</span></span></button>
+        <button type="button" class="tool" id="ftBtn" data-s="Fortuna Timing money exam job visa medicine travel house purchase"><span class="ic" style="--c:#00A878"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3.4v4.2M12 16.4v4.2M3.4 12h4.2M16.4 12h4.2"/></svg></span><span class="tx">Fortuna Timing<span class="tm">போர்ச்சுனா நேரம்</span></span></button>
+        <button type="button" class="tool" id="hqBtn" data-s="Horary"><span class="ic" style="--c:#5E5CE6"><svg viewBox="0 0 24 24"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 20 16.5h-7l-4.5 4v-4H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5z"/><path d="M10 9.4a2 2 0 1 1 2.6 1.9c-.5.2-.6.5-.6 1M12 14v.1"/></svg></span><span class="tx">Horary Answers<span class="tm">ஹோரரி விடைகள்</span></span></button>
+        <button type="button" class="tool" id="epBtn" data-s="Electional"><span class="ic" style="--c:#30B94D"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 2.8v3.4M16 2.8v3.4M8.6 15.2l2.4 2.4 4.4-4.8"/></svg></span><span class="tx">Practical Electional Muhurtham<span class="tm">செயல்முறை முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="abBtn" data-s="About"><span class="ic" style="--c:#8E8E93"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg></span><span class="tx">About<span class="tm">இந்த செயலி பற்றி</span></span></button>
+       </div>
+      </nav>
+      <div class="sidefoot"></div>
+     </aside>
+
+     <section class="col col-a" id="colA">
+      <div class="a-head"><h2>Lagna Timings</h2><p>Choose a day and a place.</p></div>
+      <div class="panel" id="mainForm">
+       <div class="fsum" id="fsum"><div class="fs-t"><b id="fsDate"></b><span id="fsPlace"></span></div><button type="button" id="fsEdit">Edit</button></div>
+       <div class="group">
+        <label class="cell" for="date"><span class="cl">Date</span><input type="date" id="date"></label>
+        <label class="cell" for="time"><span class="cl">Start Time</span><input type="time" id="time" value="00:00"></label>
+       </div>
+       <div class="group">
+        <div class="cell search"><label for="plSearch" class="vh">Search any city or town in the world</label><input id="plSearch" placeholder="Search Pudukkottai, Madurai, Dubai, London" autocomplete="off"></div>
+        <label class="cell" for="plCountry"><span class="cl">Country</span><select id="plCountry"></select></label>
+        <label class="cell" for="place"><span class="cl">City / Town</span><select id="place"></select></label>
+       </div>
+       <div class="group">
+        <label class="cell" for="lat"><span class="cl">Latitude<small>North is +</small></span><input id="lat" inputmode="decimal" value="13.0827"></label>
+        <label class="cell" for="lon"><span class="cl">Longitude<small>East is +</small></span><input id="lon" inputmode="decimal" value="80.2707"></label>
+        <label class="cell" for="tz"><span class="cl">UTC Offset<small>Hours</small></span><input id="tz" inputmode="decimal" value="5.5"></label>
+        <label class="cell" for="tzSel"><span class="cl">Time Zone<small>All UTC offsets</small></span><select id="tzSel"></select></label>
+        <label class="cell" for="ayan"><span class="cl">Ayanamsa</span><select id="ayan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+       </div>
+       <div class="lf-time" id="locClock" role="status"></div>
+       <div class="btns">
+        <button class="primary" id="go" type="button">Show Timings</button>
+        <button id="loc" type="button">Use My Location</button>
+        <button id="nowLocal" type="button">Local Time Now</button>
+        <button id="locSettings" type="button" class="hide">Open App Settings</button>
+       </div>
+       <div class="msg" id="msg" role="status"></div>
+      </div>
+
+      <div class="panel" id="alarmPanel">
+       <label class="cell" for="almOn"><span class="cl"><b>Muhurtham Alarm</b><small class="tm">முகூர்த்த அலாரம்</small></span><span style="flex:1"></span><input type="checkbox" id="almOn"></label>
+       <div id="almOpts" class="hide">
+        <div class="row2">
+         <label for="almSound" class="vh">Sound</label>
+         <select id="almSound"><option value="0">Melody (2 times, then fades)</option><option value="1">Double beep</option><option value="2">Buzz</option><option value="3">Siren</option></select>
+         <button type="button" id="almTest">Test</button>
+        </div>
+        <p class="legend">Rings when the rising timing becomes a <b>financial gain</b>, <b>auspicious financial gain</b> or <b>highly auspicious</b> muhurtham (Muhurtham on rules and GMP 3,11), or a dhana muhurtham inside GMP 3,11. Off = silent. Keep the app open and the phone awake.</p>
+       </div>
+       <div id="almBanner" class="hide"><span id="almMsg"></span><button type="button" id="almStop">Success</button></div>
+       <div id="almCal">
+        <div class="row2">
+         <label for="almLead" class="vh">Early reminder</label>
+         <select id="almLead"><option value="0">Alert at start</option><option value="5">Also 5 min before</option><option value="10">Also 10 min before</option><option value="15">Also 15 min before</option></select>
+         <button type="button" id="almIcs">Add to Calendar</button>
+        </div>
+        <p class="legend">Adds every muhurtham still to come on the day shown, each named (for example <b>Highly auspicious muhurtham</b>), to your Calendar with an alert. It rings even when this app is closed. You choose which muhurthams to add first. On iPhone, the Calendar opens: tap <b>Add All</b>. On Android, pick your Calendar app (Google Calendar or Samsung Calendar) and tap <b>Save</b> or <b>Import</b>.<span class="ta" style="display:block;font:500 13.5px/1.6 var(--tamil);color:var(--accent)">அன்றைய நாளின் இனி வரும் முகூர்த்தங்களை பெயருடன் உங்கள் Calendar-இல் சேர்க்கும். ஆப் மூடியிருந்தாலும் அலர்ட் ஒலிக்கும்.</span></p>
+        <p class="legend">To add just one muhurtham, tap the <b>alarm-clock icon</b> on its row (any tab).<span class="ta" style="display:block;font:500 13.5px/1.6 var(--tamil);color:var(--accent)">ஒரு முகூர்த்தத்தை மட்டும் சேர்க்க, அதன் வரிசையில் உள்ள அலாரம் கடிகார ஐகானைத் தட்டவும்.</span></p>
+         <div id="almPick" class="hide">
+         <div class="ph"><label><input type="checkbox" id="almAll"><span>Select All</span></label><span id="almCount"></span></div>
+         <ul id="almPickList"></ul>
+         <div class="pb"><button type="button" class="primary" id="almAdd">Add Selected</button><button type="button" id="almCancel">Cancel</button></div>
+        </div>
+        <div class="msg" id="almCalMsg" role="status"></div>
+       </div>
+      </div>
+
+      <div class="nowcard" id="nowcard" aria-live="polite">
+       <div class="k">Rising Now</div>
+       <div class="big" id="nowSub"></div>
+       <div class="ta" id="nowTa"></div>
+       <div class="meta" id="nowMeta"></div>
+      </div>
+
+      <div id="results" class="hide">
+       <div class="seg" role="group" aria-label="Timing view">
+        <button type="button" id="modeAll" aria-pressed="true">All 249 Sub-Lords<br><span>அனைத்து 249 உப அதிபதிகள்</span></button>
+        <button type="button" id="modeGmp" aria-pressed="false">GMP 3,11 · Gurumurthy Guruji Muhurtham<br><span>ஜி.எம்.பி 3,11 · குருமூர்த்தி குருஜி முகூர்த்தம்</span></button>
+        <button type="button" id="modeAna" aria-pressed="false">Muhurtham Part 1 · Day’s 249 Transits<br><span>அன்றைய 249 லக்ன கால அலசல்</span></button>
+        <button type="button" id="modeRul" aria-pressed="false">Muhurtham on Rules<br><span>விதிகளின்படி முகூர்த்தம்</span></button>
+       </div>
+       <p class="gmnote hide" id="gmpNote">Only the 15 lagna / star lord / sub lord combinations of this muhurtham are shown, each with its begin and end time. The first or last window can be cut by the 24-hour range you chose.</p>
+       <p class="gmnote hide" id="anaNote">Every ascendant timing of the day is checked against the conditions below, using the planets' transit positions at the middle of that timing. A house is the sign counted from the rising sign. As in the Aries example, the house test (condition 2) is applied to the lagna lord as well as the star lord and sub lord. Timings that pass are marked Muhurtham part 1.</p>
+       <label class="opt hide" id="anaOpt"><span>Show Failing Timings and Reasons</span><input type="checkbox" id="showFail"></label>
+       <div class="opt hide" id="tagOpt"><label for="tagShow" style="color:var(--ink);font-size:15px">Show</label><select id="tagShow"></select></div>
+       <p class="gmnote hide" id="rulNote">All 249 ascendant timings of the day are checked against rules a, b and c below, which apply to the lagna lord, the star lord and the sub lord alike. Planets are taken at the middle of each timing. A timing is also rejected if its lagna lord, star lord or sub lord is retrograde (Rahu and Ketu are not counted). Timings that pass are marked Muhurtham on rules, with Financial gain and Auspicious financial gain marks where they apply. <b id="rulRetro"></b></p>
+       <div class="hide" id="rulOpt">
+        <div class="opt"><label for="rulShow" style="color:var(--ink);font-size:15px">Show</label><select id="rulShow"><option value="all">All Timings That Pass</option><option value="fin">Financial Gain (Either Kind)</option><option value="aus">Auspicious Financial Gain Only</option><option value="dhana">Dhana Muhurtham Only</option><option value="high">Highly Auspicious Only</option></select></div>
+        <label class="opt"><span>Show Failing Timings and Reasons</span><input type="checkbox" id="showFail2"></label>
+       </div>
+       <div class="bar">
+        <div class="cnt" id="cnt"></div>
+        <select id="filter" aria-label="Filter by Sub-Lord"></select>
+       </div>
+       <ul id="list"></ul>
+       <ul id="gmpList" class="hide"></ul>
+       <ul id="anaList" class="hide"></ul>
+       <ul id="rulList" class="hide"></ul>
+       <div class="cond hide" id="cond">
+        <h3>Conditions<span class="ta">நிபந்தனைகள்</span></h3>
+        <ol>
+         <li>The star lord and sub lord should not be in the star of the 8th lord or the 12th lord of the ascendant.<span class="ta">நட்சத்திராதிபதியும் உப அதிபதியும் லக்னத்தின் 8-ஆம், 12-ஆம் அதிபதிகளின் நட்சத்திரத்தில் இருக்கக்கூடாது.</span></li>
+         <li>The ascendant star lord and sub lord should not be in the 8th house or the 12th house.<span class="ta">லக்ன நட்சத்திராதிபதியும் உப அதிபதியும் 8-ஆம் அல்லது 12-ஆம் பாவத்தில் இருக்கக்கூடாது.</span></li>
+         <li>The ascendant star lord and sub lord should not be in the star of planets placed in the 8th or 12th house.<span class="ta">லக்ன நட்சத்திராதிபதியும் உப அதிபதியும் 8-ஆம், 12-ஆம் பாவங்களில் நிற்கும் கிரகங்களின் நட்சத்திரத்தில் இருக்கக்கூடாது.</span></li>
+        </ol>
+       </div>
+       <div class="cond hide" id="cond3">
+        <h3>More filters<span class="ta">கூடுதல் வடிகட்டிகள்</span></h3>
+        <p class="legend"><b>Dhana muhurtham</b> (Muhurtham part 1, GMP 3,11 and Muhurtham on rules): the 2nd lord or the 11th lord of the transit ascendant is in its own star and in the 1st, 3rd or 11th house; the 2nd and 11th lords are in the same house or both in kendra (so kendra to each other); and the transit Moon is in the star of the 2nd lord or the 11th lord.<span class="ta" style="display:block;font:500 13.5px/1.6 var(--ta);color:var(--accent)">தன முகூர்த்தம்: லக்னத்தின் 2-ஆம் அல்லது 11-ஆம் அதிபதி தன் சொந்த நட்சத்திரத்தில் 1, 3 அல்லது 11-ஆம் வீட்டில் இருக்க வேண்டும்; 2, 11-ஆம் அதிபதிகள் ஒரே வீட்டில் அல்லது இருவரும் கேந்திரத்தில் இருக்க வேண்டும்; கோசார சந்திரன் 2 அல்லது 11-ஆம் அதிபதியின் நட்சத்திரத்தில் இருக்க வேண்டும்.</span></p>
+        <p class="legend"><b>Highly auspicious</b> (GMP 3,11 and Muhurtham on rules): the star lord and the sub lord of the ascendant are each the 3rd lord or the 11th lord; they are in the same house or in kendra to each other; neither is in the 8th or 12th house; and neither is in the star of the 8th or 12th lord.<span class="ta" style="display:block;font:500 13.5px/1.6 var(--ta);color:var(--accent)">மிகச் சிறந்த சுப முகூர்த்தம்: லக்னத்தின் நட்சத்திராதிபதியும் உப அதிபதியும் தலா 3-ஆம் அல்லது 11-ஆம் அதிபதியாக இருக்க வேண்டும்; இருவரும் ஒரே வீட்டில் அல்லது ஒருவருக்கொருவர் கேந்திரத்தில் இருக்க வேண்டும்; இருவரும் 8, 12-ஆம் வீட்டிலோ 8, 12-ஆம் அதிபதிகளின் நட்சத்திரத்திலோ இருக்கக்கூடாது.</span></p>
+       </div>
+       <div class="cond hide" id="cond2">
+        <h3>Rules<span class="ta">விதிகள்</span></h3>
+        <ol type="a">
+         <li>The transit ascendant lord, star lord and sub lord should not be placed in the 8th or 12th house from the transit ascendant.<span class="ta">கோசார லக்னாதிபதி, நட்சத்திராதிபதி, உப அதிபதி மூவரும் கோசார லக்னத்திலிருந்து 8-ஆம் அல்லது 12-ஆம் பாவத்தில் இருக்கக்கூடாது.</span></li>
+         <li>The transit ascendant lord, star lord and sub lord should not be in the star of the 8th lord or the 12th lord.<span class="ta">மூவரும் 8-ஆம், 12-ஆம் அதிபதிகளின் நட்சத்திரத்தில் இருக்கக்கூடாது.</span></li>
+         <li>The transit ascendant lord, star lord and sub lord should not be in the star of any planet placed in the 8th or 12th house.<span class="ta">மூவரும் 8-ஆம் அல்லது 12-ஆம் பாவத்தில் நிற்கும் எந்த கிரகத்தின் நட்சத்திரத்திலும் இருக்கக்கூடாது.</span></li>
+         <li>The transit ascendant lord, star lord and sub lord should not be retrograde. Rahu and Ketu, which always move backward, are not counted.<span class="ta">மூவரும் வக்ரத்தில் இருக்கக்கூடாது. ராகு, கேது எப்போதும் வக்ரம் என்பதால் கணக்கில் கொள்ளப்படாது.</span></li>
+        </ol>
+        <p class="legend" style="margin-top:10px"><b>Financial gain:</b> the star lord and sub lord of a passing ascendant are both the 2nd lord or 11th lord.<span class="ta" style="display:block;font:500 13.5px/1.6 var(--ta);color:var(--accent)">தேர்வான லக்னத்தின் நட்சத்திராதிபதியும் உப அதிபதியும் 2-ஆம் அல்லது 11-ஆம் அதிபதிகளாக இருந்தால் "பண லாபம்".</span></p>
+        <p class="legend"><b>Auspicious financial gain:</b> the lagna lord, star lord and sub lord are each in the star of the 2nd lord or 11th lord (a planet that is also the 8th or 12th lord is not counted).<span class="ta" style="display:block;font:500 13.5px/1.6 var(--ta);color:var(--accent)">லக்னாதிபதி, நட்சத்திராதிபதி, உப அதிபதி மூவரும் 2-ஆம் அல்லது 11-ஆம் அதிபதியின் நட்சத்திரத்தில் இருந்தால் (8-ஆம், 12-ஆம் அதிபதியாகவும் உள்ள கிரகம் தவிர) "சுப பண லாபம்".</span></p>
+       </div>
+       <div class="btns"><button id="copy" type="button">Copy as Text</button></div>
+      </div>
+      <p class="note">Times are local to the UTC offset you enter (use the offset in force on that date, e.g. 5.5 for India). Positions are sidereal. Calculated on your device from the date, time and place alone; no data is sent anywhere. Accuracy is within a few seconds of time for latitudes between about 60°S and 60°N.</p>
+     </section>
+
+     <section class="col col-b" id="colB">
+      <div class="panel chart hide" id="chartPanel">
+       <div class="chead"><div class="ch-t"><h2>Transit Chart<span class="tt" style="display:inline;margin-left:8px;font-size:14px">கோசார சக்கரம்</span></h2><span id="chartTime"></span></div><div class="ch-b"><button id="play" type="button">Play Lagna Movement</button><button id="nowBtn" type="button">Jump to Now</button><label class="livetog" for="chLive"><span>Live Lagna<small>நேரலை</small></span><input type="checkbox" id="chLive" role="switch"></label><label class="livetog sel60" for="chStyle60"><span>Chart Style</span><select id="chStyle60" class="stysel"><option value="south">South Indian</option><option value="north">North Indian</option><option value="both">Both charts</option></select></label><label class="livetog sel60" for="chLang60"><span>Language</span><select id="chLang60" class="langsel"></select></label></div></div>
+       <div id="chartErr" class="msg"></div>
+       <div class="cgrid"><div id="chartBox"></div><div id="ptable" class="ptab"></div></div>
+       <div class="slwrap"><div class="slrow"><input type="range" id="slider" min="0" max="1440" step="1" value="0" aria-label="Time of Day"><b id="slTime">00:00</b></div><div class="slscale" id="slScale"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div></div>
+       <p class="legend">Live lagna follows the clock every second at the chosen place and ayanamsa. Or drag the slider to move through the day. Orange outline: rising sign. Tinted signs: already crossed by the lagna since the start time.</p>
+      </div>
+      <div class="empty" aria-hidden="false">
+       <div class="eico"><svg viewBox="0 0 24 24"><path d="M3 17h18"/><path d="M6.5 17a5.5 5.5 0 0 1 11 0"/><path d="M12 4v3M5 8.5l1.8 1.8M19 8.5l-1.8 1.8"/></svg></div>
+       <b>No Timings Yet</b>
+       <p>Choose a date and a place, then select Show Timings.</p>
+      </div>
+     </section>
+    </div>
+   </div>
+
+   <div class="scrim" id="scrim"></div>
+
+   <!-- ===== Sheets ===== -->
+   <div class="panel sheet hide" id="lostPanel" role="dialog" aria-modal="true" aria-labelledby="lostT">
+    <div class="sh-head"><div><h2 id="lostT">Lost and Found</h2><span class="tt">தொலைந்த பொருள் மீட்பு</span></div><button class="xbtn" id="lostClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Keep the lost article in mind and tap the time button. The moment you tap is taken as the question time, and the rising sign at that moment for the place selected above is read. Choose your place first.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">தொலைந்த பொருளை நினைத்துக்கொண்டு நேரப் பொத்தானை அழுத்துங்கள். அழுத்தும் நேரமே கேள்வி நேரமாக எடுத்துக்கொள்ளப்பட்டு, மேலே தேர்ந்த இடத்திற்கான அந்த நேர லக்னம் ஆராயப்படும். முதலில் உங்கள் இடத்தைத் தேர்ந்தெடுங்கள்.</p>
+    </details>
+    <div class="btns"><button class="primary" id="lostTime" type="button">Note the Time Now · நேரத்தைப் பதிவு செய்</button></div>
+    <div id="lostOut" aria-live="polite"></div>
+   </div>
+
+   <div class="panel sheet hide" id="rangePanel" role="dialog" aria-modal="true" aria-labelledby="rgT">
+    <div class="sh-head"><div><h2 id="rgT">Date-Range Muhurtham</h2><span class="tt">தேதி வரம்பு முகூர்த்தம்</span></div><button class="xbtn" id="rgClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Pick a from date and a to date (up to 31 days). The place, UTC offset and ayanamsa from the form above are used. Every ascendant timing is checked, and those where the star lord and sub lord of the ascendant carry the 2nd, 3rd and 11th lord connection, with the 3rd lord and the 11th lord planets in kendra to each other (so never 6th or 8th from each other) and not in the star of the 8th or 12th lord, are listed as auspicious lagna muhurtham.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">தொடக்க தேதி, முடிவு தேதியைத் தேர்ந்தெடுங்கள் (அதிகபட்சம் 31 நாட்கள்). மேலே உள்ள இடம், UTC நேர வேறுபாடு, அயனாம்சம் பயன்படுத்தப்படும். லக்னத்தின் நட்சத்திராதிபதி, உப அதிபதி 2, 3, 11-ஆம் அதிபதி தொடர்பு கொண்டு, 3-ஆம் அதிபதியும் 11-ஆம் அதிபதியும் ஒருவருக்கொருவர் கேந்திரத்தில் (6, 8-ஆக அல்லாமல்) இருந்து, 8, 12-ஆம் அதிபதிகளின் நட்சத்திரத்தில் இல்லாத லக்ன நேரங்கள் சுப லக்ன முகூர்த்தமாகப் பட்டியலிடப்படும்.</p>
+    </details>
+    <div class="group">
+     <label class="cell" for="rgFrom"><span class="cl">From</span><input type="date" id="rgFrom"></label>
+     <label class="cell" for="rgTo"><span class="cl">To</span><input type="date" id="rgTo"></label>
+    </div>
+    <div class="btns"><button class="primary" id="rgGo" type="button">Find Auspicious Lagna</button></div>
+    <div class="msg" id="rgMsg" role="status"></div>
+    <div id="rgOut"></div>
+   </div>
+
+   <div class="panel sheet hide" id="racePanel" role="dialog" aria-modal="true" aria-labelledby="rcT">
+    <div class="sh-head"><div><h2 id="rcT">Horse Race</h2><span class="tt">குதிரைப் பந்தயம்</span></div><button class="xbtn" id="rcClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Enter the race start time, choose the race location (racecourses or any of about 7,000 world cities) and the number of horses. The transit chart of that moment and place is analysed to find the horse numbers with winning chances and name hints.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">பந்தயம் தொடங்கும் நேரம், இடம் (ரேஸ் கோர்ஸ் அல்லது உலக நகரம்), குதிரைகளின் எண்ணிக்கையை உள்ளிடுங்கள். அந்த நேரம், இடத்தின் கோசார ஜாதகம் ஆராயப்பட்டு வெற்றி வாய்ப்புள்ள குதிரை எண்கள், பெயர் குறிப்புகள் காட்டப்படும்.</p>
+    </details>
+    <div class="group">
+     <div class="cell search"><label for="rcSearch" class="vh">Search a city or racecourse</label><input id="rcSearch" placeholder="Search Chennai, Ascot, Dubai" autocomplete="off"></div>
+     <label class="cell" for="rcCountry"><span class="cl">Country</span><select id="rcCountry"></select></label>
+     <label class="cell" for="rcCity"><span class="cl">City or Course</span><select id="rcCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="rcDate"><span class="cl">Race Date</span><input type="date" id="rcDate"></label>
+     <label class="cell" for="rcTime"><span class="cl">Start Time<small>Local</small></span><input type="time" id="rcTime" value="15:00"></label>
+     <label class="cell" for="rcN"><span class="cl">Horses</span><input type="number" id="rcN" min="2" max="40" value="12" inputmode="numeric"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="rcLat"><span class="cl">Latitude</span><input id="rcLat" inputmode="decimal"></label>
+     <label class="cell" for="rcLon"><span class="cl">Longitude</span><input id="rcLon" inputmode="decimal"></label>
+     <label class="cell" for="rcTz"><span class="cl">Time Zone<small>e.g. Asia/Kolkata or 5.5</small></span><input id="rcTz" autocomplete="off"></label>
+    </div>
+    <div class="btns"><button class="primary" id="rcGo" type="button">Analyse the Race</button></div>
+    <div id="rcOut" aria-live="polite"></div>
+   </div>
+
+   <div class="panel sheet hide" id="gpPanel" role="dialog" aria-modal="true" aria-labelledby="gpT">
+    <div class="sh-head"><div><h2 id="gpT">GMP Prasnam</h2><span class="tt">ஜிஎம்பி பிரசன்னம்</span></div><button class="xbtn" id="gpClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Keep your question in mind, choose the place, and tap <b>Note the question time</b>. The moment you tap is the question time. The rising sign of that moment is read: the 3rd lord and 11th lord (and the star lord and sub lord of the rising degree) are checked for kendra, their distance to each other, the timing number, the Moon's transit of their stars and any Saturn delay.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">கேள்வியை மனதில் நினைத்து, இடத்தைத் தேர்ந்தெடுத்து <b>கேள்வி நேரத்தைப் பதிவு செய்</b> பொத்தானை அழுத்துங்கள். அழுத்தும் நேரமே கேள்வி நேரம். அந்த நேர லக்னத்தின் 3-ஆம், 11-ஆம் அதிபதிகள் (மற்றும் லக்ன நட்சத்திர, உப அதிபதிகள்) கேந்திரம், ஒன்றுக்கொன்று உள்ள தூரம், கால எண், சந்திரன் அவர்களின் நட்சத்திரத்தில் செல்லும் நாட்கள், சனி தாமதம் ஆகியவை ஆராயப்படும்.</p>
+    </details>
+    <div class="group">
+     <div class="cell search"><label for="gpSearch" class="vh">Search a city</label><input id="gpSearch" placeholder="Search Tiruchirappalli, London" autocomplete="off"></div>
+     <label class="cell" for="gpCountry"><span class="cl">Country</span><select id="gpCountry"></select></label>
+     <label class="cell" for="gpCity"><span class="cl">City</span><select id="gpCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="gpLat"><span class="cl">Latitude</span><input id="gpLat" inputmode="decimal"></label>
+     <label class="cell" for="gpLon"><span class="cl">Longitude</span><input id="gpLon" inputmode="decimal"></label>
+     <label class="cell" for="gpTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="gpTz" autocomplete="off"></label>
+    </div>
+    <div class="msg" id="gpOff" role="status"></div>
+    <div class="btns"><button class="primary" id="gpTime" type="button">Note the Question Time · கேள்வி நேரத்தை பதிவு செய்</button><button id="gpLoc" type="button">Use My Location · என் இடம்</button></div>
+    <div id="gpOut" aria-live="polite"></div>
+   </div>
+
+   <div class="panel sheet hide" id="ftPanel" role="dialog" aria-modal="true" aria-labelledby="ftT">
+    <div class="sh-head"><div><h2 id="ftT">Fortuna Timing</h2><span class="tt">போர்ச்சுனா நேரம்</span></div><button class="xbtn" id="ftClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend"><b>Fortuna</b> is the point Ascendant + Moon − Sun. In the transit chart it shows the luck of the moment; in the birth chart it shows the native’s own luck. <b>Quality:</b> look at the sub lord of the Fortuna point and then at its star lord. If that star lord signifies 2, 6, 11 the Fortuna is good; if it signifies 5, 8, 12 it is bad; if both, medium. <b>Powerful sign:</b> the sign where the Fortuna sub lord stands (not the sign where Fortuna falls). From it come ten fortunate elements: day, number, god, colour, stars, month (Sun in that sign), year (Jupiter in that sign), time (the ascendant in that sign), gem and tree.</p>
+     <p class="legend"><b>Timing.</b> For the purposes you tick, every ascendant lord / star lord / sub lord window of the day is checked: the ascendant sub lord and star lord should signify the houses of the purpose (money 2-6-11, exam 4-9-11, job 2-6-10-11, visa 3-9-12, medicine 1-5-11, travel 3-9-11, house 4-11-12, purchase 2-4-11) and not the houses to avoid, and the Fortuna of that moment should not be bad. If you enter your birth details, windows in your own Fortuna sign and on your fortunate day score higher. Touch a window to set its alarm; the Clock tool can plan these alarms too.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">போர்ச்சுனா = லக்னம் + சந்திரன் − சூரியன். போர்ச்சுனா உப அதிபதியின் நட்சத்திர அதிபதி 2, 6, 11-ஐ குறித்தால் நல்லது; 5, 8, 12-ஐ குறித்தால் கெடுதல்; இரண்டும் இருந்தால் நடுத்தரம். உப அதிபதி நிற்கும் ராசியே பலமான ராசி. இந்த விதிகள் வழங்கப்பட்ட குறிப்புகளிலிருந்து (ஆசிரியரின் அனுபவம்) எடுக்கப்பட்டவை.</p>
+    </details>
+    <div class="group"><div class="cell search"><label for="ftSearch" class="vh">Search a city or town</label><input id="ftSearch" placeholder="City or town: Chennai, Mumbai, London" autocomplete="off"></div></div>
+    <div class="group">
+     <label class="cell" for="ftCountry"><span class="cl">Country</span><select id="ftCountry"></select></label>
+     <label class="cell" for="ftState"><span class="cl">State / Province</span><select id="ftState"></select></label>
+     <label class="cell" for="ftCity"><span class="cl">City / Town</span><select id="ftCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ftLat"><span class="cl">Latitude</span><input id="ftLat" inputmode="decimal"></label>
+     <label class="cell" for="ftLon"><span class="cl">Longitude</span><input id="ftLon" inputmode="decimal"></label>
+     <label class="cell" for="ftTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="ftTz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ftFrom"><span class="cl">From</span><input type="date" id="ftFrom"></label>
+     <label class="cell" for="ftTo"><span class="cl">To<small>Up to 15 days</small></span><input type="date" id="ftTo"></label>
+     <label class="cell" for="ftT1"><span class="cl">From Time<small>Local time</small></span><input type="time" id="ftT1" value="00:00"></label>
+     <label class="cell" for="ftT2"><span class="cl">To Time<small>Local time</small></span><input type="time" id="ftT2" value="23:59"></label>
+     <label class="cell" for="ftAyan"><span class="cl">Ayanamsa</span><select id="ftAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell" for="ftSort"><span class="cl">Order</span><select id="ftSort"><option value="time">By time</option><option value="score">Best score first</option></select></label>
+    </div>
+    <div class="lf-sec"><h3>Purpose<span class="ta">நோக்கம்</span></h3><div id="ftPurp"></div></div>
+    <div class="group">
+     <label class="cell chk" for="ftStrict"><span class="cl">Only when Fortuna is good<small>Skip medium and neutral moments</small></span><input type="checkbox" id="ftStrict"></label>
+     <label class="cell chk" for="ftOnlyNat"><span class="cl">Only in my Fortuna sign<small>Needs the birth details below</small></span><input type="checkbox" id="ftOnlyNat"></label>
+    </div>
+    <details class="howto"><summary>My birth details (optional) · என் பிறப்பு விவரம்</summary>
+     <div class="group">
+      <label class="cell" for="ftBD"><span class="cl">Birth date</span><input type="date" id="ftBD"></label>
+      <label class="cell" for="ftBT"><span class="cl">Birth time<small>Local time</small></span><input type="time" id="ftBT" value="06:00"></label>
+      <label class="cell" for="ftBLat"><span class="cl">Birth latitude</span><input id="ftBLat" inputmode="decimal"></label>
+      <label class="cell" for="ftBLon"><span class="cl">Birth longitude</span><input id="ftBLon" inputmode="decimal"></label>
+      <label class="cell" for="ftBTz"><span class="cl">Birth time zone</span><input id="ftBTz" autocomplete="off"></label>
+     </div>
+     <div class="btns"><button id="ftBSame" type="button">Birth place is the place above</button><button id="ftNatGo" type="button">Show my Fortuna</button><button id="ftNatX" type="button">Clear</button></div>
+     <div id="ftNat"></div>
+    </details>
+    <div class="msg" id="ftOff" role="status"></div>
+    <div class="btns"><button class="primary" id="ftGo" type="button">Find Fortuna Timings</button><button id="ftLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="ftMsg" role="status"></div>
+    <div id="ftOut"></div>
+   </div>
+   <div class="panel sheet hide wide" id="hqPanel" role="dialog" aria-modal="true" aria-labelledby="hqT">
+    <div class="sh-head"><div><h2 id="hqT">Horary Answers</h2><span class="tt">ஹோரரி விடைகள் · KP பிரசன்னம்</span></div><button class="xbtn" id="hqClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Pick your question from the list (it is grouped by house, as in <b>S. P. Khullar</b>’s <i>Horary Astrology and Cuspal Interlinks</i> and <b>K. B. Bosmia</b>’s <i>Easy Way to Learn KP Horary Astrology</i>), choose the place, and give a <b>horary number from 1 to 249</b> (or use the time of judgment). No birth chart is needed. The app casts the horary chart, finds the <b>sub lord of the cusp</b> that rules your question, checks the houses it signifies against the houses of that event, checks the 11th cusp for fulfilment, the sub-sub lords, and the seven <b>ruling planets</b>. It then gives <b>YES / NO</b> with reasons. If the event is promised, it finds the <b>joint period (dasa–bhukti–antara)</b> run from the Moon of the question and confirms the time with the transit of the <b>Sun, Moon, Lagna and Jupiter</b> (Rahul Kaushik’s rules for timing).</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">பட்டியலில் இருந்து கேள்வியைத் தேர்ந்தெடுத்து, இடத்தையும் 1 முதல் 249 வரையிலான பிரசன்ன எண்ணையும் கொடுங்கள் (அல்லது கேள்வி கேட்கும் நேரத்தை எடுத்துக்கொள்ளலாம்). ஜாதகம் தேவையில்லை. கேள்விக்குரிய பாவ உப அதிபதி எந்த பாவங்களைக் குறிக்கிறது, 11-ஆம் பாவம், ஆளும் கிரகங்கள் ஆகியவற்றை ஆராய்ந்து ஆம் / இல்லை என்ற பதிலைக் காரணங்களுடன் தரும். நிகழ்வு உறுதியானால், தசா–புக்தி–அந்தரம், சூரியன், சந்திரன், லக்னம், குரு கோசாரம் மூலம் நிகழும் காலத்தைக் காட்டும்.</p>
+    </details>
+    <h3 class="eph3">1 · Your question<span class="ta">உங்கள் கேள்வி</span></h3>
+    <div class="group">
+     <label class="cell" for="hqQ"><span class="cl">Question</span><select id="hqQ"></select></label>
+     <label class="cell" for="hqAbout"><span class="cl">Question is about<small>Rotates the chart for relatives</small></span><select id="hqAbout"><option value="0" selected>Myself</option><option value="6">Spouse / partner (7th)</option><option value="4">Child (5th)</option><option value="8">Father (9th)</option><option value="3">Mother (4th)</option><option value="2">Younger sibling (3rd)</option><option value="10">Elder sibling / friend (11th)</option><option value="9">Boss / employer (10th)</option><option value="5">Servant / pet / employee (6th)</option></select></label>
+    </div>
+    <div id="hqInfo" class="eprec hqinfo"></div>
+    <h3 class="eph3">2 · Horary number and time<span class="ta">பிரசன்ன எண், நேரம்</span></h3>
+    <div class="group">
+     <label class="cell" for="hqMode"><span class="cl">Chart by</span><select id="hqMode"><option value="num" selected>Horary number (1 – 249)</option><option value="time">Time of judgment (Khullar)</option></select></label>
+     <label class="cell" id="hqNumRow" for="hqNum"><span class="cl">Horary number<small>Think of your question, then give a number from 1 to 249</small></span><input id="hqNum" class="hqnum" type="number" min="1" max="249" inputmode="numeric" placeholder="1 – 249"></label>
+     <label class="cell" for="hqWhen"><span class="cl">Time of question</span><select id="hqWhen"><option value="now" selected>Now</option><option value="custom">A date and time I choose</option></select></label>
+     <label class="cell" id="hqDRow" for="hqD" style="display:none"><span class="cl">Date</span><input type="date" id="hqD"></label>
+     <label class="cell" id="hqTRow" for="hqT" style="display:none"><span class="cl">Time</span><input type="time" id="hqT"></label>
+     <label class="cell" for="hqYears"><span class="cl">Look ahead</span><select id="hqYears"><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option><option value="5" selected>5 years</option><option value="10">10 years</option><option value="20">20 years</option></select></label>
+     <label class="cell" for="hqRetro"><span class="cl">Retrograde rule<small>Kaushik; off follows Khullar and Bosmia</small></span><input type="checkbox" id="hqRetro"></label>
+    </div>
+    <h3 class="eph3">3 · Place of the question<span class="ta">கேள்வி கேட்கும் இடம்</span></h3>
+    <div class="group">
+     <div class="cell search"><label for="hqSearch" class="vh">Search a city</label><input id="hqSearch" placeholder="Search Tiruchirappalli, London" autocomplete="off"></div>
+     <label class="cell" for="hqCountry"><span class="cl">Country</span><select id="hqCountry"></select></label>
+     <label class="cell" for="hqCity"><span class="cl">City</span><select id="hqCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="hqLat"><span class="cl">Latitude</span><input id="hqLat" inputmode="decimal"></label>
+     <label class="cell" for="hqLon"><span class="cl">Longitude</span><input id="hqLon" inputmode="decimal"></label>
+     <label class="cell" for="hqTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="hqTz" autocomplete="off"></label>
+    </div>
+    <div class="msg" id="hqOff" role="status"></div>
+    <div class="btns"><button class="primary" id="hqGo" type="button">Answer My Question · விடை காண்</button><button id="hqLoc" type="button">Use My Location · என் இடம்</button></div>
+    <div class="msg" id="hqMsg" role="status"></div>
+    <div id="hqOut" aria-live="polite"></div>
+   </div>
+
+   <div class="panel sheet hide wide" id="epPanel" role="dialog" aria-modal="true" aria-labelledby="epT">
+    <div class="sh-head"><div><h2 id="epT">Practical Electional Muhurtham</h2><span class="tt">செயல்முறை முகூர்த்தம்</span></div><button class="xbtn" id="epClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Choose what you want to begin (trade, vehicle, land, game, agriculture and more). The panel lists the planetary positions recommended by <b>Vivian E. Robson</b> (<i>Electional Astrology</i>, 1937) and <b>Joann Hampar</b> (<i>Electional Astrology</i>, 2005) for that event. Then choose the place, the dates and the daily time window. The app moves the transit minute by minute: the rising degree, Placidus houses, the Moon (void-of-course, Via Combusta, phase, her aspects), retrograde and combust planets, dignities, the Part of Fortune, planetary hours and eclipses. Each moment is scored against that event’s rules, and the best windows are listed with their start, end and duration, and the rules that were met or missed.</p>
+     <p class="legend">The books use the <b>tropical zodiac</b> and Western house rulers, so this is the default; you can switch to the sidereal zodiac. Outer planets (Uranus, Neptune, Pluto) and the birth chart check are not included. These are traditional guidelines, not a guarantee.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">நிகழ்வைத் தேர்ந்தெடுத்தால், ராப்சன் (Robson), ஹாம்பர் (Hampar) ஆகிய நூலாசிரியர்கள் பரிந்துரைத்த கிரக நிலைகள் காட்டப்படும். இடம், தேதி, நேர வரம்பைக் கொடுத்தால், அந்த நூல்களின் விதிகளின்படி கிரகப் பெயர்ச்சியை நிமிடம் நிமிடமாக ஆராய்ந்து, சிறந்த முகூர்த்த நேரங்களை கால அளவுடன் பட்டியலிடும். நூல்கள் வெஸ்டர்ன் (திரோபிகல்) முறையைப் பயன்படுத்துவதால் அதுவே முன்னிருப்பு; நிரயன முறைக்கும் மாற்றலாம்.</p>
+    </details>
+    <h3 class="eph3">1 · What do you want to begin?<span class="ta">எதற்கு முகூர்த்தம்?</span></h3>
+    <div id="epEvents" class="epevs"></div>
+    <div id="epRec" class="eprec"></div>
+    <h3 class="eph3">2 · Place, dates and time<span class="ta">இடம், தேதி, நேரம்</span></h3>
+    <div class="group">
+     <div class="cell search"><label for="epSearch" class="vh">Search a city</label><input id="epSearch" placeholder="Search Tiruchirappalli, London" autocomplete="off"></div>
+     <label class="cell" for="epCountry"><span class="cl">Country</span><select id="epCountry"></select></label>
+     <label class="cell" for="epCity"><span class="cl">City</span><select id="epCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="epLat"><span class="cl">Latitude</span><input id="epLat" inputmode="decimal"></label>
+     <label class="cell" for="epLon"><span class="cl">Longitude</span><input id="epLon" inputmode="decimal"></label>
+     <label class="cell" for="epTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="epTz" autocomplete="off"></label>
+    </div>
+    <div class="msg" id="epOff" role="status"></div>
+    <div class="group">
+     <label class="cell" for="epFrom"><span class="cl">From date</span><input type="date" id="epFrom"></label>
+     <label class="cell" for="epTo"><span class="cl">To date<small>up to 31 days</small></span><input type="date" id="epTo"></label>
+     <label class="cell" for="epT1"><span class="cl">Daily from</span><input type="time" id="epT1" value="06:00"></label>
+     <label class="cell" for="epT2"><span class="cl">Daily until</span><input type="time" id="epT2" value="21:00"></label>
+     <label class="cell" for="epMin"><span class="cl">Shortest window</span><select id="epMin"><option value="0">Any</option><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="60">1 hour</option><option value="90">90 minutes</option></select></label>
+     <label class="cell" for="epZod"><span class="cl">Zodiac</span><select id="epZod"><option value="trop" selected>Tropical (as in the books)</option><option value="sid">Sidereal (KP / Lahiri)</option></select></label>
+     <label class="cell" for="epStrict"><span class="cl">Strictness<small>Retrograde key planet</small></span><select id="epStrict"><option value="strict" selected>Strict – avoid (as the books say)</option><option value="relaxed">Relaxed – allow with a penalty</option></select></label>
+     <label class="cell" id="epCropRow" for="epCrop" style="display:none"><span class="cl">Crop</span><select id="epCrop"><option value="">Any</option><option value="up">Grows above ground</option><option value="root">Root crop</option></select></label>
+    </div>
+    <div class="btns"><button class="primary" id="epGo" type="button">Find Auspicious Muhurtham · முகூர்த்தம் கண்டுபிடி</button><button id="epLoc" type="button">Use My Location · என் இடம்</button></div>
+    <div class="msg" id="epMsg" role="status"></div>
+    <div id="epOut" aria-live="polite"></div>
+    <p class="legend epnote">Rules are traditional and probability-based. This is not a guarantee, not betting, gambling or investment advice, and the author and app creator accept no liability.</p>
+   </div>
+
+   <div class="panel sheet hide wide" id="bpPanel" role="dialog" aria-modal="true" aria-labelledby="bpT">
+    <div class="sh-head"><div><h2 id="bpT">Birth Chart</h2><span class="tt">பிறப்பு ஜாதகம்</span></div><button class="xbtn" id="bpClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Choose the day, month and year of birth, the time of birth, and the place (country, state and city). Latitude, longitude and the world time zone are filled in automatically, and the UTC offset is worked out for the birth date, so past daylight or war-time changes are applied. You get the Rasi, Navamsa and KP bhava charts, planet details, cuspal details, the houses each planet links to and signifies, the significators of every house, the dasha balance and the running dasha, and every dasha, bhukti and antara period. Use KP or Lahiri ayanamsa. All of it can be copied or printed.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">பிறந்த நாள், மாதம், வருடம், நேரம், இடம் (நாடு, மாநிலம், நகரம்) ஆகியவற்றைத் தேர்ந்தெடுங்கள். அட்சரேகை, தீர்க்கரேகை, உலக நேர மண்டலம் தானாக நிரம்பும்; பிறந்த தேதிக்கான UTC வேறுபாடும் தானாகக் கணக்கிடப்படும். ராசி, நவாம்ச, கே.பி பாவ சக்கரங்கள், கிரக விவரம், கஸ்ப் விவரம், கிரகங்களின் பாவத் தொடர்பும் குறிப்பும், ஒவ்வொரு பாவத்தின் காரகர்கள், தசா இருப்பு, நடப்பு தசை, அனைத்து தசா புக்தி அந்தர காலங்கள் ஆகியவை கிடைக்கும். கே.பி அல்லது லாஹிரி அயனாம்சம் தேர்வு செய்யலாம். அனைத்தையும் நகலெடுக்கவோ அச்சிடவோ முடியும்.</p>
+    </details>
+    <div id="bpSaved"></div>
+    <div class="group">
+     <label class="cell" for="bpName"><span class="cl">Name<small>Optional</small></span><input id="bpName" autocomplete="off" placeholder="Name of the native"></label>
+     <div class="cell"><span class="cl">Date of Birth<small>பிறந்த தேதி</small></span><div class="msel"><select id="bpDay" aria-label="Day"></select><select id="bpMonth" aria-label="Month"></select><select id="bpYear" aria-label="Year"></select></div></div>
+     <div class="cell"><span class="cl">Time of Birth<small>பிறந்த நேரம்</small></span><div class="msel"><select id="bpHour" aria-label="Hour"></select><select id="bpMin" aria-label="Minute"></select><select id="bpSec" aria-label="Second"></select><select id="bpAmpm" aria-label="AM or PM"><option>AM</option><option>PM</option></select></div></div>
+    </div>
+    <div class="group">
+     <div class="cell search"><label for="bpSearch" class="vh">Search a city or town</label><input id="bpSearch" placeholder="Search Pudukkottai, Madurai, Colombo" autocomplete="off"></div>
+     <label class="cell" for="bpCountry"><span class="cl">Country</span><select id="bpCountry"></select></label>
+     <label class="cell" for="bpState"><span class="cl">State / Province</span><select id="bpState"></select></label>
+     <label class="cell" for="bpCity"><span class="cl">City / Town</span><select id="bpCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="bpLat"><span class="cl">Latitude<small>North is +</small></span><input id="bpLat" inputmode="decimal"></label>
+     <label class="cell" for="bpLon"><span class="cl">Longitude<small>East is +</small></span><input id="bpLon" inputmode="decimal"></label>
+     <label class="cell" for="bpTz"><span class="cl">Time Zone<small>Name, or UTC hours like 5.5</small></span><input id="bpTz" autocomplete="off"></label>
+     <label class="cell" for="bpTzSel"><span class="cl">UTC Offset<small>All offsets</small></span><select id="bpTzSel"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="bpAyan"><span class="cl">Ayanamsa</span><select id="bpAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell" for="bpStyle"><span class="cl">Chart Style</span><select id="bpStyle"><option value="south">South Indian · தென்னிந்திய</option><option value="north">North Indian · வட இந்திய</option><option value="both">Both charts · இரண்டும்</option></select></label>
+     <label class="cell" for="bpLang"><span class="cl">Language</span><select id="bpLang" class="langsel"></select></label>
+     <label class="cell" for="bpFs"><span class="cl">Font size</span><select id="bpFs"><option value="80">80%</option><option value="90">90%</option><option value="100" selected>100%</option><option value="115">115%</option><option value="130">130%</option><option value="150">150%</option><option value="175">175%</option></select></label>
+     <label class="cell" for="bpFf"><span class="cl">Font style</span><select id="bpFf"><option value="" selected>App default</option><option value="sans">Clean sans</option><option value="serif">Serif</option><option value="mono">Monospace</option><option value="rounded">Rounded</option><option value="humanist">Humanist</option><option value="hand">Handwriting</option><option value="classic">Classic book</option></select></label>
+    </div>
+    <div class="msg" id="bpOff" role="status"></div>
+    <div class="btns"><button class="primary" id="bpGo" type="button">Calculate Birth Chart · ஜாதகம் கணி</button><button id="bpAcg" type="button">Astro Map · வரைபடம்</button><button id="bpLoc" type="button">Use My Location · என் இடம்</button><button id="bpSave" type="button">Save This Chart · சேமி</button></div>
+    <div id="bpOut" aria-live="polite"></div>
+   </div>
+
+   <div class="panel sheet hide wide" id="acPanel" role="dialog" aria-modal="true" aria-labelledby="acT">
+    <div class="sh-head"><div><h2 id="acT">Astrocartography</h2><span class="tt">ஜோதிட வரைபடம் (இடம் மாற்றப் பலன்)</span></div><button class="xbtn" id="acClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Draws the Ascendant, Descendant, MC and IC lines (“waves”) of all nine planets on a world map for the birth details in the Birth chart form, and marks the places where the waves of the ascendant lord, Moon and the 4th, 5th, 6th, 8th and 12th lords meet, with the nearest city or town. The 2nd lord’s lines show money places. Everything works offline.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">பிறப்பு ஜாதகப் படிவத்தில் உள்ள விவரங்களுக்கு ஒன்பது கிரகங்களின் லக்ன, அஸ்தம, MC, IC கோடுகளை (அலைகள்) உலக வரைபடத்தில் வரைந்து, லக்னாதிபதி, சந்திரன், 4, 5, 6, 8, 12ஆம் அதிபதிகளின் அலைகள் சந்திக்கும் இடங்களையும் அருகிலுள்ள நகரங்களையும் குறிக்கும்.</p>
+    </details>
+    <div class="group">
+     <label class="cell" for="acRad"><span class="cl">City Search Radius<small>Around a crossing</small></span><select id="acRad"><option value="150">150 km</option><option value="300" selected>300 km</option><option value="500">500 km</option><option value="800">800 km</option></select></label>
+     <label class="cell" for="acBand"><span class="cl">Money Zone Width<small>Beside 2nd lord lines</small></span><select id="acBand"><option value="100">100 km</option><option value="150" selected>150 km</option><option value="250">250 km</option><option value="400">400 km</option></select></label>
+     <div class="cell" style="flex-wrap:wrap"><span class="cl">Line Types<small>Used for the crossings</small></span><div id="acAng" class="acopts" style="flex:1;justify-content:flex-end"></div></div>
+    </div>
+    <div class="msg" id="acMsg" role="status"></div>
+    <div class="btns"><button class="primary" id="acGo" type="button">Draw Astro Map · வரைபடம் வரை</button><button id="acEdit" type="button">Change Birth Details</button><button id="acCopy" type="button">Copy Lists</button></div>
+    <div id="acBody" class="hide">
+     <div class="acopts" id="acPl"></div>
+     <label class="acchk"><input type="checkbox" id="acOnly"> Highlight lord lines only (others faded)</label>
+     <div class="acmapw"><canvas id="acCv" aria-label="World map with planetary lines"></canvas>
+      <div class="aczoom"><button id="acZin" type="button" aria-label="Zoom in">+</button><button id="acZout" type="button" aria-label="Zoom out">−</button><button id="acZfit" type="button" aria-label="Whole world">⌂</button><button id="acZhome" type="button" aria-label="Birth place">★</button></div></div>
+     <p class="legend">Lines: solid = ASC and MC, dashed = DSC, dotted = IC. Thick lines belong to the lords used below. ★ birth place. <span style="color:#1b9e4b">●</span> children / intelligence · <span style="color:#0f8f8a">●</span> and <span style="color:#2f7fd1">●</span> land and happiness · <span style="color:#c62828">●</span> and <span style="color:#ad1457">●</span> not suitable · <span style="color:#d4a017">◆</span> money (2nd lord). Drag to move, pinch or scroll to zoom.</p>
+     <div class="msg" id="acInfo"></div>
+     <div id="acList"></div>
+    </div>
+   </div>
+
+   <div class="panel sheet hide" id="ltPanel" role="dialog" aria-modal="true" aria-labelledby="ltT">
+    <div class="sh-head"><div><h2 id="ltT">Lottery Rules</h2><span class="tt">லாட்டரி விதிகள்</span></div><button class="xbtn" id="ltClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <div class="lnote">
+     <p class="legend"><b>Please read:</b> a lottery draw is random and no timing can change its odds. These ten rules come from KP astrological belief about gain by chance (houses 2, 5, 6, 8 and 11). They were not derived from, or tested on, a set of winners, because the purchase time of winning tickets is not published anywhere. Treat the result as an astrological preference for choosing a time, not a prediction, and never spend more than you can afford to lose. No money amount can be forecast.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">லாட்டரி குலுக்கல் தற்செயலானது; எந்த நேரமும் வாய்ப்பை மாற்றாது. இந்த பத்து விதிகளும் கேபி ஜோதிட நம்பிக்கையின் அடிப்படையிலானவை, புள்ளிவிவரத்தால் நிரூபிக்கப்பட்டவை அல்ல. இது முடிவு அல்ல, நேரத் தேர்வுக்கான வழிகாட்டி மட்டுமே; இழக்கக்கூடிய தொகையை மட்டுமே செலவிடுங்கள்.</p>
+    </div>
+    <details class="lf-det"><summary>The 10 lottery rules · 10 விதிகள்</summary><ol id="ltRules" style="margin:6px 0 0 18px;padding:0"></ol></details>
+    <div class="group">
+     <div class="cell search"><label for="ltSearch" class="vh">Place where the ticket will be bought</label><input id="ltSearch" placeholder="Ticket place: Tiruchirappalli, Las Vegas, Dubai" autocomplete="off"></div>
+     <label class="cell" for="ltCountry"><span class="cl">Country</span><select id="ltCountry"></select></label>
+     <label class="cell" for="ltCity"><span class="cl">City / Town</span><select id="ltCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ltLat"><span class="cl">Latitude</span><input id="ltLat" inputmode="decimal"></label>
+     <label class="cell" for="ltLon"><span class="cl">Longitude</span><input id="ltLon" inputmode="decimal"></label>
+     <label class="cell" for="ltTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="ltTz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ltFrom"><span class="cl">From</span><input type="date" id="ltFrom"></label>
+     <label class="cell" for="ltTo"><span class="cl">To<small>Up to 14 days</small></span><input type="date" id="ltTo"></label>
+     <label class="cell" for="ltAyan"><span class="cl">Ayanamsa</span><select id="ltAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell" for="ltMin"><span class="cl">Minimum Strength</span><select id="ltMin"><option value="50">Good (50 and above)</option><option value="65" selected>Strong (65 and above)</option><option value="80">Very strong (80 and above)</option></select></label>
+     <label class="cell" for="ltSkip"><span class="cl">Skip Unfavourable Times<small>Rahu kalam, Amavasya, Rikta tithi, Vishti karana</small></span><span style="flex:1"></span><input type="checkbox" id="ltSkip" checked></label>
+    </div>
+    <div class="msg" id="ltOff" role="status"></div>
+    <div class="btns"><button class="primary" id="ltGo" type="button">Find Lottery Timings · நேரம் கண்டுபிடி</button><button id="ltLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="ltMsg" role="status"></div>
+    <div id="ltOut"></div>
+     <div id="lwBox" class="lw">
+      <div class="lf-sec"><h3>Winning-number research · Big Ticket<span class="ta">வெற்றி எண் ஆய்வு</span></h3></div>
+      <p class="legend">Studies 75 real winning tickets against the sky over Dubai at the draw, then reads the sky for the dates and places you choose to suggest buying times and numbers (6-digit and 5-digit tickets, sets of numbers with a play ball). A draw is random: the table shows honestly whether the 75 results support any connection.</p>
+      <div class="group">
+       <label class="cell" for="lwFrom"><span class="cl">Period from</span><input type="date" id="lwFrom"></label>
+       <label class="cell" for="lwTo"><span class="cl">Period to<small>Up to 62 days</small></span><input type="date" id="lwTo"></label>
+       <label class="cell" for="lwDraw"><span class="cl">Draw day(s) of the month<small>For example 3</small></span><input id="lwDraw" value="3" inputmode="numeric"></label>
+       <label class="cell" for="lwDrawT"><span class="cl">Draw time (Dubai, GST)</span><input type="time" id="lwDrawT" value="19:30"></label>
+      </div>
+      <div class="group"><div class="cell" style="display:block"><span class="cl">Places to check for buying</span><div id="lwPlaces" class="lwpl"></div></div></div>
+      <div class="group">
+       <label class="cell" for="lwMin"><span class="cl">Minimum strength</span><select id="lwMin"><option value="50">Good (50 and above)</option><option value="65" selected>Strong (65 and above)</option><option value="80">Very strong (80 and above)</option></select></label>
+       <label class="cell chk" for="lwSkip"><span class="cl">Skip unfavourable times<small>Rahu kalam, Amavasya, Rikta, Vishti</small></span><input type="checkbox" id="lwSkip" checked></label>
+       <label class="cell" for="lwTop"><span class="cl">Best windows to show</span><input id="lwTop" value="6" inputmode="numeric"></label>
+       <label class="cell" for="lwSets"><span class="cl">Number sets per moment</span><input id="lwSets" value="5" inputmode="numeric"></label>
+       <label class="cell" for="lwK"><span class="cl">Numbers in a set</span><input id="lwK" value="5" inputmode="numeric"></label>
+       <label class="cell" for="lwMax"><span class="cl">Highest number</span><input id="lwMax" value="49" inputmode="numeric"></label>
+       <label class="cell" for="lwBall"><span class="cl">Highest play ball</span><input id="lwBall" value="26" inputmode="numeric"></label>
+      </div>
+      <div class="btns"><button class="primary" id="lwGo" type="button">Find Buying Times and Numbers · நேரமும் எண்களும்</button><button id="lwData" type="button">Check the 75 results · 75 முடிவுகள்</button></div>
+      <div class="msg" id="lwMsg" role="status"></div>
+      <div id="lwRes"></div>
+      <div id="lwOut"></div>
+     </div>
+   </div>
+
+   <div class="panel sheet hide" id="mmPanel" role="dialog" aria-modal="true" aria-labelledby="mmT">
+    <div class="sh-head"><div><h2 id="mmT">Money Manifestation</h2><span class="tt">பணம் ஈர்ப்பு நேரம்</span></div><button class="xbtn" id="mmClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Choose a place and a from and to date. The app reads the transit ascendant at every sub-lord change, the transit planets, the house cusps and their significations, and lists the timings that meet every rule you tick in the rules menu below. The house lords are those of the cusp signs. These rules express KP astrological belief about money coming to you; they are a guide for choosing a time, not a guarantee.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">இடம், தொடக்க, முடிவு தேதியைத் தேர்ந்தெடுங்கள். ஒவ்வொரு உப அதிபதி மாற்றத்திலும் கோசார லக்னம், கிரகங்கள், பாவ கஸ்ப்கள், அவற்றின் காரகத்துவம் ஆராயப்பட்டு, இந்த ஐந்து விதிகளுக்குப் பொருந்தும் நேரங்கள் தரப்படும். இது வழிகாட்டி மட்டுமே.</p>
+    </details>
+    <div class="acres"><b>Rules menu · விதிகள் (a timing is listed only if every ticked rule is met)</b><div id="mmRules"></div><div class="btns"><button id="mmAll" type="button">Tick all</button><button id="mmNone" type="button">Untick all</button><button id="mmDef" type="button">Recommended</button></div></div>
+    <div class="group">
+     <div class="cell search"><label for="mmSearch" class="vh">Search a city or town</label><input id="mmSearch" placeholder="Search Tiruchirappalli, London, Dubai" autocomplete="off"></div>
+     <label class="cell" for="mmCountry"><span class="cl">Country</span><select id="mmCountry"></select></label>
+     <label class="cell" for="mmCity"><span class="cl">City / Town</span><select id="mmCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="mmLat"><span class="cl">Latitude</span><input id="mmLat" inputmode="decimal"></label>
+     <label class="cell" for="mmLon"><span class="cl">Longitude</span><input id="mmLon" inputmode="decimal"></label>
+     <label class="cell" for="mmTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="mmTz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="mmFrom"><span class="cl">From</span><input type="date" id="mmFrom"></label>
+     <label class="cell" for="mmTo"><span class="cl">To<small>Up to 31 days</small></span><input type="date" id="mmTo"></label>
+     <label class="cell" for="mmAyan"><span class="cl">Ayanamsa</span><select id="mmAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+    </div>
+    <div class="msg" id="mmOff" role="status"></div>
+    <div class="btns"><button class="primary" id="mmGo" type="button">Find Money Timings · நேரம் கண்டுபிடி</button><button id="mmLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="mmMsg" role="status"></div>
+    <div id="mmOut"></div>
+   </div>
+
+   <div class="panel sheet hide" id="ckPanel" role="dialog" aria-modal="true" aria-labelledby="ckT">
+    <div class="sh-head"><div><h2 id="ckT">Cricket Wicket &amp; Breaks</h2><span class="tt">கிரிக்கெட் விக்கெட், இடைவேளை நேரம்</span></div><button class="xbtn" id="ckClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Choose the ground, the match date(s) and the playing hours. At every ascendant sub-lord change the transit chart is read. A timing is listed when the star lord or sub lord of the ascendant is the 3rd lord or the 11th lord. The list shows only the time, marked <b>WICKET POSSIBILITY</b> when the sub lord is the 11th lord or stands in the 11th lord’s star, and <b>ADVERT BREAK</b> for the other timings. Tap a time to see its transit chart. It is astrology for study and entertainment, not a prediction or betting advice.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">மைதானம், போட்டி தேதி, ஆட்ட நேரத்தைத் தேர்ந்தெடுங்கள். லக்ன நட்சத்திர அல்லது உப அதிபதி 3 அல்லது 11-ஆம் அதிபதியாக இருந்தால் நேரம் பட்டியலிடப்படும். உப அதிபதி 11-ஆம் அதிபதியாகவோ அவரது நட்சத்திரத்திலோ இருந்தால் “விக்கெட் வாய்ப்பு”; மற்ற நேரங்கள் “விளம்பர இடைவேளை”. நேரத்தைத் தொட்டால் கோசார சக்கரம் தெரியும்.</p>
+    </details>
+    <div class="group">
+     <div class="cell search"><label for="ckSearch" class="vh">Ground: search a city or town</label><input id="ckSearch" placeholder="Ground: Chennai, Mumbai, Melbourne, Lord’s" autocomplete="off"></div>
+     <label class="cell" for="ckCountry"><span class="cl">Country</span><select id="ckCountry"></select></label>
+     <label class="cell" for="ckCity"><span class="cl">City / Town</span><select id="ckCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ckLat"><span class="cl">Latitude</span><input id="ckLat" inputmode="decimal"></label>
+     <label class="cell" for="ckLon"><span class="cl">Longitude</span><input id="ckLon" inputmode="decimal"></label>
+     <label class="cell" for="ckTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="ckTz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="ckFrom"><span class="cl">From</span><input type="date" id="ckFrom"></label>
+     <label class="cell" for="ckTo"><span class="cl">To<small>Up to 7 days</small></span><input type="date" id="ckTo"></label>
+     <label class="cell" for="ckT1"><span class="cl">Play Starts<small>Local time</small></span><input type="time" id="ckT1" value="09:30"></label>
+     <label class="cell" for="ckT2"><span class="cl">Play Ends<small>Local time</small></span><input type="time" id="ckT2" value="18:00"></label>
+     <label class="cell" for="ckAyan"><span class="cl">Ayanamsa</span><select id="ckAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell" for="ckShow"><span class="cl">Show</span><select id="ckShow"><option value="wb">Wicket possibilities and advert breaks</option><option value="w">Wicket possibilities only</option></select></label>
+    </div>
+    <div class="msg" id="ckOff" role="status"></div>
+    <div class="btns"><button class="primary" id="ckGo" type="button">Find Wicket and Break Times</button><button id="ckLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="ckMsg" role="status"></div>
+    <div id="ckOut"></div>
+   </div>
+   <div class="panel sheet hide" id="m3Panel" role="dialog" aria-modal="true" aria-labelledby="m3T">
+    <div class="sh-head"><div><h2 id="m3T">3 11 Muhurtham</h2><span class="tt">3 11 முகூர்த்தம்</span></div><button class="xbtn" id="m3Close" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <div class="m3tabs" role="tablist"><button type="button" id="m3TabA" class="on" role="tab" aria-selected="true">3 11 All Timings</button><button type="button" id="m3TabB" role="tab" aria-selected="false">Author’s Muhurtham</button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend"><b>3 11 All Timings.</b> Every time the transit ascendant, its star lord and its sub lord make one of the 3,11 combinations below, the start and end time is listed for your place. Aries Mars/Venus/Saturn · Taurus Venus/Moon/Jupiter · Gemini Mercury/Mars/Mercury, Mercury/Mars/Moon, Mercury/Mars/Sun · Cancer Moon/Mercury/Venus · Leo Sun/Venus/Mercury · Virgo Mercury/Moon/Moon · Libra Venus/Jupiter/Sun · Scorpio Mars/Saturn/Mercury, Mars/Mercury/Saturn · Sagittarius Jupiter/Venus/Saturn · Capricorn Saturn/Mars/Mars · Aquarius Saturn/Jupiter/Jupiter · Pisces Jupiter/Jupiter/Mars.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">3 11 எல்லா நேரங்களும்: லக்ன அதிபதி / நட்சத்திர அதிபதி / உப அதிபதி மேலே கூறிய சேர்க்கைகளில் வரும் தொடக்க, முடிவு நேரம் பட்டியலிடப்படும்.</p>
+     <p class="legend"><b>Author’s Muhurtham.</b> At every change of the rising ascendant lord, star lord or sub lord, each of the planets you choose is checked in the transit chart. Houses are counted from the rising sign. <b>Should:</b> be placed in the 1st, 2nd, 3rd or 11th house, or be in the star of the 1st, 2nd, 3rd or 11th lord, or be in the star of a planet placed in the 1st, 2nd, 3rd or 11th house (choose whether any one or all three must hold). <b>Should not:</b> itself be the lord of the 5th, 8th, 9th or 12th house (except that the 8th-lord rule is waived for a planet that is also the 1st lord, as Mars for Aries and Venus for Libra), be placed in the 5th, 8th, 9th or 12th house, be in the star of the 5th, 8th, 9th or 12th lord, be in the star of a planet placed in the 5th, 8th, 9th or 12th house, or be retrograde (Rahu and Ketu are always retrograde by nature, so they are not counted for this). In the list, H3 means placed in the 3rd house, ★2L Ve means in the star of the 2nd lord Venus, and ★Ma in H11 means in the star of Mars who stands in the 11th house.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">ஆசிரியர் முகூர்த்தம்: லக்ன அதிபதி, நட்சத்திர அதிபதி, உப அதிபதி ஆகியோர் 1, 2, 3, 11-ஆம் வீட்டில் இருக்க வேண்டும், அல்லது 1, 2, 3, 11-ஆம் அதிபதியின் நட்சத்திரத்தில் இருக்க வேண்டும், அல்லது 1, 2, 3, 11-ஆம் வீட்டில் உள்ள கிரகத்தின் நட்சத்திரத்தில் இருக்க வேண்டும். கிரகமே 5, 8, 9, 12-ஆம் வீட்டு அதிபதியாக இருக்கக் கூடாது (லக்னாதிபதியே 8-ஆம் அதிபதியாகவும் வரும் மேஷம், துலாம் லக்னத்தில் 8-ஆம் அதிபதி விதி விலக்கு); 5, 8, 9, 12-ஆம் வீடு, அந்த வீட்டு அதிபதிகளின் நட்சத்திரம், அந்த வீட்டில் உள்ள கிரகத்தின் நட்சத்திரம், வக்ரம் ஆகியவை இருக்கக் கூடாது.</p>
+    </details>
+    <div class="group">
+     <div class="cell search"><label for="m3Search" class="vh">Search a city or town</label><input id="m3Search" placeholder="City or town: Chennai, Mumbai, London" autocomplete="off"></div>
+     <label class="cell" for="m3Country"><span class="cl">Country</span><select id="m3Country"></select></label>
+     <label class="cell" for="m3State"><span class="cl">State / Province</span><select id="m3State"></select></label>
+     <label class="cell" for="m3City"><span class="cl">City / Town</span><select id="m3City"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="m3Lat"><span class="cl">Latitude</span><input id="m3Lat" inputmode="decimal"></label>
+     <label class="cell" for="m3Lon"><span class="cl">Longitude</span><input id="m3Lon" inputmode="decimal"></label>
+     <label class="cell" for="m3Tz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="m3Tz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="m3From"><span class="cl">From</span><input type="date" id="m3From"></label>
+     <label class="cell" for="m3To"><span class="cl">To<small>Up to 7 days</small></span><input type="date" id="m3To"></label>
+     <label class="cell" for="m3T1"><span class="cl">From Time<small>Local time</small></span><input type="time" id="m3T1" value="00:00"></label>
+     <label class="cell" for="m3T2"><span class="cl">To Time<small>Local time</small></span><input type="time" id="m3T2" value="23:59"></label>
+     <label class="cell" for="m3Ayan"><span class="cl">Ayanamsa</span><select id="m3Ayan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell m3a" for="m3Sign"><span class="cl">Ascendant</span><select id="m3Sign"><option value="*">All 12 ascendants</option><option value="0">Aries</option><option value="1">Taurus</option><option value="2">Gemini</option><option value="3">Cancer</option><option value="4">Leo</option><option value="5">Virgo</option><option value="6">Libra</option><option value="7">Scorpio</option><option value="8">Sagittarius</option><option value="9">Capricorn</option><option value="10">Aquarius</option><option value="11">Pisces</option></select></label>
+     <label class="cell m3b hide" for="m3Level"><span class="cl">Planets that must pass</span><select id="m3Level"><option value="3">Ascendant lord, star lord and sub lord</option><option value="2">Star lord and sub lord</option><option value="1">Sub lord only</option></select></label>
+     <label class="cell m3b hide" for="m3Match"><span class="cl">“Should” conditions<small>Placed in 1/2/3/11 · in star of 1/2/3/11 lord · in star of planet placed in 1/2/3/11</small></span><select id="m3Match"><option value="any">Any one of the three</option><option value="all">All three</option></select></label>
+    </div>
+    <div class="msg" id="m3Off" role="status"></div>
+    <div class="btns"><button class="primary" id="m3Go" type="button">Find 3 11 Timings</button><button id="m3Loc" type="button">Use My Location</button></div>
+    <div class="msg" id="m3Msg" role="status"></div>
+    <div id="m3Out"></div>
+   </div>
+   <div class="panel sheet hide" id="tpPanel" role="dialog" aria-modal="true" aria-labelledby="tpT">
+    <div class="sh-head"><div><h2 id="tpT">Trade Profit</h2><span class="tt">வர்த்தக லாப முகூர்த்தம்</span></div><button class="xbtn" id="tpClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">These rules were distilled from two profitable trades (Pallavaram, 1 Feb 2026 11:40:59 and 2 Feb 2026 15:01). The KP chart of each moment was studied, and the conditions that <b>both</b> moments share were kept. A time is listed when <b>all four</b> hold: (1) the Moon’s star lord signifies the 11th house; (2) the 5th cusp sub lord signifies the 11th; (3) the 6th cusp sub lord signifies the 11th; (4) there is no loss, meaning the ascendant star lord and sub lord do not signify the 12th without the 11th. A time is marked <b>Strong</b> when, in addition, the Moon’s sub lord signifies the 8th house (sudden gain). Houses signified are the usual KP significators on the Placidus cusps.</p>
+     <p class="legend">About 9% of random market-hour times meet the four rules and about 4% are Strong, so the list is selective. <b>Be careful:</b> two trades cannot prove a rule. Both trades also meet these rules by chance more often than you might expect, and the existing Money Profit and Author’s rules were <b>not</b> met by them. Treat the list as a research aid to test against more of your trades, not as a promise of profit or financial advice. Market hours are 09:15 to 15:30 on trading days; change the time window if you need.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">இரண்டு லாப வர்த்தக நேரங்களின் KP ஜாதகத்தில் இரண்டிலும் பொதுவாக இருந்த விதிகள்: (1) சந்திரனின் நட்சத்திர அதிபதி 11-ஐ குறிக்க வேண்டும், (2) 5-ஆம் கஸ்ப் உப அதிபதி 11-ஐ குறிக்க வேண்டும், (3) 6-ஆம் கஸ்ப் உப அதிபதி 11-ஐ குறிக்க வேண்டும், (4) லக்ன நட்சத்திர, உப அதிபதிகள் 11 இன்றி 12-ஐ குறிக்கக் கூடாது. சந்திர உப அதிபதி 8-ஐ குறித்தால் “வலுவானது”. இது ஆய்வுக்கு மட்டும்; லாப உறுதி அல்ல.</p>
+    </details>
+    <details class="howto" id="tpEvD"><summary>Analysis of your two profit trades<span class="tt">உங்கள் இரு லாப வர்த்தகங்களின் பகுப்பாய்வு</span></summary><div id="tpEv"></div></details>
+    <div class="group">
+     <div class="cell search"><label for="tpSearch" class="vh">Search a city or town</label><input id="tpSearch" placeholder="City or town: Chennai, Mumbai, Kolkata" autocomplete="off"></div>
+     <label class="cell" for="tpCountry"><span class="cl">Country</span><select id="tpCountry"></select></label>
+     <label class="cell" for="tpState"><span class="cl">State / Province</span><select id="tpState"></select></label>
+     <label class="cell" for="tpCity"><span class="cl">City / Town</span><select id="tpCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="tpLat"><span class="cl">Latitude</span><input id="tpLat" inputmode="decimal"></label>
+     <label class="cell" for="tpLon"><span class="cl">Longitude</span><input id="tpLon" inputmode="decimal"></label>
+     <label class="cell" for="tpTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="tpTz" autocomplete="off"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="tpFrom"><span class="cl">From</span><input type="date" id="tpFrom"></label>
+     <label class="cell" for="tpTo"><span class="cl">To<small>Up to 7 days</small></span><input type="date" id="tpTo"></label>
+     <label class="cell" for="tpT1"><span class="cl">From Time<small>Local time</small></span><input type="time" id="tpT1" value="09:15"></label>
+     <label class="cell" for="tpT2"><span class="cl">To Time<small>Local time</small></span><input type="time" id="tpT2" value="15:30"></label>
+     <label class="cell" for="tpAyan"><span class="cl">Ayanamsa</span><select id="tpAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell" for="tpShow"><span class="cl">Show</span><select id="tpShow"><option value="strong">Strong timings only (both of your trades were Strong)</option><option value="all">All timings that meet the 4 rules</option></select></label>
+    </div>
+    <div class="msg" id="tpOff" role="status"></div>
+    <div class="btns"><button class="primary" id="tpGo" type="button">Find Trade Profit Timings</button><button id="tpLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="tpMsg" role="status"></div>
+    <div id="tpOut"></div>
+   </div>
+   <div class="panel sheet hide" id="mkPanel" role="dialog" aria-modal="true" aria-labelledby="mkT">
+    <div class="sh-head"><div><h2 id="mkT">Market Transit</h2><span class="tt">சந்தை கோசாரம் · மெழுகுவர்த்தி வடிவங்கள்</span></div><button class="xbtn" id="mkClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">This tool reads the real planetary positions for every candle (all calculated offline) and turns them into a <b>planetary pressure index</b>. It is <b>not a price feed</b>, so the candles are synthetic: they show how bullish or bearish, and how volatile, the sky is, drawn as candles so that candlestick and chart patterns can be read. Type your index level (for example Nifty 25000) in the start level box to see the candles on that scale; the daily move box sets how far a fully bullish or bearish day may travel.</p>
+     <p class="legend"><b>Rules used.</b> They come from two books: <i>Timing Solutions for Swing Traders</i> (Lee and Tryde, 2012, chapter 9) and the <i>Celestial Mechanics of the Marketplace</i> report. Seven rule groups add up to the pressure score, and every candle lists which of them pushed it: (1) <b>Lunar cycle</b>, buy near the New Moon and sell near the Full Moon, with quarter moons and eclipses as change-in-trend windows; (2) <b>Planet strength</b>, Jupiter and Venus bullish, Saturn, Mars, Rahu and Ketu bearish or volatile, adjusted for strong or weak signs and retrograde motion; (3) <b>Classic pairs</b>, such as Venus–Jupiter (bullish), Saturn–Uranus and Saturn–Pluto (bearish), Mars–Saturn (brakes on), Sun–Mercury conjunction (reversal day); (4) <b>Other aspects</b> between planets; (5) <b>Transit to the market’s natal chart</b> (Table 9.1 of the book): Venus or Jupiter in sextile or trine to the market’s natal Sun, Jupiter or Pluto, Jupiter on its Part of Fortune, and hard aspects from Saturn, Mars, Uranus or Pluto to its natal money planets; (6) <b>Transit ascendant and cusps</b>, where stress on the money houses (2, 5, 8, 11) is a warning and the KP 11th-house rules mark gain; (7) <b>Turning-point windows</b>, stationary planets, Full and quarter moons, eclipses. The “rule book” at the bottom of the results lists them with their sources. The market’s natal chart can be switched off or replaced with your own date, time and place; the NSE default uses 3 Nov 1994, 09:00 IST as an assumption, so replace it with a time you trust. Volatility grows with Mars, Rahu, Ketu, Saturn, hard aspects, retrograde planets and a Moon near the nodes.</p>
+     <p class="legend"><b>Check the rules on real prices.</b> Paste your own daily prices (date, open, high, low, close, one line per day) in the box below. The app then draws your real candles, shows what the planets predicted for each day, and counts how often the rules were right, in total and by rule group. Nothing is sent anywhere.</p>
+     <p class="legend"><b>Patterns</b> found on the candles: doji, hammer, hanging man, shooting star, engulfing, morning and evening star, three soldiers and crows, marubozu, double top and bottom, head and shoulders, support and resistance, breakout, trend and moving-average crosses. <b>Be careful:</b> these are classical associations, not tested price predictors. Use for research and learning, not as financial advice.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">ஒவ்வொரு மெழுகுவர்த்திக்கும் உண்மையான கிரக நிலைகள் (இணையம் இல்லாமல்) கணக்கிடப்பட்டு “கிரக அழுத்த குறியீடு” ஆக மாற்றப்படுகிறது. இது உண்மையான விலை அல்ல; ஏற்றம்/இறக்கம் மற்றும் ஏற்ற இறக்கத்தை மெழுகுவர்த்தியாக காட்டும் ஆய்வுக் கருவி. நிதி ஆலோசனை அல்ல.</p>
+    </details>
+    <div class="group">
+     <div class="cell search"><label for="mkSearch" class="vh">Search a city or town</label><input id="mkSearch" placeholder="Exchange city: Mumbai, New York, London" autocomplete="off"></div>
+     <label class="cell" for="mkCountry"><span class="cl">Country</span><select id="mkCountry"></select></label>
+     <label class="cell" for="mkState"><span class="cl">State / Province</span><select id="mkState"></select></label>
+     <label class="cell" for="mkCity"><span class="cl">City / Town</span><select id="mkCity"></select></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="mkLat"><span class="cl">Latitude</span><input id="mkLat" inputmode="decimal" value="19.0760"></label>
+     <label class="cell" for="mkLon"><span class="cl">Longitude</span><input id="mkLon" inputmode="decimal" value="72.8777"></label>
+     <label class="cell" for="mkTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="mkTz" autocomplete="off" value="5.5"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="mkFrom"><span class="cl">From</span><input type="date" id="mkFrom"></label>
+     <label class="cell" for="mkTo"><span class="cl">To<small>Daily: up to 120 days · intraday: up to 7</small></span><input type="date" id="mkTo"></label>
+     <label class="cell" for="mkTf"><span class="cl">Candle</span><select id="mkTf"><option value="1d">Daily</option><option value="60">1 hour</option><option value="30">30 minutes</option><option value="15">15 minutes</option></select></label>
+     <label class="cell" for="mkT1"><span class="cl">Session start<small>Local time</small></span><input type="time" id="mkT1" value="09:15"></label>
+     <label class="cell" for="mkT2"><span class="cl">Session end<small>Local time</small></span><input type="time" id="mkT2" value="15:30"></label>
+     <label class="cell" for="mkBase"><span class="cl">Start level<small>Your index level, or 100</small></span><input id="mkBase" inputmode="decimal" value="100"></label>
+     <label class="cell" for="mkVol"><span class="cl">Daily move</span><select id="mkVol"><option value="0.5">Calm · 0.5%</option><option value="1" selected>Normal · 1%</option><option value="1.5">Active · 1.5%</option><option value="2.5">Wild · 2.5%</option></select></label>
+     <label class="cell" for="mkAyan"><span class="cl">Ayanamsa</span><select id="mkAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label>
+     <label class="cell chk" for="mkWk"><span class="cl">Include Saturday and Sunday</span><input type="checkbox" id="mkWk"></label>
+    </div>
+    <div class="group">
+     <label class="cell" for="mkNat"><span class="cl">Market natal chart<small>Used for transit contacts</small></span><select id="mkNat"><option value="nse">NSE / Nifty (3 Nov 1994, 09:00, assumed)</option><option value="none">None</option><option value="custom">My own date, time and place</option></select></label>
+     <label class="cell" for="mkNatD"><span class="cl">Natal date</span><input type="date" id="mkNatD"></label>
+     <label class="cell" for="mkNatT"><span class="cl">Natal time</span><input type="time" id="mkNatT" value="09:15"></label>
+     <label class="cell" for="mkNatLat"><span class="cl">Natal latitude</span><input id="mkNatLat" inputmode="decimal" value="19.0760"></label>
+     <label class="cell" for="mkNatLon"><span class="cl">Natal longitude</span><input id="mkNatLon" inputmode="decimal" value="72.8777"></label>
+     <label class="cell" for="mkNatTz"><span class="cl">Natal time zone</span><input id="mkNatTz" value="5.5"></label>
+    </div>
+    <details class="howto"><summary>Compare with your real prices (optional)<span class="tt">உண்மை விலை ஒப்பீடு</span></summary><div class="cell" style="display:block"><label for="mkCsvIn" class="cl">Daily prices: date, open, high, low, close</label><textarea id="mkCsvIn" rows="6" placeholder="2026-10-19,25100,25250,25020,25180&#10;2026-10-20,25180,25300,25100,25120" style="width:100%;font:500 13px var(--sf)"></textarea><small class="muted">When this box has prices, the From and To dates are ignored and the candles are for these days.</small></div></details>
+    <div class="msg" id="mkOff" role="status"></div>
+    <div class="btns"><button class="primary" id="mkGo" type="button">Draw Planetary Candles</button><button id="mkLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="mkMsg" role="status"></div>
+    <div id="mkOut"></div>
+   </div>
+   <div class="panel sheet hide" id="clPanel" role="dialog" aria-modal="true" aria-labelledby="clT">
+    <div class="sh-head"><div><h2 id="clT">Live Transit Clock</h2><span class="tt">நேரடி லக்ன கடிகாரம்</span></div><button class="xbtn" id="clClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <div class="clbar"><div class="clseg" role="tablist" aria-label="Clock face"><button type="button" data-f="analog" class="on">Analog</button><button type="button" data-f="digital">Digital</button></div><button type="button" id="clFs" class="clfs">Full screen</button></div>
+    <div id="clStage" class="clstage an" aria-live="off"></div>
+    <div id="clAscCard"></div>
+    <div id="clTb" class="cltbw"></div>
+    <p class="legend">The ring shows the 12 rasis with Aries at the top, running clockwise like the hours. The gold <b>Asc</b> marker is the live transit ascendant: it travels once round the ring every day. The planets are placed on the same ring (sidereal, KP or Lahiri as chosen in the Transit settings). Everything is calculated on this device, so it works with no internet.</p>
+    <details class="howto"><summary>Background and look<span class="tt">பின்னணி</span></summary>
+     <div class="group">
+      <div class="cell" style="display:block"><span class="cl">Background photo<small>Saved on this device, works offline</small></span><div class="btns"><label class="clfile">Choose a photo<input type="file" id="clPhoto" accept="image/*"></label><button type="button" id="clPhotoX">Remove photo</button></div></div>
+      <label class="cell" for="clTheme"><span class="cl">Colour theme<small>Used when there is no photo</small></span><select id="clTheme"></select></label>
+      <label class="cell" for="clDim"><span class="cl">Photo darkness<small>Makes the text easy to read</small></span><input type="range" id="clDim" min="0.1" max="0.8" step="0.05" value="0.45"></label>
+     </div>
+     <div class="msg" id="clPhMsg" role="status"></div>
+    </details>
+    <details class="howto" open><summary>Location<span class="tt">இடம்</span></summary>
+     <p class="legend">With internet the place is found automatically. Without it, the place chosen here (country, state, city) is used for the ascendant and all the muhurtham times.</p>
+     <div class="group">
+      <div class="cell search"><label for="clSearch" class="vh">Search a city or town</label><input id="clSearch" placeholder="Search a city or town" autocomplete="off"></div>
+      <label class="cell" for="clCountry"><span class="cl">Country</span><select id="clCountry"></select></label>
+      <label class="cell" for="clState"><span class="cl">State / Province</span><select id="clState"></select></label>
+      <label class="cell" for="clCity"><span class="cl">City / Town</span><select id="clCity"></select></label>
+     </div>
+     <div class="group">
+      <label class="cell" for="clLat"><span class="cl">Latitude</span><input id="clLat" inputmode="decimal"></label>
+      <label class="cell" for="clLon"><span class="cl">Longitude</span><input id="clLon" inputmode="decimal"></label>
+      <label class="cell" for="clTz"><span class="cl">Time Zone<small>Name or hours like 5.5</small></span><input id="clTz" autocomplete="off"></label>
+      <label class="cell chk" for="clAuto"><span class="cl">Find my place automatically when online</span><input type="checkbox" id="clAuto"></label>
+      
+     </div>
+     <div class="btns"><button type="button" id="clLoc">Use My Location</button><button type="button" id="clMain">Use Transit Settings Place</button></div>
+     <div class="msg" id="clOff" role="status"></div>
+    </details>
+    <details class="howto" open><summary>Muhurtham alarms<span class="tt">முகூர்த்த அலாரம்</span></summary>
+     <p class="legend">Choose the muhurthams you want. At each window's start time one alarm and notification comes, the melody plays <b>twice</b>, and then it fades out by itself so the next muhurtham alarm can come in its own time. Press <b>Success</b> on the alarm to stop it sooner. On the Android and Windows apps the alarms ring even when the app is closed and offline. Open the app once a day to add the next day's alarms (the app also tops them up while it is open).</p>
+     <div class="group clsel">
+      <label class="cell chk" for="clS_ep"><span class="cl">Practical Electional Muhurtham<small>Uses the event chosen in that tool</small></span><input type="checkbox" id="clS_ep"></label>
+      <label class="cell chk" for="clS_sp"><span class="cl">Speculation Research Muhurtham<small>Uses the rules ticked in that tool</small></span><input type="checkbox" id="clS_sp"></label>
+      <label class="cell chk" for="clS_tp"><span class="cl">Trade Profit Muhurtham<small>Market hours set in that tool</small></span><input type="checkbox" id="clS_tp"></label>
+      <label class="cell chk" for="clS_mp"><span class="cl">Money Profit Muhurtham<small>Uses the rules ticked in that tool</small></span><input type="checkbox" id="clS_mp"></label>
+      <label class="cell chk" for="clS_m3"><span class="cl">3 · 11 Muhurtham</span><input type="checkbox" id="clS_m3"></label>
+      <label class="cell chk" for="clS_ft"><span class="cl">Fortuna Timing Muhurtham<small>Uses the purposes ticked in that tool</small></span><input type="checkbox" id="clS_ft"></label>
+      <label class="cell chk" for="clS_all"><span class="cl"><b>All the muhurthams</b></span><input type="checkbox" id="clS_all"></label>
+     </div>
+     <div class="group">
+      <label class="cell" for="clHz"><span class="cl">Plan ahead</span><select id="clHz"><option value="12">Next 12 hours</option><option value="24">Next 24 hours</option><option value="48">Next 48 hours</option><option value="72">Next 3 days</option></select></label>
+      <label class="cell" for="clCap"><span class="cl">Most alarms</span><select id="clCap"><option value="12">12</option><option value="24">24</option><option value="40">40</option><option value="80">80</option></select></label>
+      <label class="cell chk" for="clPlOn"><span class="cl">Keep these alarms topped up whenever the app opens</span><input type="checkbox" id="clPlOn"></label>
+     </div>
+     <div class="btns"><button class="primary" type="button" id="clPlGo">Set the Alarms</button><button type="button" id="clPlTest">Test Alarm (10 s)</button></div>
+     <div class="msg" id="clPlMsg" role="status"></div>
+     <div id="clPlOut"></div>
+    </details>
+    <details class="howto"><summary>Install on iPhone, Android and Windows<span class="tt">நிறுவு</span></summary>
+     <p class="legend"><b>Android phone:</b> install the GuruAgasthiya APK (everything, including alarms that ring when the app is closed). Or open the web app in Chrome, tap the menu and choose <i>Install app</i>.</p>
+     <p class="legend"><b>iPhone / iPad:</b> open the web app address in Safari, tap <i>Share</i>, then <i>Add to Home Screen</i>. It opens full screen like an app and works offline. Apple does not let a web app ring alarms when it is closed, so keep the clock open on the Lock Screen or use the phone's own alarms for those times.</p>
+     <p class="legend"><b>Windows:</b> run the GuruAgasthiya Setup (or the portable app). Or open the web app in Edge or Chrome and use <i>Install</i> in the address bar. Pin it to the taskbar and press <i>Full screen</i> to use it as a desk clock.</p>
+     <p class="legend">Tip: pick <i>Full screen</i> above for a wall or desk clock. The screen is kept awake while it is open (where the device allows).</p>
+     <div class="btns"><button type="button" id="clInstall" style="display:none">Install this app now</button></div>
+    </details>
+   </div>
+
+
+   <div class="panel sheet hide" id="mpPanel" role="dialog" aria-modal="true" aria-labelledby="mpT">
+    <div class="sh-head"><div><h2 id="mpT">Money Profit Muhurtham</h2><span class="tt">பண லாப முகூர்த்தம்</span></div><button class="xbtn" id="mpClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div><details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary><p class="legend"><b>How the rules were chosen.</b> They come from the 14 winning-ticket purchases you supplied: for each, the transit ascendant sub lord, cusp sub lords and the Moon’s star lord were compared with random times. The link that repeated most is the 11th house (gain) through the ascendant sub lord or the 11th cusp sub lord (13 of 14 purchases; about 59% of random times). The menu lists each rule with its count so you can see how strong it is. It works completely offline. A muhurtham from these rules is a traditional KP preference for starting money activities (business, investment, signing, lending, buying or selling); it does not guarantee profit.</p><p class="legend" style="font-family:var(--ta);color:var(--accent)">நீங்கள் தந்த 14 வெற்றி டிக்கெட் நேரங்களில் அடிக்கடி வந்த கிரக தொடர்புகள் இங்கு விதிகளாக உள்ளன. இது இணையம் இல்லாமலும் வேலை செய்யும். இது பாரம்பரிய KP விருப்பமே; லாபத்திற்கு உத்தரவாதம் அல்ல.</p></details><div class="acres"><b>Rules menu · விதிகள் (a timing is listed only if every ticked rule is met)</b><div id="mpRules"></div></div><div class="group"><div class="cell search"><label for="mpSearch" class="vh">Search a city or town</label><input id="mpSearch" placeholder="Search Pallavaram, Detroit, Dubai" autocomplete="off"></div><label class="cell" for="mpCountry"><span class="cl">Country</span><select id="mpCountry"></select></label><label class="cell" for="mpCity"><span class="cl">City / Town</span><select id="mpCity"></select></label></div><div class="group"><label class="cell" for="mpLat"><span class="cl">Latitude</span><input id="mpLat" inputmode="decimal"></label><label class="cell" for="mpLon"><span class="cl">Longitude</span><input id="mpLon" inputmode="decimal"></label><label class="cell" for="mpTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="mpTz" autocomplete="off"></label></div><div class="group"><label class="cell" for="mpFrom"><span class="cl">From</span><input id="mpFrom" type="date"></label><label class="cell" for="mpTo"><span class="cl">To<small>Up to 366 days</small></span><input type="date" id="mpTo"></label><label class="cell" for="mpAyan"><span class="cl">Ayanamsa</span><select id="mpAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label></div><div class="group"><label class="cell" for="mpT1"><span class="cl">From time</span><input id="mpT1" type="time" value="00:00"></label><label class="cell" for="mpT2"><span class="cl">To time</span><input id="mpT2" type="time" value="23:59"></label></div><div class="msg" id="mpOff" role="status"></div>
+    <div class="btns"><button class="primary" id="mpGo" type="button">Find Money Timings · நேரம் கண்டுபிடி</button><button id="mpLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="mpMsg" role="status"></div>
+    <div id="mpOut"></div>
+   </div>
+
+   <div class="panel sheet hide" id="spPanel" role="dialog" aria-modal="true" aria-labelledby="spT">
+    <div class="sh-head"><div><h2 id="spT">Speculation Research</h2><span class="tt">ஊக ஆய்வு (லாட்டரி, கேசினோ)</span></div><button class="xbtn" id="spClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div><div class="acres warn"><b>Please read first · முதலில் படிக்கவும்</b><p>This is not a way to make money. In the test on 14 winning-ticket purchases, no planetary condition separated them from random times (global p about 0.88). A lottery or casino result is decided by the draw or the game, not by the time a bet is placed. The finder lists timings that match the KP rules you tick: an astrological preference only. Bet only what you can afford to lose. In the USA, help for gambling harm: 1-800-GAMBLER.</p><p class="wta">வெற்றி டிக்கெட் நேரங்களில் எந்த கிரக நிலையும் தனித்து தெரியவில்லை. இது பணம் சம்பாதிக்கும் வழி அல்ல; இழக்கக்கூடிய தொகையை மட்டுமே பயன்படுத்துங்கள்.</p></div><details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary><p class="legend"><b>What this is, honestly.</b> It analyses the 14 winning-ticket purchases you supplied and compares each condition with 4,000 random times in Michigan. <b>The result: none of the planetary conditions separates your 14 purchases from random times.</b> The most frequent one (ascendant sub lord signifying the 11th with another gain house) appears in 9 of 14 purchases, but random times would give about 4.6, and a search of 351 conditions finds a result this strong by chance most of the time (global p about 0.88). A lottery or casino result is decided by the draw or the game, not by the time a bet is placed, and both have a house edge. The finder below lists timings that match the traditional KP rules you choose. Treat it as an astrological preference, never as a way to make money, and bet only what you can afford to lose. If gambling is causing you harm, help is available (in the USA, 1-800-GAMBLER).</p><p class="legend" style="font-family:var(--ta);color:var(--accent)">நீங்கள் தந்த 14 வெற்றி டிக்கெட் வாங்கிய நேரங்களை ஆராய்ந்து, 4,000 சீரற்ற நேரங்களுடன் ஒப்பிடப்பட்டது. கிரக நிலைகள் எதுவும் இந்த 14 நேரங்களை சீரற்ற நேரங்களிலிருந்து வேறுபடுத்தவில்லை. வெற்றி என்பது குலுக்கலால் தீர்மானிக்கப்படுகிறது, வாங்கும் நேரத்தால் அல்ல. இழக்கக்கூடிய தொகையை மட்டுமே பயன்படுத்துங்கள்.</p></details><details class="lf-det" id="spStatsBox"><summary>Analysis of the 14 tickets: charts, cusp links and statistics · 14 டிக்கெட் ஆய்வு</summary>
+      <div class="acres"><b>Findings</b>
+        <ul style="margin:6px 0 0 18px;padding:0"><li>Most frequent links (exploratory): ascendant sub lord signifies the 11th plus a gain house in 9 of 14; 2nd cusp sub lord does the same in 8 of 14; the Moon’s star lord in 7 of 14; at least two of these three in 10 of 14 (random times: 27%).</li>
+        <li>These were picked after seeing the tickets. When the same picking is done on 14 random times, 9 or 10 of 14 is typical (chance of doing as well: 41%). So this is not evidence.</li>
+        <li>Conditions the 5-house theory expects (5th, 6th, 8th and 11th cusp sub lords signifying gain) occur in only 4 to 5 of 14, about what chance gives.</li>
+        <li>The ascendant star lord or sub lord signified loss (12th without 11th) in only 2 of 14, a little below chance (about 3.2 expected), and the ascendant sub lord was retrograde in only 1 of 14.</li>
+        <li>Fourteen purchases is a very small sample, and only winners are known. The draw, not the purchase moment, decides a lottery, and 7 of the 14 purchases were made between 12:00 and 17:00 when only certain ascendants rise, which also makes patterns look stronger.</li></ul></div>
+      <div id="spStatsTbl"></div><div id="spTicketTbl"></div></details><div class="acres"><b>Rules menu · விதிகள் (a timing is listed only if every ticked rule is met)</b><div id="spRules"></div></div><div class="group"><div class="cell search"><label for="spSearch" class="vh">Search a city or town</label><input id="spSearch" placeholder="Search Detroit, Las Vegas, Tiruchirappalli" autocomplete="off"></div><label class="cell" for="spCountry"><span class="cl">Country</span><select id="spCountry"></select></label><label class="cell" for="spCity"><span class="cl">City / Town</span><select id="spCity"></select></label></div><div class="group"><label class="cell" for="spLat"><span class="cl">Latitude</span><input id="spLat" inputmode="decimal"></label><label class="cell" for="spLon"><span class="cl">Longitude</span><input id="spLon" inputmode="decimal"></label><label class="cell" for="spTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="spTz" autocomplete="off"></label></div><div class="group"><label class="cell" for="spFrom"><span class="cl">From</span><input id="spFrom" type="date"></label><label class="cell" for="spTo"><span class="cl">To<small>Up to 14 days</small></span><input type="date" id="spTo"></label><label class="cell" for="spAyan"><span class="cl">Ayanamsa</span><select id="spAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label></div><div class="group"><label class="cell" for="spT1"><span class="cl">From time</span><input id="spT1" type="time" value="00:00"></label><label class="cell" for="spT2"><span class="cl">To time</span><input id="spT2" type="time" value="23:59"></label></div><div class="msg" id="spOff" role="status"></div>
+    <div class="btns"><button class="primary" id="spGo" type="button">Find Timings · நேரம் கண்டுபிடி</button><button id="spLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="spMsg" role="status"></div>
+    <div id="spOut"></div>
+   </div>
+
+   <div class="panel sheet hide" id="eqPanel" role="dialog" aria-modal="true" aria-labelledby="eqT">
+    <div class="sh-head"><div><h2 id="eqT">Earthquake Research</h2><span class="tt">நில அதிர்வு ஆய்வு</span></div><button class="xbtn" id="eqClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div><div class="acres warn"><b>Please read first · முதலில் படிக்கவும்</b><p>This finds times whose transit chart resembles the charts of 54 great earthquakes you supplied. It does not forecast earthquakes. Tested against random times at the same places, none of 445 conditions stood out (best one would appear by chance 35% of the time), and conditions picked from the earlier quakes did not hold on the later ones. Do not warn or alarm anyone on the basis of this list; for real hazard information use your national seismological agency and USGS.</p><p class="wta">இது நில அதிர்வை முன்னறிவிப்பு செய்யாது. இந்த பட்டியலை வைத்து பிறருக்கு எச்சரிக்கை விடுக்க வேண்டாம்.</p></div><details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary><p class="legend"><b>Please read first.</b> This option finds times whose transit chart resembles the charts of 54 great earthquakes (magnitude 7 or more, 1,000 or more deaths, 1900–2023) that you supplied. <b>It does not forecast earthquakes.</b> When 445 planetary and cusp conditions were tested on those 54 earthquakes against random times at the same places, none stood out: the best of them would appear by chance 35% of the time, and conditions chosen from the earlier 27 earthquakes did not hold on the later 27 (average p = 0.50). Earthquakes of this size are rare (about one every 2.3 years worldwide), so a matching chart is almost always followed by nothing. The conditions below are the ones that looked most common among the 54; their counts and chance rates are shown so you can judge them. For real hazard information use your national seismological agency, USGS, and building-safety guidance. Do not warn or alarm others on the basis of this list.</p><p class="legend" style="font-family:var(--ta);color:var(--accent)">இது நில அதிர்வை முன்னறிவிப்பு செய்யாது. 54 பெரிய நில அதிர்வுகளின் ஜாதகங்களை சீரற்ற நேரங்களுடன் ஒப்பிட்டபோது, எந்த கிரக நிலையும் தனித்து தெரியவில்லை. இந்த பட்டியலை வைத்து பிறருக்கு எச்சரிக்கை விடுக்க வேண்டாம்.</p></details><div class="acres"><b>Conditions · நிபந்தனைகள் (the match score counts how many ticked conditions are met)</b><div id="eqRules"></div></div><div class="group"><label class="cell" for="eqMode"><span class="cl">What to scan</span><select id="eqMode"><option value="scan">The 54 historic epicentre areas (up to 31 days)</option><option value="place">One place that I choose (up to 366 days)</option></select></label><label class="cell" for="eqMin"><span class="cl">Minimum matches</span><input id="eqMin" type="number" min="1" max="10" value="5"></label><label class="cell" for="eqAyan"><span class="cl">Ayanamsa</span><select id="eqAyan"><option value="kp">KP (Krishnamurti)</option><option value="lahiri">Lahiri</option></select></label></div><div id="eqPlaceBox"><div class="group"><div class="cell search"><label for="eqSearch" class="vh">Search a city or town</label><input id="eqSearch" placeholder="Search Tokyo, Kathmandu, Santiago" autocomplete="off"></div><label class="cell" for="eqCountry"><span class="cl">Country</span><select id="eqCountry"></select></label><label class="cell" for="eqCity"><span class="cl">City / Town</span><select id="eqCity"></select></label></div><div class="group"><label class="cell" for="eqLat"><span class="cl">Latitude</span><input id="eqLat" inputmode="decimal"></label><label class="cell" for="eqLon"><span class="cl">Longitude</span><input id="eqLon" inputmode="decimal"></label><label class="cell" for="eqTz"><span class="cl">Time Zone<small>Set by city, or hours like 5.5</small></span><input id="eqTz" autocomplete="off"></label></div></div><div class="group"><label class="cell" for="eqFrom"><span class="cl">From</span><input id="eqFrom" type="date"></label><label class="cell" for="eqTo"><span class="cl">To<small>31 days (or 366 for one place)</small></span><input id="eqTo" type="date"></label></div><div class="msg" id="eqOff" role="status"></div>
+    <div class="btns"><button class="primary" id="eqGo" type="button">Find resembling times · ஒத்த நேரங்கள்</button><button id="eqLoc" type="button">Use My Location</button></div>
+    <div class="msg" id="eqMsg" role="status"></div>
+    <div id="eqOut"></div>
+   </div>
+
+   <div class="panel sheet hide" id="cmPanel" role="dialog" aria-modal="true" aria-labelledby="cmT">
+    <div class="sh-head"><div><h2 id="cmT">Chandra Muhurtham</h2><span class="tt">சந்திர முகூர்த்தம்</span></div><button class="xbtn" id="cmClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary>
+     <p class="legend">Pick a from date and a to date (up to 31 days). The place, UTC offset and ayanamsa from the form above are used. For every ascendant timing the Moon is read: its star, the owner of that star, and its sub lord. A timing is listed when the star owner of the Moon is the 3rd lord or the 11th lord of the transit ascendant, that planet is not in the 8th or 12th house from the ascendant, and the ascendant star lord or sub lord is the Moon, the Moon's star owner or the Moon's sub lord.</p>
+     <p class="legend" style="font-family:var(--ta);color:var(--accent)">தொடக்க தேதி, முடிவு தேதியைத் தேர்ந்தெடுங்கள் (அதிகபட்சம் 31 நாட்கள்). ஒவ்வொரு லக்ன நேரத்திலும் சந்திரனின் நட்சத்திரம், அந்த நட்சத்திர அதிபதி, சந்திரனின் உப அதிபதி ஆகியவை ஆராயப்படும். சந்திரனுக்கு நட்சத்திரம் தரும் கிரகம் கோசார லக்னத்திற்கு 3-ஆம் அல்லது 11-ஆம் அதிபதியாக இருந்து, லக்னத்திலிருந்து 8, 12-ஆம் வீட்டில் இல்லாமல், லக்னத்தின் நட்சத்திர அல்லது உப அதிபதி சந்திரன், சந்திரனின் நட்சத்திர அதிபதி அல்லது சந்திரனின் உப அதிபதியாக இருந்தால் பட்டியலிடப்படும்.</p>
+    </details>
+    <div class="group">
+     <label class="cell" for="cmFrom"><span class="cl">From</span><input type="date" id="cmFrom"></label>
+     <label class="cell" for="cmTo"><span class="cl">To</span><input type="date" id="cmTo"></label>
+     <label class="cell" for="cmShow"><span class="cl">Show</span><select id="cmShow"><option value="all">All Timings</option><option value="high">Highly Auspicious Only</option><option value="money">Money Muhurtham and Flow</option></select></label>
+    </div>
+    <div class="btns"><button class="primary" id="cmGo" type="button">Find Chandra Muhurtham</button></div>
+    <div class="msg" id="cmMsg" role="status"></div>
+    <div id="cmOut"></div>
+   </div>
+
+   <div class="panel sheet hide ab" id="abPanel" role="dialog" aria-modal="true" aria-labelledby="abT">
+    <div class="sh-head"><div><h2 id="abT">About GuruAgasthiya</h2><span class="tt">குரு அகஸ்தியா பற்றி</span></div><button class="xbtn" id="abClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <p class="ded">With folded hands, this application is dedicated to the lotus feet of<br>Lord Mahaganapathi, Lord Murugan, Lord Iyappa upon the Tiger, Lord Karuppar and Devi Durga upon the Tiger,<br>and to Pudukkottai Ariyanachi, Pudukkottai Santhamurthi Vedhanayaki, Pudukkottai Bhuvaneswari and Pudukkottai Brahadambal.</p>
+    <p>It is offered, with reverence, to all the Rishis, Munis and sages who laboured upon the science of astrology so that hope and light might reach human lives, and to every great soul whose grace has carried this ancient lamp down to our day.</p>
+    <div class="gal"><figure><img alt="Lord Agasthiya" src="img/lord-agasthiya-9b8886d0c6.jpg"><figcaption>Lord Agasthiya<span>The great guru</span></figcaption></figure><figure><img alt="Prof. K. S. Krishnamurti" src="img/prof-k-s-krishnamurti-922cf0b2b2.jpg"><figcaption>Prof. K. S. Krishnamurti<span>Founder of the KP system (1908 – 1972)</span></figcaption></figure><figure><img alt="Sriman Gurumurthy Guruji" src="img/sriman-gurumurthy-guruji-1aa58ed61a.jpg"><figcaption>Sriman Gurumurthy Guruji<span>Inventor of the 3, 11 concept</span></figcaption></figure><figure><img alt="Sriman Ramaswamy Chettiyar" src="img/sriman-ramaswamy-chettiyar-c64a566cee.jpg"><figcaption>Sriman Ramaswamy Chettiyar<span>Revered guru</span></figcaption></figure><figure><img alt="Captain S. Ghaneshakumar Manthradhi" src="img/captain-s-ghaneshakumar-manthradhi-0aff171fa7.jpg"><figcaption>Captain S. Ghaneshakumar Manthradhi<span>Author of this application</span></figcaption></figure></div>
+    <h3>Our Gurus and Benefactors</h3>
+    <p>Our first and highest bow is to the great Guru <b>Lord Agasthiya</b>, the sage of the south, from whom all light in this work flows. With equal devotion we remember <b>Sri Adi Shankara</b>, <b>Kanchi Periyava</b>, <b>Sri Sadasiva Brahmendra of Nerur</b>, <b>Pamban Swamigal</b> and <b>Shirdi Maharaj</b>, whose lives show that wisdom and surrender walk together.</p>
+    <p>We offer huge thanks and deep gratitude to <b>Sriman Gurumurthy Guruji</b>, who gave the world the celebrated <b>3, 11 concept</b>, and to <b>K. S. Krishnamurti Guruji</b>, the father of the KP system, whose sub-lord theory made the timing of events precise. We remember with love and respect <b>Sriman Ramaswamy Chettiyar</b>, <b>Sriman Murugurajendran</b>, <b>Sriman Shanthamurthy Iyer</b> and <b>Sriman Kannan</b>, whose teaching and kindness shaped this journey.</p>
+    <h3>Works Fully Offline</h3>
+    <p>Everything in this app (the astronomy engine, fonts, world map, about 160,800 places with their time zones and all rules) is inside the app itself. It needs no internet. Only the optional search for a village that is missing from the built-in list uses the internet, and only when you are online. Your phone’s location button uses the device’s GPS and works without internet on most phones; otherwise choose a place from the list or type the latitude and longitude.</p>
+    <h3>The Author</h3>
+    <p>This application was created by <b>Captain S. Ghaneshakumar Manthradhi</b>: an astrologer, an aviator and a share-market trader. He has been passionate about astrology since 1994 and brings thirty-two years of practical experience, especially in <i>transit ascendant muhurtham</i> and the timing of events. He is a pioneer of cricket wicket prediction, work that sought to show the living connection between the transit ascendant, the planets and events on earth.</p>
+    <p>The beloved <i>sishya</i> of Lord Agasthiya and a slave of the slaves of the Divine, he carries one wish: that everyone should enjoy the blessings of astrology by choosing auspicious time, muhurtham and electional astrology, and should come to realise the power of practical astrology.</p>
+    <h3>Contact</h3>
+    <p>For questions, feedback or suggestions, write to <a href="mailto:sriguruagasthiya@gmail.com"><b>sriguruagasthiya@gmail.com</b></a></p>
+    <p class="ded">May this humble work bring hope, good timing and light to all who use it.</p>
+   </div>
+
+   <div class="panel sheet hide" id="chartPop" role="dialog" aria-modal="true" aria-labelledby="cpT">
+    <div class="sh-head"><div class="cphd"><h2 id="cpT">Muhurtham Chart</h2><span class="tt" id="cpTa"></span><span class="cpmeta"><span class="dpill" id="cpDate"></span><span class="cpsub" id="cpSub"></span></span></div><div class="cpinfo" id="cpInfo"></div><button class="xbtn" id="cpClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <div class="cpwhy hide" id="cpWhy" role="region" aria-label="Muhurtham details"></div>
+     <div class="cpgrid"><div id="cpChart"></div><div id="cpTable" class="ptab"></div></div>
+   </div>
+   <div class="panel sheet hide" id="cuspPanel" role="dialog" aria-modal="true" aria-labelledby="cuT">
+    <div class="sh-head"><div><h2 id="cuT">Cuspal Chart (Bhava)</h2><span class="tt">பாவ கஸ்ப் விவரம்</span></div><button class="xbtn" id="cuspClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>
+    <div class="lf-time" id="cuspHead"></div>
+    <div class="btns" style="margin-top:6px"><button id="cuspFreeze" type="button">Freeze</button><label class="livetog sel60" for="cuStyle60"><span>Chart Style</span><select id="cuStyle60" class="stysel"><option value="south">South Indian</option><option value="north">North Indian</option><option value="both">Both charts</option></select></label><label class="livetog sel60" for="cuLang60"><span>Language</span><select id="cuLang60" class="langsel"></select></label></div>
+    <div id="cuspChart" class="cuspch"></div>
+    <div class="tscroll"><table class="ctab" id="cuspTab"></table></div>
+    <div id="cuspLords" class="lf-sec"></div>
+    <p class="lf-note" id="cuspNote">Placidus cusps, sidereal (KP), for the present moment and the place chosen in the main form. The house lord is the sign lord of that house's cusp. A cusp "indicates" a house when its star lord or sub lord is that house lord. A lord is in the 8th or 12th house when its sign is the 8th or 12th sign from the rising sign, and a result that depends on such a lord is cancelled. Green blinking rows show financial gain. The luck and speculation rule is applied to the 6th cusp.<br><span class="ta" style="font-family:var(--ta);color:var(--accent)">தற்போதைய நேரத்திற்கும் மேலே தேர்ந்த இடத்திற்கும் பிளாசிடஸ் கஸ்ப் (நிரயனம், கே.பி.). பாவாதிபதி என்பது அந்த பாவ கஸ்ப் அமைந்த ராசியின் அதிபதி. கஸ்பின் நட்சத்திராதிபதி அல்லது உப அதிபதி அந்த பாவாதிபதியாக இருந்தால் அது அந்த பாவத்தைக் குறிக்கும். 8, 12-ஆம் வீட்டில் (லக்னத்திலிருந்து அந்த ராசியில்) நிற்கும் அதிபதியைச் சார்ந்த பலன் ரத்தாகும். பச்சை நிறத்தில் மின்னும் வரிசை பண லாபத்தைக் காட்டும். அதிர்ஷ்டம்-ஊக வணிக விதி 6-ஆம் கஸ்புக்குப் பொருந்தும்.</span></p>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+
+<script src="data/cities.js?v=5172b3b0e4"></script>
+<script src="js/01-astronomy-engine.js?v=f41139a879"></script>
+<script src="js/02-app.js?v=d24f877d74"></script>
+<script src="js/03-stage-layout.js?v=fa1fee8f00"></script>
+<script src="js/04-alarm-bell-on-every-muhurtham-v3-5.js?v=a04151bd6e"></script>
+<script src="js/05-v4-9-hover-label-for-the-sidebar-tools-s.js?v=3b25160166"></script>
+<script src="js/06-v4-10-the-mobile-desktop-switch-lives-at.js?v=7dfe2a0828"></script>
+<div id="gaMpLive" class="galive" role="status" aria-live="polite"></div>
+<div id="gaDisc" class="gadisc hide" role="alertdialog" aria-modal="true" aria-labelledby="gaDiscT" aria-describedby="gaDiscB"><div class="gs"></div><div class="gc"><h2 id="gaDiscT">Important Disclaimer</h2><span class="gt">முக்கிய அறிவிப்பு</span>
+<div id="gaDiscB"><p>GuruAgasthiya is an astrological research and educational tool based on KP astrology principles. Every result it shows, including those for <b>cricket wicket-fall timing, horse racing, lottery, speculation, share-market and money-profit muhurtham</b>, is based on astrological probability and is indicative only.</p>
+<ul><li>This application does <b>not assure or guarantee</b> the time of a wicket falling, the winning of any horse, the winning of any lottery or ticket, or any financial gain.</li>
+<li>It gives <b>no betting, gambling, trading or investment advice</b> and does not encourage or advise anyone to bet, gamble or speculate on the basis of its results.</li>
+<li>Any decision taken, and its consequences, are entirely the user’s own responsibility. Betting and gambling may be restricted or unlawful where you live; please follow your local laws.</li>
+<li>To the fullest extent permitted by law, the author, the creator and the publisher of this application accept <b>no liability</b> for any loss, damage or claim arising from its use or from reliance on its results.</li></ul>
+<p class="gta">இந்தச் செயலியின் முடிவுகள் ஜோதிட நிகழ்தகவின் அடிப்படையிலானவை மட்டுமே. கிரிக்கெட் விக்கெட் விழும் நேரம், குதிரைப் பந்தய வெற்றி, லாட்டரி வெற்றி அல்லது பண லாபம் ஆகியவற்றுக்கு உறுதி அளிக்கப்படவில்லை. பந்தயம் கட்டுமாறு இது அறிவுறுத்தவில்லை. பயன்படுத்துவதால் ஏற்படும் எந்த இழப்புக்கும் ஆசிரியரோ செயலி உருவாக்குநரோ பொறுப்பல்ல.</p></div>
+<button type="button" id="gaDiscOk">OK, I understand · சரி, புரிந்துகொண்டேன்</button></div></div>
+<script src="revamp/revamp.js?v=1cd77ef64e"></script>
+<script src="revamp/features.js?v=8913c4cc4d"></script>
+<script src="revamp/i18n.js?v=e15ee1f1d6"></script>
+<script src="pwa.js?v=95423283be"></script>
+</body>
+</html>
