@@ -64,7 +64,10 @@ let out = html.replace(/<(style|script)([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, at
     body = body.replace(/url\(\s*['"]?data:([^;]+);base64,([A-Za-z0-9+/=]+)['"]?\s*\)/g,
       (_, mime, b64) => `url(../${mime.includes('font') ? extract(mime, b64, 'fonts', 'font') : extract(mime, b64, 'img', 'bg')})`);
     const name = `css/${String(++cssN).padStart(2, '0')}-${slug(body, 'style')}.css`;
-    return `<link rel="stylesheet" href="${write(name, body)}">`;
+    // With the revamp layer, the engine's styles sit in a lower cascade layer: any revamp rule then wins
+    // over any engine rule, without specificity contests or !important.
+    const layered = existsSync(join(ROOT, 'revamp', 'revamp.css')) ? `@layer engine {\n${body}\n}\n` : body;
+    return `<link rel="stylesheet" href="${write(name, layered)}">`;
   }
   // scripts
   if (/application\/json/.test(attrs)) {
@@ -120,7 +123,7 @@ if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
   const boot = `<script>(function(){var d=document.documentElement;d.classList.add('rv-boot');` +
     `try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);}catch(e){}` +
     `addEventListener('load',function(){setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>\n` +
-    `<style>html.rv-boot{background:#F4F5F9}html.rv-boot[data-theme=dark]{background:#0D1020}` +
+    `<style>@layer rvfix, engine;html.rv-boot{background:#F4F5F9}html.rv-boot[data-theme=dark]{background:#0D1020}` +
     `@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020}}` +
     `html.rv-boot body{background:transparent!important}html.rv-boot body>*{visibility:hidden!important}` +
     `html.rv-boot body::before{content:"GuruAgasthiya";position:fixed;inset:0;display:grid;place-items:center;` +

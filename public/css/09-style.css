@@ -1,6 +1,9 @@
+@layer engine {
 
 .ftq{font-style:normal;display:inline-block;padding:1px 8px;border-radius:99px;font-size:.78em;font-weight:600;margin-left:4px;background:var(--fill);color:var(--ink)}
 .ftq.q-Good{background:rgba(52,199,89,.18);color:#1e8e3e}.ftq.q-Medium{background:rgba(255,159,10,.2);color:#b36b00}.ftq.q-Bad{background:rgba(255,69,58,.18);color:#c62828}.ftq.q-Neutral{background:var(--fill)}
 .ftn td{vertical-align:top;white-space:normal}.ftn td:first-child{min-width:130px}
 #ftPurp{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;padding:8px 4px}
 .ftp{display:flex;gap:8px;align-items:flex-start;background:var(--fill);border-radius:12px;padding:8px 10px}.ftp small{display:block;opacity:.7}
+
+}

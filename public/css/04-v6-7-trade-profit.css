@@ -1,3 +1,4 @@
+@layer engine {
 
 /* v6.7 Trade Profit */
 #tpOut li.row.m3c{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;padding:8px 54px 8px 12px;align-items:center;min-height:0}
@@ -20,3 +21,5 @@
 #tpEv .tblw{margin:4px 0 8px}
 #tpEv .okc{color:#1a8a4a;font-weight:700}
 #tpEv .nokc{color:#c62828;font-weight:700}
+
+}
