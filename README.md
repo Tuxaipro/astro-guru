@@ -134,22 +134,51 @@ Edit files in `revamp/`, then run `npm run import` to rebuild `public/`.
 ## Tests
 
 ```bash
-npm test                 # compare the engine's results with tests/snapshots.json
-npm test -- --update     # accept the current results as the new reference
+npm test                 # import check + engine results (fast)
+npm run test:pages       # every page in Chrome, desktop and phone: loads, main button works, no script errors
+npm run test:all         # both
+npm test -- --update     # accept the current engine results as the new reference
+node scripts/style-diff.mjs --save   # record every element's style (before a CSS refactor)
+node scripts/style-diff.mjs          # compare after it: lists every style value that changed
 ```
 
-`scripts/test-engine.mjs` loads the real app headless (jsdom) and runs:
+- **Import check** (`scripts/check-contract.mjs`): the redesign works on about 50 of the engine's own
+  elements, found by id. After each `npm run import` it lists any id a new APK renamed or removed.
+- **Engine results** (`scripts/test-engine.mjs`): loads the real app headless (jsdom) and runs:
+  - **Lagna Timings** for Chennai, 15 Jan 2026, from 00:00 and from 22:00 (across midnight).
+  - **A Birth Chart** for Chennai, 15 Jun 1990, 10:30.
+  - **Three time-zone edge cases:**
+    - New York, 14 Mar 2021, 02:30 (a time that doesn't exist).
+    - New York, 7 Nov 2021, 01:30 (a time that happens twice).
+    - Chennai, 1 Sep 1942 (India's wartime UTC+6:30).
 
-- **Lagna Timings** for Chennai, 15 Jan 2026, from 00:00 and from 22:00 (across midnight).
-- **A Birth Chart** for Chennai, 15 Jun 1990, 10:30.
-- **Three time-zone edge cases:**
-  - New York, 14 Mar 2021, 02:30 (a time that doesn't exist).
-  - New York, 7 Nov 2021, 01:30 (a time that happens twice).
-  - Chennai, 1 Sep 1942 (India's wartime UTC+6:30).
+  Any change in a time, a lord or a planet position is shown line by line.
+- **Pages** (`scripts/test-pages.mjs`): opens all 24 pages by their address in the Chrome installed on
+  this computer (playwright-core). Each page is checked at 1440×900 and 390×844, its main button is
+  pressed, and the run fails on missing content, a wrong address or highlight, a page wider than the
+  screen, no result, or any script error.
 
-Run it after importing a new APK. Any change in a time, a lord or a planet position is shown line by line.
+Run `npm run test:all` after importing a new APK, and before publishing.
 
 The unchanged v7.7 port is kept read-only in `../guruagasthiya-v7.7-original/`.
+
+### How the code is organised
+
+- `revamp/revamp.js`: the shell. Layout, sidebar and search, routes (`#/…`), settings, the phone tab bar,
+  the shared page watcher, and the problem notice.
+- `revamp/features.js`: added features. Sharing, calendar, question log, setup, the working state on main
+  buttons, and the problem log.
+- `revamp/i18n.js`: translations.
+- `revamp/place.js`: the one-line place picker.
+- `revamp/text.js`: tidying engine text. Read more, page icons, date chips, and the daily disclaimer.
+- `revamp/revamp.css`: all styles. The engine's styles are in a lower cascade layer (`@layer engine`), so
+  revamp rules win without `!important`. The few left override inline styles the engine sets.
+- `revamp.js` loads first, then the others in name order, then routes start once every script has run.
+
+### Problems and the problem log
+
+A script error shows one short notice ("Something went wrong on this page") with a Reload button. The last
+20 errors are kept on the device. **Settings → Problem log** can copy them to send to the developer.
 
 ## Use
 
@@ -171,8 +200,22 @@ A normal refresh always shows the latest build. You never need to clear the cach
   for everything else. On another host, give `index.html`, `version.json`, `sw.js` and `pwa.js` the
   header `Cache-Control: no-store` (or `no-cache`).
 
-To deploy, upload `public/` to any static host (Cloudflare Pages, Netlify, Vercel, nginx). It needs HTTPS
-for the service worker, install prompt, geolocation and notifications.
+### Publishing
+
+Upload `public/` to any static host with HTTPS. The service worker, install, location and notifications
+all need it.
+
+- **Cloudflare Pages or Netlify:** the build writes `public/_headers`, so the caching above works with no
+  extra setup. With Cloudflare:
+
+  ```bash
+  npx wrangler pages deploy public --project-name guruagasthiya
+  ```
+
+  It asks you to sign in to your Cloudflare account the first time.
+- **nginx, Vercel and others:** set `Cache-Control: no-store` for `/`, `/index.html`, `/version.json`,
+  `/sw.js` and `/pwa.js`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list
+  downloads as about 2.3 MB.
 
 ## Differences from the APK
 
