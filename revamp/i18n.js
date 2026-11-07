@@ -5,7 +5,8 @@
    English line for the Tamil line printed beside it. This file follows the same rules:
    - "English + தமிழ்" (bi) and "English only" (en): nothing changes here.
    - Tamil (ta): every revamp text, plus the engine's short labels (fields, buttons, options,
-     planets, signs, stars), with patterns for dates, lord chains and the rising-now line.
+     planets, signs, stars), with patterns for dates, lord chains and the rising-now line, and the
+     long help paragraphs, translated whole (their Tamil is in i18n-ta.js).
    - Every other language: the main revamp labels (sidebar, pages, settings, result buttons).
      Long help text stays English there, as it does in the engine.
    Text is matched whole (a full text node, or a placeholder / title / aria-label), so a word
@@ -224,7 +225,30 @@
     'Problem log copied. Paste it into a message to the developer.': 'பிழைப் பதிவு நகலெடுக்கப்பட்டது. உருவாக்குநருக்கான செய்தியில் ஒட்டவும்.', 'Copying is blocked here.': 'இங்கே நகலெடுக்க முடியாது.', 'Tap for details': 'விவரங்களுக்குத் தட்டவும்', '(a timing is listed only if every ticked rule is met)': '(தேர்ந்த எல்லா விதிகளும் பொருந்தும் நேரம் மட்டுமே பட்டியலிடப்படும்)',
     'Next 12 hours': 'அடுத்த 12 மணி நேரம்', 'Next 24 hours': 'அடுத்த 24 மணி நேரம்', 'Next 48 hours': 'அடுத்த 48 மணி நேரம்', 'Next 3 days': 'அடுத்த 3 நாள்', '31 days (or 366 for one place)': '31 நாள் (ஓர் இடத்திற்கு 366)',
     'Rahu kalam, Amavasya, Rikta, Vishti': 'ராகு காலம், அமாவாசை, ரிக்தை, விஷ்டி', 'Rahu kalam, Amavasya, Rikta tithi, Vishti karana': 'ராகு காலம், அமாவாசை, ரிக்தா திதி, விஷ்டி கரணம்',
-    'Android phone:': 'ஆண்ட்ராய்டு போன்:', 'Windows:': 'விண்டோஸ்:', 'twice': 'இருமுறை'
+    'Android phone:': 'ஆண்ட்ராய்டு போன்:', 'Windows:': 'விண்டோஸ்:', 'twice': 'இருமுறை',
+    // Engine: short help lines and table cells (whole text nodes)
+    'Kaushik; off follows Khullar and Bosmia': 'Kaushik முறை; அணைத்தால் Khullar, Bosmia முறை',
+    'Daily: up to 120 days · intraday: up to 7': 'தினசரி: 120 நாட்கள் வரை · நாளுக்குள்: 7 நாட்கள் வரை',
+    'When this box has prices, the From and To dates are ignored and the candles are for these days.': 'இந்தப் பெட்டியில் விலைகள் இருந்தால், தொடக்க, முடிவுத் தேதிகள் புறக்கணிக்கப்பட்டு, இந்த நாட்களுக்கான மெழுகுவர்த்திகள் காட்டப்படும்.',
+    'Bars: bias per candle (stronger colour = more rules agree) · line: running index from 100': 'பட்டைகள்: ஒவ்வொரு மெழுகுவர்த்தியின் போக்கு (அடர்ந்த நிறம் = அதிக விதிகள் ஒப்புகின்றன) · கோடு: 100 இலிருந்து தொடரும் குறியீடு',
+    'Condition at the purchase time': 'வாங்கிய நேரத்தின் நிபந்தனை',
+    'Cusp sub lords: 2nd, 5th, 6th, 8th, 11th and the houses each signifies': 'பாவ முனை உப அதிபதிகள்: 2, 5, 6, 8, 11 மற்றும் ஒவ்வொன்றும் குறிக்கும் பாவங்கள்',
+    'Ascendant sub lord signifies the 11th with the 2nd, 5th, 6th or 8th': 'லக்ன உப அதிபதி 2, 5, 6 அல்லது 8-உடன் 11-ஐக் குறிக்கிறார்',
+    '2nd cusp sub lord signifies the 11th with the 2nd, 5th, 6th or 8th': '2-ஆம் பாவ முனை உப அதிபதி 2, 5, 6 அல்லது 8-உடன் 11-ஐக் குறிக்கிறார்',
+    'Moon’s star lord signifies the 11th with the 2nd, 5th, 6th or 8th': 'சந்திரனின் நட்சத்திர அதிபதி 2, 5, 6 அல்லது 8-உடன் 11-ஐக் குறிக்கிறார்',
+    'Ascendant sub lord signifies the 11th': 'லக்ன உப அதிபதி 11-ஐக் குறிக்கிறார்',
+    '2nd cusp sub lord signifies the 11th': '2-ஆம் பாவ முனை உப அதிபதி 11-ஐக் குறிக்கிறார்',
+    '5th cusp sub lord: 11th with 2nd, 5th, 6th or 8th': '5-ஆம் பாவ முனை உப அதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    '11th cusp sub lord: 11th with 2nd, 5th, 6th or 8th': '11-ஆம் பாவ முனை உப அதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    '6th cusp sub lord: 11th with 2nd, 5th, 6th or 8th': '6-ஆம் பாவ முனை உப அதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    '8th cusp sub lord: 11th with 2nd, 5th, 6th or 8th': '8-ஆம் பாவ முனை உப அதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    'Ascendant star lord: 11th with 2nd, 5th, 6th or 8th': 'லக்ன நட்சத்திர அதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    'Ascendant lord: 11th with 2nd, 5th, 6th or 8th': 'லக்னாதிபதி: 2, 5, 6 அல்லது 8-உடன் 11',
+    'Ascendant sub lord signifies the 12th without the 11th (loss)': 'லக்ன உப அதிபதி 11 இல்லாமல் 12-ஐக் குறிக்கிறார் (நஷ்டம்)',
+    'Ascendant star lord signifies the 12th without the 11th (loss)': 'லக்ன நட்சத்திர அதிபதி 11 இல்லாமல் 12-ஐக் குறிக்கிறார் (நஷ்டம்)',
+    'Ascendant sub lord retrograde': 'லக்ன உப அதிபதி வக்கிரம்',
+    'Position · lord/star/sub': 'நிலை · ராசி/நட்சத்திர/உப அதிபதி', 'House (cusp)': 'பாவம் (பாவ முனை)', 'Cusp': 'பாவ முனை',
+    'Sub lord signifies': 'உப அதிபதி குறிப்பவை', 'Rule': 'விதி',
   };
 
   /* ---------- Tamil patterns for text that carries values ---------- */
@@ -258,6 +282,14 @@
     [/^(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})(.*)$/, function (m) { return m[1] + ' ' + TA_MON[m[2]] + ' ' + m[3] + m[4]; }],
     [/^(Rules|விதிகள்) \(a timing is listed only if every ticked rule is met\)$/, function () { return 'விதிகள் (தேர்ந்த எல்லா விதிகளும் பொருந்தும் நேரம் மட்டுமே பட்டியலிடப்படும்)'; }],
     [/^Time zone now: (.+)$/, function (m) { return 'இப்போதைய நேர மண்டலம்: ' + m[1]; }],
+    [/^Using the place you chose \(or your saved place\)\. Time zone now: (.+)$/, function (m) { return 'நீங்கள் தேர்ந்தெடுத்த (அல்லது சேமித்த) இடம் பயன்படுத்தப்படுகிறது. இப்போதைய நேர மண்டலம்: ' + m[1]; }],
+    [/^Place set: (.+)\. Latitude, longitude and UTC offset were filled in\. Tap Show timings\.$/, function (m) { return 'இடம் அமைக்கப்பட்டது: ' + m[1] + '. அட்சரேகை, தீர்க்கரேகை, UTC வேறுபாடு நிரப்பப்பட்டன. நேரங்களைக் காட்டு என்பதைத் தட்டுங்கள்.'; }],
+    [/^Place: entered coordinates · UTC offset at birth: (.+)$/, function (m) { return 'இடம்: உள்ளிட்ட ஆயத்தொலைவுகள் · பிறந்த நேர UTC வேறுபாடு: ' + m[1]; }],
+    // cusp sub lords in the ticket table: "5: Mercury [2,3,4,10,11,12]"
+    [new RegExp('^(\\d{1,2}): (' + PLANET + ') (\\[[\\d,]+\\])$'), function (m) { return m[1] + ': ' + TA[m[2]] + ' ' + m[3]; }],
+    [new RegExp('^(' + PLANET + ') \\(R\\)$'), function (m) { return TA[m[1]] + ' (வ)'; }],
+    [/^Trade (\d+): (\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}), ([\d:]+) IST · (.+)$/, function (m) { return 'வர்த்தகம் ' + m[1] + ': ' + m[2] + ' ' + TA_MON[m[3]] + ' ' + m[4] + ', ' + m[5] + ' IST · ' + m[6]; }],
+    [/^💰 Money profit (A\+B|A|B) · 2·11 cusp-lord link( ✓)?$/, function (m) { return '💰 பண லாபம் ' + m[1] + ' · 2·11 பாவ முனை அதிபதித் தொடர்பு' + (m[2] || ''); }],
     // "Aquarius 18°51′ · Saturn/Rahu/Moon ·"
     [new RegExp('^(\\w+) ([\\d°′″]+) · ((?:' + PLANET + ')(?:/(?:' + PLANET + '))*)( ·)?$'), function (m) {
       return TA[m[1]] ? TA[m[1]] + ' ' + m[2] + ' · ' + m[3].split('/').map(function (x) { return TA[x]; }).join('/') + (m[4] || '') : null; }]
@@ -366,10 +398,27 @@
   /* Tamil mode: the engine prints many rules and notes in English with a Tamil copy inside the
      same paragraph, and hides the copy in every single-language mode. Show the copy instead. */
   var TWIN = '.ta,.tm,.tt,.gt,.gta', twinT;
+  // The engine hides its Tamil copies in single-language modes with display:none!important inside its
+  // cascade layer, which no revamp stylesheet rule can override; an inline !important can.
+  function showTwin(e) {
+    [e].concat([].slice.call(e.querySelectorAll(TWIN + ',.tam60'))).forEach(function (x) {
+      if (x.hasAttribute('data-rvshow')) return;
+      // keep the element's own style attribute, to put back exactly as it was
+      x.setAttribute('data-rvshow', x.hasAttribute('style') ? 's' + x.getAttribute('style') : 'n');
+      x.style.setProperty('display', 'inline', 'important');
+    });
+  }
   function twins(on) {
     document.querySelectorAll('.rv-ta-only').forEach(function (p) { if (!on) p.classList.remove('rv-ta-only'); });
     document.querySelectorAll('.rv-ta-twin').forEach(function (e) { if (!on) e.classList.remove('rv-ta-twin'); });
-    if (!on) return;
+    if (!on) {
+      document.querySelectorAll('[data-rvshow]').forEach(function (x) {
+        var o = x.getAttribute('data-rvshow');
+        if (o.charAt(0) === 's') x.setAttribute('style', o.slice(1)); else x.removeAttribute('style');
+        x.removeAttribute('data-rvshow');
+      });
+      return;
+    }
     document.querySelectorAll(TWIN).forEach(function (e) {
       var p = e.parentElement, t = e.textContent.trim();
       if (!p || t.length < 20 || !/[஀-௿]/.test(t)) return;
@@ -384,15 +433,74 @@
         var lead = p.firstElementChild;
         if (lead && lead !== e && /^(B|STRONG)$/.test(lead.tagName) && /^[A-Z]?\d+[.):]?$/.test(lead.textContent.trim())) lead.classList.add('rv-ta-keep');
       }
-      e.classList.add('rv-ta-twin'); p.classList.add('rv-ta-only');
+      e.classList.add('rv-ta-twin'); p.classList.add('rv-ta-only'); showTwin(e);
     });
   }
+  /* Tamil mode: long help paragraphs. A paragraph is split into several text nodes around <b>/<i>,
+     so it is translated whole. Its own nodes move into a hidden holder inside the paragraph and a
+     Tamil copy (with the same emphasis) is shown beside it; in every other language the very same
+     nodes move back. They stay in the page meanwhile, so the engine and the text-node layer above
+     still find and restore the text they changed. The Tamil is in i18n-ta.js (window.RV_TA_HELP):
+     [selector, English key, Tamil HTML], where the key is a phrase from the paragraph's English text,
+     or a RegExp whose match feeds a function that returns the Tamil HTML. */
+  var HELP = [], paraRec = new WeakMap(), paraOn = new Set(), paraT;
+  function helpList(list) {
+    HELP = (list || []).filter(function (e) { return e && e[0] && e[1] && e[2]; });
+    if (current === 'ta') paras(true);
+  }
+  function paraKept(el, r) { return !!r && r.w.parentNode === el && r.hold.parentNode === el; }
+  function paras(on) {
+    if (!on) {
+      paraOn.forEach(function (el) {
+        var r = paraRec.get(el); paraRec.delete(el);
+        if (!paraKept(el, r)) return;
+        while (r.hold.firstChild) el.insertBefore(r.hold.firstChild, r.hold);
+        el.removeChild(r.hold); el.removeChild(r.w);
+        // a class added and removed meanwhile (tam60) leaves an empty attribute behind
+        r.bare.forEach(function (n) { if (n.getAttribute('class') === '') n.removeAttribute('class'); });
+        if (!r.had) el.removeAttribute('data-rvtr');
+      });
+      paraOn.clear();
+      return;
+    }
+    HELP.forEach(function (e) {
+      document.querySelectorAll(e[0]).forEach(function (el) {
+        if (paraKept(el, paraRec.get(el))) return;
+        var text = el.textContent.replace(/\s+/g, ' ').trim(), html = null;
+        if (typeof e[1] === 'string') { if (text.indexOf(e[1]) >= 0) html = typeof e[2] === 'function' ? e[2]() : e[2]; }
+        else { var m = text.match(e[1]); if (m) html = e[2](m); }
+        if (html == null) return;
+        var hold = document.createElement('span');
+        hold.className = 'rv-ta-hold'; hold.setAttribute('aria-hidden', 'true'); hold.style.setProperty('display', 'none', 'important');
+        while (el.firstChild) hold.appendChild(el.firstChild);
+        // Text written here is the main text, not a Tamil copy for the engine to hide (class tam60).
+        var w = document.createElement('span');
+        w.className = 'rv-ta-para'; w.innerHTML = html;
+        // The engine's Tamil mode keeps only the Tamil after a " · " in a line ("English · தமிழ்").
+        // An invisible word joiner after the dot keeps whole Tamil lines whole.
+        var tw = document.createTreeWalker(w, NodeFilter.SHOW_TEXT), tn;
+        while ((tn = tw.nextNode())) if (tn.nodeValue.indexOf('·') >= 0) tn.nodeValue = tn.nodeValue.replace(/·(\s*)(?=[\u0B80-\u0BFF])/g, '·$1\u2060');
+        w.setAttribute('data-rvtr', ''); w.querySelectorAll('*').forEach(function (c) { c.setAttribute('data-rvtr', ''); });
+        var r = { w: w, hold: hold, had: el.hasAttribute('data-rvtr'),
+          bare: [].filter.call(hold.querySelectorAll('*'), function (n) { return !n.hasAttribute('class'); }) };
+        el.appendChild(w); el.appendChild(hold);
+        el.setAttribute('data-rvtr', '');
+        el.classList.remove('tam60', 'rv-ta-only');
+        paraRec.set(el, r); paraOn.add(el);
+      });
+    });
+  }
+  window.rvTaHelp = helpList;
+
   var current = null;
   function apply() {
     var l = lang();
+    clearTimeout(paraT); clearTimeout(twinT);
+    paras(false);
     restore();
     current = l;
     twins(l === 'ta');
+    if (l === 'ta') paras(true);
     if (active(l)) walk(document.body, l);
     document.dispatchEvent(new CustomEvent('rv-lang', { detail: l }));
   }
@@ -406,9 +514,14 @@
       }
       m.addedNodes.forEach(function (a) { walk(a, current); });
     });
-    if (current === 'ta') { clearTimeout(twinT); twinT = setTimeout(function () { twins(true); }, 300); }
+    if (current === 'ta') {
+      // The language may change before these run: they act only while Tamil is still on.
+      if (HELP.length && ms.some(function (m) { return m.type === 'childList' && m.addedNodes.length; })) { clearTimeout(paraT); paraT = setTimeout(function () { if (current === 'ta') paras(true); }, 60); }
+      clearTimeout(twinT); twinT = setTimeout(function () { if (current === 'ta') twins(true); }, 300);
+    }
   }).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS.concat('class') });
   new MutationObserver(function () { if (lang() !== current) apply(); })
     .observe(document.body, { attributes: true, attributeFilter: ['data-lang'] });
+  helpList(window.RV_TA_HELP);
   apply();
 })();

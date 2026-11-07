@@ -102,6 +102,9 @@ The engine translates 109 labels into 44 languages. The revamp follows the same 
   - The engine's short labels are translated too: fields, buttons, options, planets, signs and the 27 stars.
   - So are dates, lord chains (சனி/ராகு/செவ்வாய்), the Rising now line and timing-row details.
   - Where the engine prints an English paragraph with a Tamil copy beside it, the Tamil copy is shown instead.
+  - The long help paragraphs (How It Works, rule notes and warnings, the About page, fixed notes under
+    results) are translated whole, with their bold and italic kept (`revamp/i18n-ta.js`). Names, book titles
+    and city names stay as written.
 - **The other 43 languages:** the main revamp labels are translated: sidebar groups, Now, Next timings,
   Settings, search, and the Copy, Print, Share and calendar buttons. Long help text stays in English, as it
   does in the engine.
@@ -169,6 +172,7 @@ The unchanged v7.7 port is kept read-only in `../guruagasthiya-v7.7-original/`.
 - `revamp/features.js`: added features. Sharing, calendar, question log, setup, the working state on main
   buttons, and the problem log.
 - `revamp/i18n.js`: translations.
+- `revamp/i18n-ta.js`: Tamil for the long help paragraphs.
 - `revamp/place.js`: the one-line place picker.
 - `revamp/text.js`: tidying engine text. Read more, page icons, date chips, and the daily disclaimer.
 - `revamp/revamp.css`: all styles. The engine's styles are in a lower cascade layer (`@layer engine`), so
