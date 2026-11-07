@@ -118,6 +118,11 @@
     'Could not get your location. Try again, or search for a city.': 'உங்கள் இருப்பிடத்தைப் பெற முடியவில்லை. மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
     'Finding your location took too long. Try again, or search for a city.': 'இருப்பிடத்தைத் தேட நீண்ட நேரமாகிறது. மீண்டும் முயலவும், அல்லது ஒரு நகரத்தைத் தேடவும்.',
     'My location': 'என் இருப்பிடம்',
+    'Looking up the approximate place of your connection…': 'உங்கள் இணைப்பின் தோராய இடத்தைத் தேடுகிறது…',
+    'The approximate place could not be found either. Search for a city.': 'தோராய இடமும் கிடைக்கவில்லை. ஒரு நகரத்தைத் தேடவும்.',
+    'Your connection seems to be near {place} (approximate). ': 'உங்கள் இணைப்பு {place} அருகில் இருப்பது போல் தெரிகிறது (தோராயம்). ',
+    'Use {place}': '{place} பயன்படுத்து',
+    'Home place: {place} (approximate, from your connection)': 'சொந்த இடம்: {place} (தோராயம், உங்கள் இணைப்பிலிருந்து)',
     'All set. Your choices are saved on this device.': 'எல்லாம் தயார். உங்கள் தேர்வுகள் இந்தச் சாதனத்தில் சேமிக்கப்பட்டன.',
 
     // Engine: Lagna Timings page

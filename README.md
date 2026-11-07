@@ -69,7 +69,8 @@ every calculation in the v7.7 engine stays as it was.
 ### Added features (`revamp/features.js`)
 
 - **First-run setup:** on a first visit, choose a home place (search or current location), language and
-  ayanamsa. You can run it again from Settings, with **Set up home place**. The engine's shared place
+  ayanamsa. When the browser cannot give a position, the dialog says why and offers the nearest listed city
+  to where the network connection appears to be (a lookup at ipwho.is, or geojs.io), marked approximate. You can run it again from Settings, with **Set up home place**. The engine's shared place
   (added in v7.2) then carries that place to every tool.
 - **Birth Chart** opens on today's date instead of 1 January 2100.
 - **Timings list:**

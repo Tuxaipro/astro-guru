@@ -414,7 +414,7 @@
       '<div class="rv-dlg-head"><img class="rv-setup-logo" alt="" src="' + ((document.querySelector('.brand .logo') || {}).src || '') + '"><h2 id="rvSetupT">Welcome to GuruAgasthiya <span class="tm">வணக்கம்</span></h2></div>' +
       '<div class="rv-dlg-body">' +
         '<p class="rv-setup-lead">Three quick choices and the app is ready. You can change them later in Settings.</p>' +
-        '<section class="rv-set-sec"><h3>Your home place</h3><div class="rv-setup-place"><input type="search" id="rvSetupQ" placeholder="Search a city or town" autocomplete="off"><button type="button" id="rvSetupLoc">Use my location</button></div><ul class="rv-setup-res" id="rvSetupRes"></ul><p class="rv-setup-pick" id="rvSetupPick"></p></section>' +
+        '<section class="rv-set-sec"><h3>Your home place</h3><div class="rv-setup-place"><input type="search" id="rvSetupQ" placeholder="Search a city or town" autocomplete="off"><button type="button" id="rvSetupLoc">Use my location</button></div><ul class="rv-setup-res" id="rvSetupRes"></ul><p class="rv-setup-pick" id="rvSetupPick"></p><p class="rv-setup-approx" id="rvSetupApprox"></p></section>' +
         '<section class="rv-set-sec rv-set-rows"><h3>Language and system</h3><div class="langrow"><label for="rvSetupLang">Language</label><select id="rvSetupLang"></select></div><div class="langrow"><label for="rvSetupAyan">Ayanamsa</label><select id="rvSetupAyan"></select></div></section>' +
       '</div>' +
       '<div class="rv-dlg-foot"><button type="button" class="rv-skip" data-close>Skip for now</button><button type="button" class="rv-done" id="rvSetupGo">Start</button></div>';
@@ -434,6 +434,7 @@
     }
     q.addEventListener('input', function () {
       if (chosen && chosen.loc) { chosen = null; pick(''); }
+      approxN++; approxEl.textContent = '';
       var list = search(q.value);
       res.innerHTML = list.map(function (x, i) { return '<li><button type="button" data-i="' + i + '">' + esc(x.name) + '<span>' + esc([x.st, x.cc].filter(Boolean).join(', ')) + '</span></button></li>'; }).join('');
       res._list = list;
@@ -449,16 +450,62 @@
     // or an error), so watch that rather than refreshing the timings blindly.
     var locBtn = dlg.querySelector('#rvSetupLoc'), goBtn = dlg.querySelector('#rvSetupGo'), locWatch = null;
     function pick(text, bad) { pickEl.textContent = text; pickEl.classList.toggle('err', !!bad); }
+    var approxEl = dlg.querySelector('#rvSetupApprox'), approxN = 0;
+    function cityAt(i) { var r = C.c[i]; return { name: r[0], cc: C.cc[r[1]], lat: r[2], lon: r[3], tz: C.tz[r[4]], st: (C.st && C.st[r[5]]) || '' }; }
+    function nearest(p) {
+      // The listed city with the name the lookup gave, if there is one near those coordinates (the
+      // lookup names the town the connection belongs to); otherwise the closest listed place within 60 km.
+      if (!C) return null;
+      var k = Math.cos(p.lat * Math.PI / 180), want = p.city ? norm(p.city) : '';
+      var best = -1, bd = Infinity, named = -1, nd = Infinity;
+      for (var i = 0; i < C.c.length; i++) {
+        var r = C.c[i], dy = r[2] - p.lat, dx = (r[3] - p.lon) * k, d = dy * dy + dx * dx;
+        if (d < bd) { bd = d; best = i; }
+        if (want && d < nd && norm(r[0]) === want) { nd = d; named = i; }
+      }
+      if (named >= 0 && Math.sqrt(nd) * 111 < 60) return cityAt(named);
+      return best >= 0 && Math.sqrt(bd) * 111 < 60 ? cityAt(best) : null;
+    }
+    // When the browser gives no position, ask where the network connection is from (city-level, often
+    // off by some distance) and offer the nearest listed city, clearly marked as approximate.
+    function fromNetwork(url, read) {
+      return fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+        var p = j && read(j);
+        return p && isFinite(p.lat) && isFinite(p.lon) ? p : null;
+      });
+    }
+    function suggestApprox() {
+      var n = ++approxN;
+      approxEl.textContent = T('Looking up the approximate place of your connection…');
+      fromNetwork('https://ipwho.is/', function (j) { return j.success === false ? null : { lat: +j.latitude, lon: +j.longitude, city: j.city }; })
+        .catch(function () { return null; })
+        .then(function (p) { return p || fromNetwork('https://get.geojs.io/v1/ip/geo.json', function (j) { return { lat: +j.latitude, lon: +j.longitude, city: j.city }; }); })
+        .catch(function () { return null; })
+        .then(function (p) {
+          if (n !== approxN) return;
+          var city = p && nearest(p);
+          if (!city) { approxEl.textContent = T('The approximate place could not be found either. Search for a city.'); return; }
+          var label = city.name + ', ' + [city.st, city.cc].filter(Boolean).join(', ');
+          approxEl.textContent = '';
+          approxEl.appendChild(document.createTextNode(T('Your connection seems to be near {place} (approximate). ', { place: label })));
+          var b = document.createElement('button'); b.type = 'button'; b.textContent = T('Use {place}', { place: city.name });
+          b.addEventListener('click', function () {
+            chosen = city; res.innerHTML = ''; q.value = city.name; approxEl.textContent = '';
+            pick(T('Home place: {place} (approximate, from your connection)', { place: label }));
+          });
+          approxEl.appendChild(b);
+        });
+    }
     function stopWatch() { if (locWatch) { locWatch(); locWatch = null; } locBtn.disabled = false; goBtn.disabled = false; }
     locBtn.addEventListener('click', function () {
       var lb = $('loc'), m = $('msg');
-      stopWatch(); chosen = null; res.innerHTML = ''; q.value = '';
-      if (!lb || !m || !navigator.geolocation) { pick(T('Location is not available in this browser. Search for a city instead.'), true); return; }
+      stopWatch(); chosen = null; res.innerHTML = ''; q.value = ''; approxN++; approxEl.textContent = '';
+      if (!lb || !m || !navigator.geolocation) { pick(T('Location is not available in this browser. Search for a city instead.'), true); suggestApprox(); return; }
       pick(T('Finding your location… The browser may ask for permission.'));
       locBtn.disabled = true; goBtn.disabled = true;
       var mo = new MutationObserver(check);
       // The engine tries twice (12 s, then 25 s with high accuracy) before it gives up.
-      var t = setTimeout(function () { stopWatch(); pick(T('Finding your location took too long. Try again, or search for a city.'), true); }, 45000);
+      var t = setTimeout(function () { stopWatch(); pick(T('Finding your location took too long. Try again, or search for a city.'), true); suggestApprox(); }, 45000);
       locWatch = function () { mo.disconnect(); clearTimeout(t); };
       function check() {
         var text = m.textContent;
@@ -471,6 +518,7 @@
             : why === 'unavailable'
               ? T('Your device gave no position. On a computer, allow location for the browser in the system settings (Mac: System Settings → Privacy & Security → Location Services) and keep Wi‑Fi on. On a phone, switch on Location. Then try again, or search for a city.')
               : T('Could not get your location. Try again, or search for a city.'), true);
+          if (why !== 'denied') suggestApprox();
         } else if (/^Location set/.test(text)) {
           stopWatch();
           var name = (text.match(/^Location set: (.+?) · /) || [])[1] || T('My location');
@@ -505,7 +553,7 @@
     function open() {
       if (lang) sl.innerHTML = lang.innerHTML, sl.value = lang.value;
       if (ayan) sa.innerHTML = ayan.innerHTML, sa.value = ayan.value;
-      stopWatch(); chosen = null; pick(''); q.value = ''; res.innerHTML = '';
+      stopWatch(); chosen = null; pick(''); q.value = ''; res.innerHTML = ''; approxN++; approxEl.textContent = '';
       if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
       setTimeout(function () { q.focus(); }, 50);
     }
