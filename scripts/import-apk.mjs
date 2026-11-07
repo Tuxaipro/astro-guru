@@ -212,6 +212,8 @@ self.addEventListener('notificationclick', (e) => {
 
 const total = files.reduce((s, f) => s + statSync(join(OUT, f)).size, 0);
 console.log(`GuruAgasthiya ${version}: ${files.length + 1} files, ${(total / 1048576).toFixed(1)} MB -> ${relative(process.cwd(), OUT) || '.'}`);
+// After a new APK: say at once if an element the revamp relies on was renamed or removed.
+if (existsSync(REVAMP)) (await import('./check-contract.mjs')).checkContract();
 
 function walk(dir, base = dir) {
   return readdirSync(dir).flatMap((n) => {
