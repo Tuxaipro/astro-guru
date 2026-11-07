@@ -19,7 +19,7 @@ const PROPS = ['display', 'position', 'visibility', 'opacity', 'color', 'backgro
   'padding', 'margin', 'border-radius', 'border-top-width', 'border-top-color', 'gap', 'grid-template-columns', 'flex-direction',
   'justify-content', 'align-items', 'z-index', 'text-align', 'box-shadow', 'min-height', 'height', 'width'];
 // Text that changes by itself (clocks, the rising sign) is left out.
-const SKIP = '#nowcard, #clPanel .clface, #clPanel .cldig, .rv-next, #gaMpLive, .rv-toast, #list > li, .rbell';
+const SKIP = '#clPanel .clface, #clPanel .cldig, #list > li, .rbell, #ptable, #cuspTab tbody';
 
 const server = spawn(process.execPath, [join(ROOT, 'scripts', 'serve.mjs'), String(PORT)], { stdio: 'ignore' });
 await new Promise((r) => setTimeout(r, 600));

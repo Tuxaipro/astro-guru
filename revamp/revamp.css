@@ -174,7 +174,7 @@ body.rv .chead h2{font:600 20px/1.2 var(--sf)}
 /* ---------- Long text folds ---------- */
 body.rv .rv-folded{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 body.rv .stage[data-view="mobile"] #nowcard{order:3}
-body.rv.rv-m #gaMpLive{bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+body.rv.rv-m #gaMpLive{bottom:calc(78px + env(safe-area-inset-bottom,0px))!important}
 body.rv .rv-more{display:inline-block;min-height:0;height:auto;margin:2px 0 8px;padding:2px 0;box-shadow:none;background:none;border:0;color:var(--accent);font:600 13px/1.4 var(--sf);cursor:pointer}
 body.rv .rv-more:hover{text-decoration:underline}
 body.rv .legend{color:var(--muted);line-height:1.55}
@@ -509,7 +509,7 @@ body.rv.rv-m .rv-toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.rv .rv-toast{background:#ECEEFA;color:#1A1D3A}}
 
 /* Copying / printing: hide controls inside results */
-body.rv-copying .whybtn,body.rv-copying .rbell,body.rv-copying .rv-more,body.rv-copying li.row button{display:none}
+body.rv-copying .whybtn,body.rv-copying .rbell,body.rv-copying .rv-more,body.rv-copying li.row button{display:none!important}
 #rvPrintRoot{font:400 11pt/1.5 "IBM Plex Sans","Mukta Malar",sans-serif;color:#111}
 #rvPrintRoot h1{font:600 18pt/1.2 "IBM Plex Sans",sans-serif;margin:0 0 4px}
 #rvPrintRoot .rv-print-meta{color:#555;margin:0 0 14px}
@@ -620,7 +620,7 @@ body.rv .stage[data-view="desktop"] .side{position:sticky;top:0;height:100vh;hei
 /* Lagna Timings page: the list alone, at a readable width. The transit chart lives on the Now page. */
 body.rv.rv-p-lagna .stage[data-view="desktop"] .app{grid-template-columns:var(--rv-side) minmax(0,1fr);grid-auto-rows:min-content;height:auto;min-height:100%}
 body.rv.rv-p-lagna .stage[data-view="desktop"] #nowcard,
-body.rv.rv-p-lagna .stage[data-view="desktop"] .col-b{display:none}
+body.rv.rv-p-lagna .stage[data-view="desktop"] .col-b{display:none!important}
 body.rv.rv-p-lagna .stage[data-view="desktop"] .col{overflow:visible;height:auto;max-width:960px;width:100%}
 body.rv.rv-p-lagna .stage[data-view="desktop"] .col-a{border-right:0}
 
@@ -629,7 +629,7 @@ body.rv.rv-p-now .stage[data-view="desktop"] .app{height:auto;min-height:100%;al
   grid-template-columns:var(--rv-side) minmax(0,1fr) minmax(300px,380px);grid-template-rows:auto auto 1fr;column-gap:24px;padding-right:var(--rv-pad)}
 body.rv.rv-p-now .stage[data-view="desktop"] .col{display:contents}
 body.rv.rv-p-now .stage[data-view="desktop"] .col-a>*:not(#nowcard):not(#rvNext),
-body.rv.rv-p-now .stage[data-view="desktop"] .col-b>*:not(#chartPanel){display:none}
+body.rv.rv-p-now .stage[data-view="desktop"] .col-b>*:not(#chartPanel){display:none!important}
 body.rv.rv-p-now .stage[data-view="desktop"] #nowcard{grid-column:2/4;grid-row:1;margin:26px 0 20px}
 body.rv.rv-p-now .stage[data-view="desktop"] #chartPanel{grid-column:2;grid-row:2;margin:0 0 48px;min-width:0}
 body.rv.rv-p-now .stage[data-view="desktop"] .rv-next{display:block;grid-column:3;grid-row:2;align-self:start;position:sticky;top:20px}
@@ -855,13 +855,13 @@ body.rv button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---------- Audit fixes ---------- */
 /* Live muhurtham alert: a one-line chip in the corner; tap to read the details */
-body.rv #gaMpLive.rv-chiplive{max-width:min(360px,calc(100vw - 32px));padding:10px 40px 10px 14px;border-radius:14px;cursor:pointer;
-  right:16px;left:auto;bottom:16px;box-shadow:0 10px 30px rgba(13,16,32,.28)}
-body.rv #gaMpLive.rv-chiplive:not(.rv-open)>span{display:none}
+body.rv #gaMpLive.rv-chiplive{max-width:min(360px,calc(100vw - 32px));padding:10px 40px 10px 14px!important;border-radius:14px!important;cursor:pointer;
+  right:16px!important;left:auto!important;bottom:16px!important;box-shadow:0 10px 30px rgba(13,16,32,.28)!important}
+body.rv #gaMpLive.rv-chiplive:not(.rv-open)>span{display:none!important}
 body.rv #gaMpLive.rv-chiplive>b{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13.5px}
-body.rv #gaMpLive.rv-chiplive .galx{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;min-height:0;padding:0;border-radius:50%}
+body.rv #gaMpLive.rv-chiplive .galx{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;min-height:0!important;padding:0!important;border-radius:50%!important}
 body.rv #gaMpLive.rv-chiplive.rv-open .galx{top:8px;transform:none}
-body.rv.rv-m #gaMpLive.rv-chiplive{bottom:calc(76px + env(safe-area-inset-bottom,0px));right:12px}
+body.rv.rv-m #gaMpLive.rv-chiplive{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important;right:12px!important}
 /* Results scrolled into view land below the page's sticky header */
 body.rv .rv-pages .sheet [id]{scroll-margin-top:96px}
 /* Phones: one field per row, so long choices (November, KP (Krishnamurti)) are not cut */
