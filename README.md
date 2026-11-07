@@ -132,7 +132,8 @@ One system across the app, with one corner radius:
 - Switches and tick boxes sit on one line with their label, across the card.
 - Option tiles have even sizes: Fortuna purposes and lottery places.
 
-Edit files in `revamp/`, then run `npm run import` to rebuild `public/`.
+Edit files in `revamp/`, then run `npm run build` (the same as `npm run import`) to rebuild `public/`.
+`npm run dev` rebuilds and then serves it.
 
 ## Tests
 
@@ -187,7 +188,9 @@ A script error shows one short notice ("Something went wrong on this page") with
 ## Use
 
 ```bash
+npm run build           # rebuild public/ from ../GuruAgasthiya-7.7.apk and revamp/
 npm start               # http://localhost:4173
+npm run dev             # build, then start
 npm run import -- ../GuruAgasthiya-7.8.apk   # regenerate public/ from a newer APK
 ```
 

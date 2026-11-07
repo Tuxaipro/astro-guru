@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "import": "node scripts/import-apk.mjs",
+    "build": "npm run import",
     "start": "node scripts/serve.mjs",
+    "dev": "npm run build && npm start",
     "test": "node scripts/check-contract.mjs && node scripts/test-engine.mjs",
     "test:pages": "node scripts/test-pages.mjs",
     "test:all": "npm test && npm run test:pages"
