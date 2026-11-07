@@ -1,6 +1,6 @@
 # GuruAgasthiya web
 
-The GuruAgasthiya Android app (v7.7) as an installable web app that also works offline.
+The GuruAgasthiya Android app (v7.7) as a plain website.
 
 ## How it was made
 
@@ -17,9 +17,9 @@ detects the native `GuruApp` bridge and falls back to browser APIs when it is mi
 
 `scripts/import-apk.mjs` splits that file into normal assets. Every style and script block becomes a file
 in `public/css` or `public/js`, in its original order. The fonts, images and the city and land data become
-separate files too. The script then adds a web app manifest, icons and a service worker that precaches
-everything. The app code is unchanged, apart from two lines that now read the city and land data from
-`window.GA_CITY` and `window.GA_LAND` instead of inline JSON.
+separate files too. The app code is unchanged, apart from two lines that now read the city and land data from
+`window.GA_CITY` and `window.GA_LAND` instead of inline JSON. There is no web app manifest and no service
+worker: the site is not installable and needs a connection, like any website.
 
 ## Revamp layer
 
@@ -199,18 +199,14 @@ npm run import -- ../GuruAgasthiya-7.8.apk   # regenerate public/ from a newer A
 A normal refresh always shows the latest build. You never need to clear the cache.
 
 - Every file the page loads has a content hash in its address (`?v=…`), so a changed file is a new address.
-- The service worker fetches the page and `version.json` fresh every time. Versioned files come from its
-  store. Other files are checked with the server. The store answers only when there is no connection.
-- On each load, `pwa.js` compares its build id with `version.json`. If the server has a newer build, it
-  clears the offline copy and reloads once.
-- `npm start` sends `no-store` for the page, `version.json`, `sw.js` and `pwa.js`, and `no-cache` with ETags
-  for everything else. On another host, give `index.html`, `version.json`, `sw.js` and `pwa.js` the
-  header `Cache-Control: no-store` (or `no-cache`).
+- `npm start` sends `no-store` for the page and `no-cache` with ETags for everything else. On another host,
+  give `index.html` the header `Cache-Control: no-store` (or `no-cache`).
+- Earlier builds installed a service worker for offline use. The page now removes it, and its stored
+  files, from any browser that still has one.
 
 ### Publishing
 
-Upload `public/` to any static host with HTTPS. The service worker, install, location and notifications
-all need it.
+Upload `public/` to any static host with HTTPS. Location and notifications need it.
 
 - **Cloudflare Pages or Netlify:** the build writes `public/_headers`, so the caching above works with no
   extra setup. With Cloudflare:
@@ -220,12 +216,11 @@ all need it.
   ```
 
   It asks you to sign in to your Cloudflare account the first time.
-- **nginx, Vercel and others:** set `Cache-Control: no-store` for `/`, `/index.html`, `/version.json`,
-  `/sw.js` and `/pwa.js`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list
+- **nginx, Vercel and others:** set `Cache-Control: no-store` for `/` and `/index.html`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list
   downloads as about 2.3 MB.
 
 ## Differences from the APK
 
-- Alarms ring only while the app is open in a tab or installed window. Android's `AlarmManager` could ring
-  with the app closed. **Add to Calendar** (ICS) remains the reliable way to get alerts when the app is closed.
-- The online place search (open-meteo geocoding) needs a network connection. The 160k-city list works offline.
+- Alarms ring only while the app is open in a tab. Android's `AlarmManager` could ring with the app closed. **Add to Calendar** (ICS) remains the reliable way to get alerts when the app is closed.
+- The site needs a connection; the APK worked offline. The 160k-city list is part of the site, so the place
+  search works without the online (open-meteo) lookup.

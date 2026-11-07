@@ -601,6 +601,7 @@ body.rv .rv-setup-res li:first-child button{border-top:0}
 body.rv .rv-setup-res button:hover{background:var(--fill2)}
 body.rv .rv-setup-res span{font:400 12.5px var(--sf);color:var(--muted)}
 body.rv .rv-setup-pick:not(:empty){margin:8px 0 0;font:600 13.5px var(--sf);color:var(--green)}
+body.rv .rv-setup-pick.err{color:var(--bad);font-weight:500}
 body.rv .rv-skip{min-height:40px;padding:0 12px;border:0;background:none;color:var(--muted);font:600 14px var(--sf);cursor:pointer}
 body.rv .rv-dlg-foot .rv-skip{margin-right:auto}
 body.rv #rvSettings .rv-dlg-foot{flex-wrap:wrap}

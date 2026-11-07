@@ -41,7 +41,7 @@ createServer((req, res) => {
   const enc = text && /\bbr\b/.test(accept) ? 'br' : text && /\bgzip\b/.test(accept) ? 'gzip' : '';
   // The page, its build id and the service worker are never stored; everything else is revalidated
   // (versioned files change their address when they change).
-  const noStore = /(^|\/)(index\.html|version\.json|sw\.js|pwa\.js)$/.test(p);
+  const noStore = /(^|\/)index\.html$/.test(p);
   const etag = `"${st.size.toString(36)}-${Math.round(st.mtimeMs).toString(36)}${enc ? '-' + enc : ''}"`;
   const head = { 'Cache-Control': noStore ? 'no-store' : 'no-cache', ETag: etag, ...(text ? { Vary: 'Accept-Encoding' } : {}) };
   if (!noStore && req.headers['if-none-match'] === etag) { res.writeHead(304, head).end(); return; }

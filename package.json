@@ -2,7 +2,7 @@
   "name": "guruagasthiya-web",
   "version": "7.7.0",
   "private": true,
-  "description": "GuruAgasthiya as an installable, offline web app, imported from the Android APK.",
+  "description": "GuruAgasthiya as a website, imported from the Android APK.",
   "type": "module",
   "scripts": {
     "import": "node scripts/import-apk.mjs",

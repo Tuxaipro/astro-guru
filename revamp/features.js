@@ -18,9 +18,6 @@
   }
 
   /* ---------- Browser housekeeping ---------- */
-  // The engine holds back the browser's install offer for its own button, which the revamp removed;
-  // let the browser show its own offer instead (this listener runs before the engine's).
-  window.addEventListener('beforeinstallprompt', function (e) { e.stopImmediatePropagation(); }, true);
   // Browsers block vibration until the page has been tapped; skip it until then instead of failing.
   if (navigator.vibrate && navigator.userActivation) {
     var vib = navigator.vibrate.bind(navigator);
@@ -436,6 +433,7 @@
       return a.concat(b).slice(0, 8).map(function (i) { var r = C.c[i]; return { name: r[0], cc: C.cc[r[1]], lat: r[2], lon: r[3], tz: C.tz[r[4]], st: (C.st && C.st[r[5]]) || '' }; });
     }
     q.addEventListener('input', function () {
+      if (chosen && chosen.loc) { chosen = null; pick(''); }
       var list = search(q.value);
       res.innerHTML = list.map(function (x, i) { return '<li><button type="button" data-i="' + i + '">' + esc(x.name) + '<span>' + esc([x.st, x.cc].filter(Boolean).join(', ')) + '</span></button></li>'; }).join('');
       res._list = list;
@@ -446,8 +444,37 @@
       pickEl.textContent = T('Home place: {place}', { place: chosen.name + ', ' + [chosen.st, chosen.cc].filter(Boolean).join(', ') });
       res.innerHTML = ''; q.value = chosen.name;
     });
-    dlg.querySelector('#rvSetupLoc').addEventListener('click', function () {
-      chosen = { loc: true }; pickEl.textContent = T('Home place: your current location (the browser will ask for permission).');
+    // "Use my location" asks the browser at once, through the engine's own button, and shows the
+    // answer here: the place found, or why it failed. The engine reports in #msg ("Location set: …",
+    // or an error), so watch that rather than refreshing the timings blindly.
+    var locBtn = dlg.querySelector('#rvSetupLoc'), goBtn = dlg.querySelector('#rvSetupGo'), locWatch = null;
+    function pick(text, bad) { pickEl.textContent = text; pickEl.classList.toggle('err', !!bad); }
+    function stopWatch() { if (locWatch) { locWatch(); locWatch = null; } locBtn.disabled = false; goBtn.disabled = false; }
+    locBtn.addEventListener('click', function () {
+      var lb = $('loc'), m = $('msg');
+      stopWatch(); chosen = null; res.innerHTML = ''; q.value = '';
+      if (!lb || !m || !navigator.geolocation) { pick(T('Location is not available in this browser. Search for a city instead.'), true); return; }
+      pick(T('Finding your location… The browser may ask for permission.'));
+      locBtn.disabled = true; goBtn.disabled = true;
+      var mo = new MutationObserver(check);
+      // The engine tries twice (12 s, then 25 s with high accuracy) before it gives up.
+      var t = setTimeout(function () { stopWatch(); pick(T('Finding your location took too long. Try again, or search for a city.'), true); }, 45000);
+      locWatch = function () { mo.disconnect(); clearTimeout(t); };
+      function check() {
+        var text = m.textContent;
+        if (m.classList.contains('err')) {
+          stopWatch();
+          pick(/denied|blocked/i.test(text)
+            ? T('Location permission was denied or blocked. Allow location for this site in the browser (the icon beside the address), then try again, or search for a city.')
+            : T('Could not get your location. Try again, or search for a city.'), true);
+        } else if (/^Location set/.test(text)) {
+          stopWatch();
+          var name = (text.match(/^Location set: (.+?) · /) || [])[1] || T('My location');
+          chosen = { loc: true }; pick(T('Home place: {place}', { place: name }));
+        }
+      }
+      mo.observe(m, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+      lb.click();
     });
     function applyPlace(x) {
       // Same steps the engine uses: all countries, the name in the search box, then pick the city.
@@ -461,20 +488,20 @@
         if (hit >= 0) { ci.selectedIndex = hit; fire(ci, 'change'); }
       }
     }
-    dlg.querySelector('#rvSetupGo').addEventListener('click', function () {
+    goBtn.addEventListener('click', function () {
       if (lang && sl.value && lang.value !== sl.value) { lang.value = sl.value; fire(lang, 'change'); }
       if (ayan && sa.value && ayan.value !== sa.value) { ayan.value = sa.value; fire(ayan, 'change'); }
-      if (chosen && chosen.loc) { var lb = $('loc'); if (lb) lb.click(); }
-      else if (chosen) applyPlace(chosen);
+      // A found location is already set in the engine; a searched city is applied here.
+      if (chosen && !chosen.loc) applyPlace(chosen);
       store('rvSetup', 1); dlg.close();
       var go = $('go'); if (go) setTimeout(function () { go.click(); }, 300);
-      toast('All set. Your choices are saved on this device.');
+      toast(T('All set. Your choices are saved on this device.'));
     });
-    dlg.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', function () { store('rvSetup', 1); dlg.close(); }); });
+    dlg.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', function () { stopWatch(); store('rvSetup', 1); dlg.close(); }); });
     function open() {
       if (lang) sl.innerHTML = lang.innerHTML, sl.value = lang.value;
       if (ayan) sa.innerHTML = ayan.innerHTML, sa.value = ayan.value;
-      chosen = null; pickEl.textContent = ''; q.value = ''; res.innerHTML = '';
+      stopWatch(); chosen = null; pick(''); q.value = ''; res.innerHTML = '';
       if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
       setTimeout(function () { q.focus(); }, 50);
     }

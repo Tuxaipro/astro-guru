@@ -22,7 +22,7 @@ const vc = new VirtualConsole();
 vc.on('jsdomError', (e) => errors.push(String(e.message).split('\n')[0]));
 // Test the calculation engine only: leave out the interface scripts (the revamp layer and the original
 // layout helpers), whose page watchers make jsdom very slow on large reports.
-const UI_SCRIPTS = /<script src="(revamp\/[^"]+|js\/0[3-6]-[^"]+|pwa\.js)"><\/script>\n?/g;
+const UI_SCRIPTS = /<script src="(revamp\/[^"]+|js\/0[3-6]-[^"]+)"><\/script>\n?/g;
 const html = readFileSync(PAGE, 'utf8').replace(UI_SCRIPTS, '').replace(/<link rel="stylesheet"[^>]*>\n?/g, ''); // styles are not needed to calculate
 const dom = new JSDOM(html, {
   url: pathToFileURL(PAGE).href, runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true, virtualConsole: vc,
