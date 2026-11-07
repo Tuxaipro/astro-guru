@@ -10,6 +10,47 @@
   }
   var stage = $('stage'), root = document.documentElement;
   if (!stage) return;
+
+  /* ---------- One shared page watcher ----------
+     Several parts of the revamp tidy up what the engine draws (folding long text, date chips, keyboard
+     access). One observer for the whole page, run once after the page settles, instead of one each. */
+  var changeFns = [], changeT = null;
+  window.rvOnChange = function (fn) { changeFns.push(fn); };
+  new MutationObserver(function () {
+    if (changeT) return;
+    changeT = setTimeout(function () {
+      changeT = null;
+      changeFns.forEach(function (fn) { try { fn(); } catch (e) { report(e); } });
+    }, 150);
+  }).observe(document.body, { childList: true, subtree: true });
+
+  /* ---------- Problems are shown, not silent ----------
+     A script error shows one short notice with a Reload button, and is kept (last 20) so it can be
+     copied from Settings and sent for a fix. */
+  var ERR_KEY = 'rvErrors', errNote = null;
+  function report(err, where) {
+    var msg = String((err && (err.message || err.reason)) || err || 'Unknown error').split('\n')[0].slice(0, 300);
+    if (/ResizeObserver loop|Script error\.?$/.test(msg)) return;
+    try {
+      var log = JSON.parse(localStorage.getItem(ERR_KEY) || '[]');
+      log.unshift({ at: new Date().toISOString(), page: location.hash, msg: msg, where: where || '' });
+      localStorage.setItem(ERR_KEY, JSON.stringify(log.slice(0, 20)));
+    } catch (e) {}
+    if (errNote) return;
+    errNote = document.createElement('div');
+    errNote.className = 'rv-errnote'; errNote.setAttribute('role', 'alert');
+    errNote.innerHTML = '<span></span><button type="button" data-a="reload"></button><button type="button" data-a="x" aria-label="Close">✕</button>';
+    errNote.querySelector('span').textContent = T('Something went wrong on this page. Reload to try again.');
+    errNote.querySelector('[data-a=reload]').textContent = T('Reload');
+    errNote.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.a === 'reload') location.reload(); else { errNote.remove(); }
+    });
+    document.body.appendChild(errNote);
+  }
+  window.rvReport = report;
+  window.addEventListener('error', function (e) { report(e.error || e.message, (e.filename || '').split('/').pop() + ':' + e.lineno); });
+  window.addEventListener('unhandledrejection', function (e) { report(e.reason, 'promise'); });
   document.body.classList.add('rv');
 
   /* ---------- Layout follows the window, no phone mock-up ---------- */
@@ -200,7 +241,14 @@
       var id = ROUTES[r], panel = $(id.replace(/Btn$/, 'Panel'));
       if (panel && panel.classList.contains('hide')) { routing = true; $(id).click(); routing = false; }
       document.body.classList.add('rv-p-tool');
-      if (changed) { var sc = $('scroller'); if (sc) sc.scrollTop = 0; }
+      if (changed) {
+        var sc = $('scroller'); if (sc) sc.scrollTop = 0;
+        // Keyboard and screen-reader users start at the page's heading (after the engine focuses ✕).
+        setTimeout(function () {
+          var h = panel && panel.querySelector('.sh-head h2');
+          if (h && !panel.classList.contains('hide')) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+        }, 120);
+      }
     }
     mark(ROUTES[r]); document.title = titleOf(r); syncTabs();
     if (stage.dataset.view === 'mobile') closeTools();
@@ -498,9 +546,7 @@
   var FOLD_SEL = '.legend, .gmnote, .sheet .sub, .sheet .note, .sheet .intro, .sheet p.hint';
   function foldAll(rootEl) { (rootEl || document).querySelectorAll(FOLD_SEL).forEach(fold); }
   foldAll();
-  var ft;
-  new MutationObserver(function () { clearTimeout(ft); ft = setTimeout(function () { foldAll(); }, 250); })
-    .observe(document.body, { childList: true, subtree: true });
+  window.rvOnChange(function () { foldAll(); });
 
   /* ---------- Sheets: the tool's icon leads its header ---------- */
   document.querySelectorAll('.sheet').forEach(function (s) {
@@ -600,9 +646,7 @@
       }
     });
   }
-  var dt;
-  new MutationObserver(function () { clearTimeout(dt); dt = setTimeout(dedupeDates, 120); })
-    .observe(document.body, { childList: true, subtree: true });
+  window.rvOnChange(dedupeDates);
   dedupeDates();
 
   /* ---------- Disclaimer: once per day ----------

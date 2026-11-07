@@ -218,7 +218,10 @@
     'Contact': 'தொடர்புக்கு', 'The great guru': 'மகா குரு', 'Revered guru': 'மதிப்பிற்குரிய குரு', 'Author of this application': 'இந்தச் செயலியின் ஆசிரியர்',
     'Founder of the KP system (1908 – 1972)': 'கே.பி முறையின் நிறுவனர் (1908 – 1972)', 'Inventor of the 3, 11 concept': '3, 11 கோட்பாட்டைக் கண்டறிந்தவர்',
     // Settings rows
-    'Chart Colour': 'சக்கர வண்ணம்', 'Tap for details': 'விவரங்களுக்குத் தட்டவும்', '(a timing is listed only if every ticked rule is met)': '(தேர்ந்த எல்லா விதிகளும் பொருந்தும் நேரம் மட்டுமே பட்டியலிடப்படும்)',
+    'Chart Colour': 'சக்கர வண்ணம்', 'Something went wrong on this page. Reload to try again.': 'இந்தப் பக்கத்தில் ஒரு பிழை ஏற்பட்டது. மீண்டும் ஏற்றிப் பாருங்கள்.',
+    'Reload': 'மீண்டும் ஏற்று', 'Problem log': 'பிழைப் பதிவு', 'Copy problem log': 'பிழைப் பதிவை நகலெடு', 'Clear': 'அழி',
+    '1 problem was recorded on this device.': 'இந்தச் சாதனத்தில் 1 பிழை பதிவானது.', '{n} problems were recorded on this device.': 'இந்தச் சாதனத்தில் {n} பிழைகள் பதிவாயின.',
+    'Problem log copied. Paste it into a message to the developer.': 'பிழைப் பதிவு நகலெடுக்கப்பட்டது. உருவாக்குநருக்கான செய்தியில் ஒட்டவும்.', 'Copying is blocked here.': 'இங்கே நகலெடுக்க முடியாது.', 'Tap for details': 'விவரங்களுக்குத் தட்டவும்', '(a timing is listed only if every ticked rule is met)': '(தேர்ந்த எல்லா விதிகளும் பொருந்தும் நேரம் மட்டுமே பட்டியலிடப்படும்)',
     'Next 12 hours': 'அடுத்த 12 மணி நேரம்', 'Next 24 hours': 'அடுத்த 24 மணி நேரம்', 'Next 48 hours': 'அடுத்த 48 மணி நேரம்', 'Next 3 days': 'அடுத்த 3 நாள்', '31 days (or 366 for one place)': '31 நாள் (ஓர் இடத்திற்கு 366)',
     'Rahu kalam, Amavasya, Rikta, Vishti': 'ராகு காலம், அமாவாசை, ரிக்தை, விஷ்டி', 'Rahu kalam, Amavasya, Rikta tithi, Vishti karana': 'ராகு காலம், அமாவாசை, ரிக்தா திதி, விஷ்டி கரணம்',
     'Android phone:': 'ஆண்ட்ராய்டு போன்:', 'Windows:': 'விண்டோஸ்:', 'twice': 'இருமுறை'

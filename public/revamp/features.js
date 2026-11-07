@@ -405,8 +405,7 @@
     var li = e.target;
     if ((e.key === 'Enter' || e.key === ' ') && li.matches && li.matches('li.row[tabindex]')) { e.preventDefault(); li.click(); }
   });
-  var kt;
-  new MutationObserver(function () { clearTimeout(kt); kt = setTimeout(keyRows, 200); }).observe(document.body, { childList: true, subtree: true });
+  if (window.rvOnChange) window.rvOnChange(keyRows);
   keyRows();
 
   /* ---------- First-run setup: language, ayanamsa, home place ---------- */
@@ -491,6 +490,63 @@
     b.type = 'button'; b.className = 'rv-skip'; b.textContent = 'Set up home place';
     b.addEventListener('click', function () { $('rvSettings').close(); setup.open(); });
     foot.insertBefore(b, foot.lastChild);
+  })();
+
+  /* ---------- Main buttons show that they are working ----------
+     The engine calculates in one go, which freezes the page for a few seconds on big ranges.
+     Show "working" on the button first, then let the engine run. */
+  (function () {
+    var replay = false;
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.sheet .btns > button.primary, #mainForm .btns > button.primary');
+      if (!b || replay || b.disabled) return;
+      if (b.classList.contains('rv-busy')) { e.stopImmediatePropagation(); e.preventDefault(); return; }
+      e.stopImmediatePropagation(); e.preventDefault();
+      b.classList.add('rv-busy'); b.setAttribute('aria-busy', 'true');
+      requestAnimationFrame(function () {
+        setTimeout(function () {
+          var t0 = performance.now(); replay = true;
+          try { b.click(); } finally { replay = false; }
+          var sheet = b.closest('.sheet'), out = sheet && sheet.querySelector('[id$="Out"]');
+          var finished = false;
+          function done() { if (finished) return; finished = true; b.classList.remove('rv-busy'); b.removeAttribute('aria-busy'); }
+          if (performance.now() - t0 > 80 || !out) { done(); return; } // the work already ran
+          // The engine works in steps: wait until its result stops changing (at most 20 s).
+          var idle, mo = new MutationObserver(function () { clearTimeout(idle); idle = setTimeout(stop, 400); });
+          function stop() { mo.disconnect(); done(); }
+          mo.observe(out, { childList: true, subtree: true, characterData: true });
+          idle = setTimeout(stop, 1200); setTimeout(stop, 20000);
+        }, 30);
+      });
+    }, true);
+    // Result summaries ("16 timings listed …") are read out by screen readers.
+    document.querySelectorAll('.sheet [id$="Msg"], .sheet .msg, #msg').forEach(function (m) {
+      m.setAttribute('role', 'status'); m.setAttribute('aria-live', 'polite');
+    });
+  })();
+
+  /* ---------- Settings: problem log ---------- */
+  (function () {
+    var body = document.querySelector('#rvSettings .rv-dlg-body'); if (!body) return;
+    var sec = document.createElement('section');
+    sec.className = 'rv-set-sec rv-errlog hide';
+    sec.innerHTML = '<h3>Problem log</h3><p class="rv-errlog-n"></p><div class="rv-errlog-b"><button type="button" data-a="copy">Copy problem log</button><button type="button" data-a="clear">Clear</button></div>';
+    body.appendChild(sec);
+    function log() { try { return JSON.parse(localStorage.getItem('rvErrors') || '[]'); } catch (e) { return []; } }
+    function sync() {
+      var l = log(); sec.classList.toggle('hide', !l.length);
+      sec.querySelector('.rv-errlog-n').textContent = T(l.length === 1 ? '1 problem was recorded on this device.' : '{n} problems were recorded on this device.', { n: l.length });
+    }
+    sec.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.a === 'copy') {
+        var text = 'GuruAgasthiya ' + VERSION + ' · ' + navigator.userAgent + '\n' + log().map(function (x) { return x.at + ' ' + x.page + ' ' + x.msg + (x.where ? ' (' + x.where + ')' : ''); }).join('\n');
+        copyText(text).then(function () { toast(T('Problem log copied. Paste it into a message to the developer.')); }, function () { toast(T('Copying is blocked here.')); });
+      } else { try { localStorage.removeItem('rvErrors'); } catch (x) {} sync(); }
+    });
+    var d = $('rvSettings'); if (d) d.addEventListener('close', sync);
+    document.querySelector('.rv-setbtn') && document.querySelector('.rv-setbtn').addEventListener('click', sync);
+    sync();
   })();
 
   /* ---------- Lighter start-up: the world map outline loads after the page ---------- */

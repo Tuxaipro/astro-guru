@@ -876,3 +876,19 @@ body.rv details.howto:has(#clInstall){display:none!important}
 body.rv.rv-p-lagna .stage[data-view="desktop"] .col-a{justify-self:center;width:100%;max-width:calc(var(--rv-cw) + 2 * var(--rv-pad))!important;margin:0 auto}
 /* the timings list already has "Jump to now" beside "Tagged timings only" */
 body.rv .rv-actions-main [data-a="now"]{display:none!important}
+
+/* ---------- Working state, problem notice ---------- */
+body.rv button.rv-busy{position:relative;cursor:progress!important;pointer-events:none}
+body.rv button.rv-busy::after{content:"";position:absolute;right:16px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;
+  border:2px solid currentColor;border-right-color:transparent;animation:rvSpin .8s linear infinite;opacity:.9}
+@keyframes rvSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){body.rv button.rv-busy::after{animation-duration:2.4s}}
+body.rv .rv-errnote{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:10px;
+  max-width:min(560px,calc(100vw - 32px));padding:10px 10px 10px 16px;border-radius:12px;background:var(--surface);color:var(--ink);
+  box-shadow:0 0 0 1px var(--bad),0 12px 40px rgba(13,16,32,.3);font:500 14px/1.4 var(--sf)}
+body.rv .rv-errnote button{min-height:34px;padding:6px 12px;border:0;border-radius:var(--btn-r,10px);background:var(--fill);color:var(--accent);font:600 13.5px var(--sf);cursor:pointer}
+body.rv .rv-errlog-b{display:flex;gap:8px;flex-wrap:wrap}
+body.rv .rv-errlog-b button{min-height:36px;padding:7px 14px;border:0;border-radius:var(--btn-r,10px);background:var(--fill);color:var(--accent);font:600 13.5px var(--sf);cursor:pointer}
+body.rv .rv-errlog-n{margin:0 0 8px;color:var(--muted);font-size:13.5px}
+body.rv .sh-head h2:focus{outline:none}
+body.rv .sh-head h2:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
