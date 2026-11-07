@@ -115,6 +115,15 @@ body.rv .stage .rv-groups .tool:hover{background:var(--fill2)}
 body.rv .stage .rv-groups .tool::after{display:none}
 body.rv .stage .rv-groups .tool .ic{width:28px;height:28px;border-radius:8px;background:var(--fill2);flex:none}
 body.rv .stage .rv-groups .tool .ic svg{width:16px;height:16px;stroke:var(--ink2);stroke-width:1.7}
+/* Each tool's own hue (--ich, set by revamp.js): a soft tint behind a stroke of the same hue. */
+body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic{background:hsl(var(--ich) 72% 52% / .16)}
+body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic svg{stroke:hsl(var(--ich) 58% 36%)}
+:root[data-theme="dark"] body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic{background:hsl(var(--ich) 70% 60% / .22)}
+:root[data-theme="dark"] body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic svg{stroke:hsl(var(--ich) 80% 74%)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic{background:hsl(var(--ich) 70% 60% / .22)}
+  :root:not([data-theme="light"]) body.rv .stage .rv-groups .tool[style*="--ich"]:not(.rv-on) .ic svg{stroke:hsl(var(--ich) 80% 74%)}
+}
 body.rv .stage .rv-groups .tool .tx{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;font:500 14px/1.25 var(--sf)}
 body.rv .stage .rv-groups .tool .tx .tm{display:block;font:500 12px/1.4 var(--tamil);color:var(--muted2);margin-top:1px}
 body.rv .stage .rv-groups .tool.rv-on{background:var(--tint)}

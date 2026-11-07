@@ -108,6 +108,12 @@
     groupsEl.appendChild(more);
     grid.replaceWith(groupsEl);
     var h = nav.querySelector('h2.sec'); if (h) h.remove();
+    // Every tool's icon tile gets its own hue (revamp.css turns --ich into the tile and stroke colours
+    // for each theme). Hues step round the wheel by the golden angle, so neighbours never look alike,
+    // and a tool keeps its hue wherever it is listed.
+    [].slice.call(groupsEl.querySelectorAll('.tool')).forEach(function (b, i) {
+      b.style.setProperty('--ich', String(Math.round((25 + i * 137.5) % 360)));
+    });
   }
 
   /* ---------- Tool search ---------- */
@@ -179,6 +185,7 @@
   nowBtn.type = 'button'; nowBtn.id = 'rvNowBtn'; nowBtn.className = 'tool rv-nowbtn';
   nowBtn.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>' +
     '<span class="tx">Now<span class="tm">இப்போது</span></span>';
+  nowBtn.style.setProperty('--ich', '238'); // the app's indigo, like the other tiles when Now is not the page shown
   groupsEl.insertBefore(nowBtn, groupsEl.firstChild);
   nowBtn.addEventListener('click', function () { setPage('now'); mark('rvNowBtn'); }); // the engine closes any open tool
   var homeBtn = $('homeBtn');
