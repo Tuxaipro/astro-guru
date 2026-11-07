@@ -216,7 +216,9 @@ Upload `public/` to any static host with HTTPS. Location and notifications need 
   ```
 
   It asks you to sign in to your Cloudflare account the first time.
-- **nginx, Vercel and others:** set `Cache-Control: no-store` for `/` and `/index.html`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list
+- **Vercel:** `vercel.json` skips the install and build steps (the APK is not in the repository; `public/`
+  is) and sets the same headers. Import the project from GitHub and deploy; nothing else to configure.
+- **nginx and others:** set `Cache-Control: no-store` for `/` and `/index.html`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list
   downloads as about 2.3 MB.
 
 ## Differences from the APK
