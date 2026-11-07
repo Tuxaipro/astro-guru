@@ -116,6 +116,9 @@ if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
     `font:600 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:#8B8FAE}</style>\n`;
   out = out.replace(/(<meta name="viewport"[^>]*>\n?)/, `$1${boot}`);
 }
+// The APK's page asks iOS to open a home-screen bookmark full screen. This is a plain website now, and
+// Chrome warns about the old tag name, so drop it (the home-screen title tag is harmless and stays).
+out = out.replace(/<meta name="apple-mobile-web-app-capable"[^>]*>\n?/, '');
 // Earlier builds installed a service worker that keeps serving its stored copy of the app. Remove it,
 // and its store, from any browser that still has it.
 out = out.replace('</head>', `<script>if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(a){a.forEach(function(r){r.unregister();});});` +
