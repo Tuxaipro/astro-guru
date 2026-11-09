@@ -24,6 +24,8 @@ vc.on('jsdomError', (e) => errors.push(String(e.message).split('\n')[0]));
 const LAYOUT_SCRIPTS = /<script src="js\/(?:0[3-9]|[1-9][0-9])-[^"]+"><\/script>\n?/g;
 const html = readFileSync(PAGE, 'utf8').replace(LAYOUT_SCRIPTS, '').replace(/<link rel="stylesheet"[^>]*>\n?/g, ''); // no layout, no styles
 const PERSON = { name: 'Meena', date: '1990-06-15', time: '10:30:00', lat: '13.0827', lon: '80.2707', tz: 'Asia/Kolkata', place: 'Chennai, Tamil Nadu, India' };
+const HOME = { name: 'Madurai', st: 'Tamil Nadu', cc: 'India', lat: 9.919, lon: 78.12, tz: 'Asia/Kolkata', src: 'manual' };
+const RECENT = { name: 'Chennai', st: 'Tamil Nadu', cc: 'India', lat: 13.0827, lon: 80.2707, tz: 'Asia/Kolkata' };
 const dom = new JSDOM(html, {
   url: pathToFileURL(PAGE).href, runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true, virtualConsole: vc,
   beforeParse(w) {
@@ -43,6 +45,7 @@ const dom = new JSDOM(html, {
     Object.defineProperty(w, 'localStorage', { value: ls, configurable: true });
     ls.setItem('rvSetup', '1'); // no first-run dialog
     ls.setItem('gaBirthList', JSON.stringify([PERSON])); // one saved person, as Birth Chart would save it
+    ls.setItem('ga_place', JSON.stringify(HOME)); ls.setItem('ga_place_recent', JSON.stringify([HOME, RECENT])); // the shared place and its history
   },
 });
 await new Promise((r) => dom.window.addEventListener('load', r));
@@ -73,7 +76,16 @@ check('disclaimer: the first tool click shows the disclaimer, OK opens the tool'
   $('gaDiscOk').click();
   return eq('gaDisc hidden after OK', disc.classList.contains('hide'), true) || eq('rvDiscDay saved', !!w.localStorage.getItem('rvDiscDay'), true);
 });
-await settle();
+await sleep(1200); // the engine's shared place settles 500 ms after load; the revamp follows 200 ms later
+check('shared place: Natal Chart Trade opens on the home place, named, with its recent places', () => {
+  const panel = $('ntPanel'), line = panel.querySelector('.rv-place-t b'), recent = panel.querySelector('select.plrecent');
+  if (!recent) return 'no Recent places select in ntPanel';
+  const names = [...recent.options].map((o) => o.text);
+  return eq('#ntSearch', $('ntSearch').value, HOME.name) || eq('#ntLat', $('ntLat').value, String(HOME.lat)) || eq('#ntLon', $('ntLon').value, String(HOME.lon)) ||
+    eq('#ntTz', $('ntTz').value, HOME.tz) || eq('place line', line.textContent.trim(), 'Madurai, Tamil Nadu, India') ||
+    (names.includes('Chennai, Tamil Nadu, India') ? '' : `Chennai missing from recent places: ${JSON.stringify(names)}`) ||
+    eq('recent select on the home place', recent.options[recent.selectedIndex]?.text, 'Madurai, Tamil Nadu, India');
+});
 check('saved people: Natal Chart Trade opens with a people list', () => {
   const panel = $('ntPanel'), sel = panel.querySelector('.rv-people select');
   if (panel.classList.contains('hide')) return 'ntPanel still hidden';

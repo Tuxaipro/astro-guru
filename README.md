@@ -71,7 +71,8 @@ every calculation in the v10.5 engine stays as it was.
 - **First-run setup:** on a first visit, choose a home place (search or current location), language and
   ayanamsa. When the browser cannot give a position, the dialog says why and offers the nearest listed city
   to where the network connection appears to be (a lookup at ipwho.is, or geojs.io), marked approximate. You can run it again from Settings, with **Set up home place**. The engine's shared place
-  (added in v7.2) then carries that place to every tool.
+  (added in v7.2) then carries that place to every tool. The engine's list of tools predates 10.5, so the
+  revamp carries the place into Natal Chart Trade itself, with the same **Recent places** list.
 - **Birth Chart** opens on today's date instead of 1 January 2100.
 - **Timings list:**
   - **Jump to now** scrolls to the timing running now, or the next one.
@@ -169,6 +170,7 @@ node scripts/style-diff.mjs          # compare after it: lists every style value
 - **Revamp layer** (`scripts/test-revamp.mjs`): loads the app headless (jsdom) with the `revamp/`
   scripts in place and checks what they add on top of the engine:
   - The disclaimer opens the tool on OK and is remembered for the day.
+  - Natal Chart Trade opens on the shared home place, named, with the recent places to choose from.
   - A person saved in Birth Chart fills Natal Chart Trade's name, date, time, coordinates and place line.
   - A result list of 120 rows folds to 60 with a "Showing 60 of 120" bar; "Show more" shows the rest; a
     re-run folds again; 40 rows get no bar.

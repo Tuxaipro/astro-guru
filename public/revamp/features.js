@@ -331,13 +331,69 @@
     var box = peopleSelect(function (r) {
       var set = function (id, v) { var el = $(id); if (el && v !== undefined && v !== null) { el.value = v; fire(el, 'input'); fire(el, 'change'); } };
       set('ntName', r.name || ''); set('ntDob', r.date); set('ntTob', (r.time || '').slice(0, 8));
+      // The place goes in first: the search rebuilds the city list (the shared place may be selected there)
+      // and may move the coordinates to its first match, so the person's own coordinates follow it.
+      var q = $('ntSearch'); if (q && r.place) { q.value = r.place; fire(q, 'input'); }
       set('ntLat', r.lat); set('ntLon', r.lon); set('ntTz', r.tz);
-      // Name the place in the folded place line without running a search (which would move the coordinates).
-      var q = $('ntSearch'); if (q && r.place) { q.value = r.place; var det = q.closest('details'); if (det) det.dispatchEvent(new Event('change')); }
     });
     grp.parentNode.insertBefore(box, grp);
     var nt = $('ntPanel');
     if (nt) new MutationObserver(function () { if (!nt.classList.contains('hide')) box.refresh(); }).observe(nt, { attributes: true, attributeFilter: ['class'] });
+  })();
+  /* ---------- Natal Chart Trade follows the shared place (10.5) ----------
+     The engine's "one place for every menu" (v7.2) names its tools in a fixed list written before 10.5,
+     so Natal Chart Trade opened on bare coordinates ("Place by coordinates · 9.919, 78.12") and had no
+     "Recent places". It now follows the shared place the way Birth Chart does, and offers the recent
+     places; choosing one there sets it for every tool, through the engine's own GA_PLACE.apply. */
+  (function () {
+    var se = $('ntSearch'), la = $('ntLat'), lo = $('ntLon'), tz = $('ntTz');
+    if (!se || !la || !lo || !tz) return;
+    function state() { return window.GA_PLACE && window.GA_PLACE.state; }
+    function pkey(x) { return x ? x.lat + '|' + x.lon + '|' + x.tz : ''; }
+    function near(a, b) { return Math.abs(a.lat - b.lat) < 1e-4 && Math.abs(a.lon - b.lon) < 1e-4; }
+    // The same steps the engine takes for its own tools: all countries, the name in the search box so the
+    // city list holds it, that city selected, then the exact coordinates and time zone of the place.
+    function apply(x) {
+      var co = $('ntCountry'), ci = $('ntCity');
+      try {
+        if (co && [].some.call(co.options, function (o) { return o.value === '*a'; })) { co.value = '*a'; fire(co, 'change'); }
+        if (x.name) { se.value = x.name; fire(se, 'input'); }
+        if (ci && x.name) {
+          var opts = [].slice.call(ci.options), hit = -1, i, t;
+          for (i = 0; i < opts.length && hit < 0; i++) { t = opts[i].text; if (t.indexOf(x.name) === 0 && (!x.cc || t.indexOf(x.cc) >= 0) && (!x.st || t.indexOf(x.st) >= 0)) hit = i; }
+          for (i = 0; i < opts.length && hit < 0; i++) if (opts[i].text.indexOf(x.name) === 0) hit = i;
+          if (hit >= 0) ci.selectedIndex = hit;
+        }
+      } catch (e) {}
+      la.value = x.lat; lo.value = x.lon; tz.value = x.tz;
+      [la, lo, tz].forEach(function (el) { fire(el, 'input'); fire(el, 'change'); });
+    }
+    // "Recent places", the control the engine adds to its own tools (same class, so the engine refills it too).
+    var cell = se.closest('.cell'), lab = document.createElement('label'), sel = document.createElement('select');
+    lab.className = 'cell'; lab.innerHTML = '<span class="cl">Recent places</span>';
+    sel.className = 'plrecent'; sel.setAttribute('aria-label', 'Recent places');
+    lab.appendChild(sel); cell.parentNode.insertBefore(lab, cell);
+    function fillRecent() {
+      var st = state(); if (!st) return;
+      sel.innerHTML = '<option value="">—</option>' + st.recent.map(function (x, i) {
+        return '<option value="' + i + '">' + esc(x.name + (x.st ? ', ' + x.st : '') + (x.cc ? ', ' + x.cc : '')) + '</option>';
+      }).join('');
+      var k = st.cur ? st.recent.findIndex(function (x) { return near(x, st.cur); }) : -1;
+      sel.value = k >= 0 ? String(k) : '';
+    }
+    sel.addEventListener('change', function () {
+      var st = state(), x = st && st.recent[parseInt(sel.value, 10)];
+      if (x) window.GA_PLACE.apply(x); // every tool; follow() below brings it here
+    });
+    var last = null;
+    function follow() {
+      var st = state(), cur = st && st.cur;
+      if (!cur || isNaN(parseFloat(cur.lat)) || isNaN(parseFloat(cur.lon))) return;
+      var k = pkey(cur); if (k === last) return;
+      last = k; apply(cur); fillRecent();
+    }
+    // The engine sets the shared place up 500 ms after loading, then watches its tools every 500 ms.
+    setTimeout(function () { follow(); setInterval(follow, 500); }, 700);
   })();
   /* Ask GuruAgasthiya draws its birth form inside the chat; offer the saved people there too. */
   (function () {
