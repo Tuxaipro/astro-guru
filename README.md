@@ -106,6 +106,9 @@ The engine translates 109 labels into 44 languages. The revamp follows the same 
   - The long help paragraphs (How It Works, rule notes and warnings, the About page, fixed notes under
     results) are translated whole, with their bold and italic kept (`revamp/i18n-ta.js`). Names, book titles
     and city names stay as written.
+  - The 10.5 tools (Guru Agasthiya Muhurtham, Natal Chart Trade, Ask GuruAgasthiya) are covered too: their
+    labels, hints, buttons, options, chips and help paragraphs. Ask GuruAgasthiya's own replies come from
+    the engine in the chosen language.
 - **The other 43 languages:** the main revamp labels are translated: sidebar groups, Now, Next timings,
   Settings, search, and the Copy, Print, Share and calendar buttons. Long help text stays in English, as it
   does in the engine.

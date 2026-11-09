@@ -63,9 +63,14 @@
   function updatePlace(p) {
     var name = ctrlVal(cellBy(p.place, /City|Town/i)) || ctrlVal(cellBy(p.place, /Recent/i)) || '';
     if (/^(choose|select|—|-|all )/i.test(name)) name = ctrlVal(cellBy(p.place, /Recent/i)) || name;
+    // 10.5's city list answers a miss with a sentence ("No match in the offline list. Type the latitude…"):
+    // that is advice, not a place. Show what was searched for, or say the place is set by coordinates.
+    var citySel = (cellBy(p.place, /City|Town/i) || p.det).querySelector('select');
+    var noMatch = citySel && citySel.selectedIndex >= 0 && citySel.options[citySel.selectedIndex].value === '';
+    if (noMatch || /no match|type the latitude|search online/i.test(name)) name = ctrlVal(cellBy(p.place, /Search/i)) || '';
     var c = p.coords || p.place, lat = ctrlVal(cellBy(c, /Latitude/i)), lon = ctrlVal(cellBy(c, /Longitude/i));
     var tz = ctrlVal(cellBy(c, /Time Zone/i));
-    p.det.querySelector('.rv-place-t b').textContent = name || T('Choose a place');
+    p.det.querySelector('.rv-place-t b').textContent = name || (lat && lon ? T('Place by coordinates') : T('Choose a place'));
     p.det.querySelector('.rv-place-t span').textContent =
       [lat && lon ? lat + ', ' + lon : '', tz].filter(Boolean).join(' · ') || T('Search any city or town');
   }
