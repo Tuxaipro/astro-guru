@@ -31,6 +31,8 @@ const dom = new JSDOM(html, {
     w.matchMedia = w.matchMedia || (() => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} }));
     w.Element.prototype.scrollTo = function () {}; w.Element.prototype.scrollIntoView = function () {}; w.scrollTo = function () {};
     w.requestIdleCallback = (fn) => setTimeout(fn, 1);
+    // No network: the engine's online place search gets a failed request instead of a missing function.
+    w.fetch = () => Promise.reject(new w.TypeError('fetch is not available in the test'));
     // jsdom refuses pushState/replaceState on a file: page; the revamp's routes write #/<tool> through them.
     const setHash = (state, title, url) => { if (typeof url === 'string' && url.startsWith('#')) w.location.hash = url; };
     w.History.prototype.pushState = setHash; w.History.prototype.replaceState = setHash;

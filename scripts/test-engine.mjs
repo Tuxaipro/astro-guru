@@ -32,6 +32,8 @@ const dom = new JSDOM(html, {
     w.matchMedia = w.matchMedia || (() => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} }));
     w.Element.prototype.scrollTo = function () {}; w.Element.prototype.scrollIntoView = function () {}; w.scrollTo = function () {};
     w.requestIdleCallback = (fn) => setTimeout(fn, 1);
+    // No network: the engine's online place search gets a failed request instead of a missing function.
+    w.fetch = () => Promise.reject(new w.TypeError('fetch is not available in the test'));
     w.HTMLDialogElement && (w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); }, w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); });
     // file: pages have no localStorage in jsdom; give the app a fresh in-memory one.
     const mem = new Map();
