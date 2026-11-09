@@ -65,6 +65,9 @@
     'The list is set to {day}. Change the day in Lagna Timings.': 'பட்டியல் {day} நாளுக்கு உள்ளது. நாளை லக்ன நேரங்களில் மாற்றவும்.',
     'Choose a place': 'இடத்தைத் தேர்ந்தெடுக்கவும்', 'Search any city or town': 'எந்த நகரத்தையும் ஊரையும் தேடலாம்',
     'Search a city or town': 'நகரம் அல்லது ஊரைத் தேடுக',
+    // Revamp: What's new page (its paragraphs are in i18n-ta.js)
+    "What's new": 'புதியவை', 'New in the engine 10.5': 'இயந்திரம் 10.5-இல் புதியவை', 'New on the web': 'இணையப் பதிப்பில் புதியவை',
+    "What's new in 10.5 and on the web": '10.5-இலும் இணையப் பதிப்பிலும் புதியவை',
     // Revamp: results, list tools, toasts
     '{n} tagged': '{n} குறியிட்டவை', 'No tagged timings on this day': 'இந்த நாளில் குறியிட்ட நேரம் இல்லை',
     'Every timing in this list is already in the past.': 'இந்தப் பட்டியலில் உள்ள எல்லா நேரங்களும் கடந்துவிட்டன.',

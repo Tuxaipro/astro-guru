@@ -200,6 +200,47 @@ check('ask fallback: an unmatched Tamil reply gets the card in Tamil', () => {
 });
 d.body.setAttribute('data-lang', 'bi'); await sleep(100);
 
+// (5) What's new: the revamp's own page, at #/whats-new, listed beside About and linked from it.
+check('whats-new: the sidebar entry sits next to About with data-route="whats-new"', () => {
+  const b = $('rvNewBtn');
+  if (!b) return 'no #rvNewBtn in the sidebar';
+  return eq('data-route', b.dataset.route, 'whats-new') || eq('in the last group', b.closest('.rv-group')?.dataset.g, 'more') ||
+    eq('right after About', b.previousElementSibling?.id, 'abBtn') || eq('own hue', /^\d+$/.test(b.style.getPropertyValue('--ich').trim()), true);
+});
+w.location.hash = '#/whats-new'; await settle();
+check('whats-new: #/whats-new shows the panel, highlights the entry and names the page', () => {
+  const p = $('rvNewPanel');
+  if (!p) return 'no #rvNewPanel';
+  return eq('panel hidden', p.classList.contains('hide'), false) || eq('address', w.location.hash, '#/whats-new') ||
+    eq('sidebar highlight', d.querySelector('.rv-groups .tool.rv-on')?.id, 'rvNewBtn') || eq('title', d.title, "What's new · GuruAgasthiya") ||
+    eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 10.5 | New on the web') ||
+    eq('items', p.querySelectorAll('li').length, 11) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 7, true);
+});
+check('whats-new: About links to it from the top', () => {
+  const a = d.querySelector('#abPanel > .sh-head + .rv-new-link a');
+  return a ? eq('href', a.getAttribute('href'), '#/whats-new') : 'no .rv-new-link right after the About header';
+});
+d.body.setAttribute('data-lang', 'ta'); await sleep(200);
+check('whats-new: in Tamil, the headings and every paragraph are translated', () => {
+  const p = $('rvNewPanel');
+  const paras = [...p.querySelectorAll('p.rv-new-intro, li')];
+  const missing = paras.filter((el) => !el.querySelector(':scope > .rv-ta-para')).map((el) => el.textContent.trim().slice(0, 40));
+  return eq('heading', p.querySelector('h2').textContent.trim(), 'புதியவை') || eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'இயந்திரம் 10.5-இல் புதியவை | இணையப் பதிப்பில் புதியவை') ||
+    eq('sidebar label', $('rvNewBtn').querySelector('.tx').firstChild.textContent.trim(), 'புதியவை') ||
+    (missing.length ? `paragraphs without Tamil: ${JSON.stringify(missing)}` : '') ||
+    eq('links kept', p.querySelectorAll('.rv-ta-para a[href^="#/"]').length >= 7, true);
+});
+d.body.setAttribute('data-lang', 'bi'); await sleep(200);
+check('whats-new: back in bilingual mode the English is back and ✕ returns to the page underneath', () => {
+  const p = $('rvNewPanel');
+  if (p.querySelector('.rv-ta-para')) return 'Tamil paragraphs still in place';
+  if (p.querySelector('h2').textContent.trim() !== "What's new") return `heading is ${JSON.stringify(p.querySelector('h2').textContent)}`;
+  $('rvNewClose').click();
+  return eq('panel hidden', p.classList.contains('hide'), true);
+});
+await settle();
+check('whats-new: after ✕ the address is the base page again', () => (/^#\/(now|lagna-timings)$/.test(w.location.hash) ? '' : `address is ${w.location.hash}`));
+
 // ---------- result ----------
 const scriptErrors = errors.filter((e) => !/scrollTo|getContext|Not implemented/.test(e));
 if (scriptErrors.length) { failed++; console.log(`FAIL  no script errors\n      ${scriptErrors.slice(0, 5).join('\n      ')}`); } else { passed++; console.log('PASS  no script errors'); }

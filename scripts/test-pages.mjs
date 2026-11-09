@@ -20,8 +20,9 @@ const PREPARE = {
   'horary-answers': async (p) => { await p.fill('#hqNum', '108'); },
   'natal-chart-trade': async (p) => { await p.fill('#ntDob', '1990-06-15'); }, // the time field has a default
 };
-// Pages with no result to wait for after the main button (it sets alarms or draws a map).
-const NO_OUTPUT = new Set(['live-transit-clock', 'astrocartography', 'cuspal-chart', 'about', 'now', 'lagna-timings']);
+// Pages with no result to wait for after the main button (it sets alarms or draws a map), and the
+// two reading pages, About and What's new (the revamp's own page), which have no main button.
+const NO_OUTPUT = new Set(['live-transit-clock', 'astrocartography', 'cuspal-chart', 'about', 'whats-new', 'now', 'lagna-timings']);
 // Messages that are the browser's, not the app's.
 const IGNORE = /navigator\.vibrate|Banner not shown|apple-mobile-web-app-capable|favicon/i;
 

@@ -105,6 +105,12 @@
     more.innerHTML = '<h3 class="rv-gh">More <span class="tm">மேலும்</span></h3><div class="rv-gl"></div>';
     rest.forEach(function (b) { more.lastChild.appendChild(b); });
     if (about) more.lastChild.appendChild(about);
+    // "What's new" is the revamp's own page (its panel is built below, with the routes), listed beside About.
+    var newBtn = document.createElement('button');
+    newBtn.type = 'button'; newBtn.id = 'rvNewBtn'; newBtn.className = 'tool'; newBtn.dataset.s = "What's new version 10.5 web changes release notes";
+    newBtn.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/><path d="M18.5 3.5v3M17 5h3M19 16.5v3M17.5 18h3"/></svg></span>' +
+      '<span class="tx">What\'s new<span class="tm">புதியவை</span></span>';
+    more.lastChild.appendChild(newBtn);
     groupsEl.appendChild(more);
     grid.replaceWith(groupsEl);
     var h = nav.querySelector('h2.sec'); if (h) h.remove();
@@ -221,7 +227,7 @@
     akBtn: 'ask-guruagasthiya', gpBtn: 'gmp-prasnam', hqBtn: 'horary-answers', lostBtn: 'lost-and-found',
     mmBtn: 'money-manifestation', mpBtn: 'money-profit-muhurtham', tpBtn: 'trade-profit', ntBtn: 'natal-chart-trade',
     mkBtn: 'market-transit', spBtn: 'speculation-research', ltBtn: 'lottery-rules', ckBtn: 'cricket-wicket',
-    raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about'
+    raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about', rvNewBtn: 'whats-new'
   };
   groupsEl.querySelectorAll('.tool').forEach(function (b) {
     var r = b.id === 'rvNowBtn' ? 'now' : SLUGS[b.id] || slugOf(b.title || '') || slugOf(b.id.replace(/Btn$/, ''));
@@ -235,6 +241,54 @@
   var appEl = document.querySelector('.app');
   if (appEl) appEl.appendChild(pagesEl);
   document.querySelectorAll('.sheet').forEach(function (sh) { if (sh.id !== 'chartPop') pagesEl.appendChild(sh); });
+
+  /* ---------- "What's new": the revamp's own page, at #/whats-new ----------
+     Like Now, it belongs to the revamp, not the engine: the engine's sheet stack was built before this
+     panel existed, so it never opens, closes or counts it. It is a .sheet in the page area like the tools,
+     so the routes above treat it as one more tool page (open = not .hide), and the About page links to it.
+     The text is English; Tamil comes from i18n.js (headings) and i18n-ta.js (paragraphs), like About. */
+  var newPanel = document.createElement('div');
+  newPanel.className = 'panel sheet hide ab rv-new'; newPanel.id = 'rvNewPanel';
+  newPanel.setAttribute('role', 'dialog'); newPanel.setAttribute('aria-labelledby', 'rvNewT');
+  newPanel.innerHTML =
+    '<div class="sh-head"><div><h2 id="rvNewT">What\'s new</h2><span class="tt">புதியவை</span></div>' +
+    '<button class="xbtn" id="rvNewClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>' +
+    '<p class="rv-new-intro">GuruAgasthiya engine <b>10.5</b> brings three new tools, a master switch for the alarms and a pass over the whole app for screen readers. ' +
+      'The <b>web version</b> runs that same engine in the browser, with a new interface around it: setup, saved people, sharing, folded lists, Tamil throughout and coloured tool tiles.</p>' +
+    '<h3>New in the engine 10.5</h3>' +
+    '<ul class="rv-new-list">' +
+      '<li><a href="#/guru-agasthiya-muhurtham">Guru Agasthiya Muhurtham</a> gives every ascendant window at your place marks from the lords of houses 1, 2, 3 and 11, counted from the transit ascendant, and lists the auspicious ones for the dates you choose. You can set the least marks to list, skip retrograde lords or keep only the highly auspicious windows.</li>' +
+      '<li><a href="#/ask-guruagasthiya">Ask GuruAgasthiya</a> is a chat that answers from its own rules on the device, reads your birth chart when you give the birth details, and opens Horary Answers, GMP Prasnam and 3·11 Muhurtham from the conversation. It can read its replies aloud and listen to you, where the browser allows speech.</li>' +
+      '<li><a href="#/natal-chart-trade">Natal Chart Trade</a> scores your birth chart for stock trading, investing, lottery, horse racing and cards, and shows the lucky and unlucky periods of life (Vimshottari), your best days in the dates you choose, and the Moon windows. It is a study of tendencies, not a promise of profit.</li>' +
+      '<li><b>Alarms master switch.</b> One button in Settings turns every muhurtham alarm on or off at once and shows how many are waiting.</li>' +
+      '<li><b>Accessibility.</b> Every icon-only button gets a spoken name from its label or tooltip, and charts and graphics are named for screen readers or marked decorative.</li>' +
+    '</ul>' +
+    '<h3>New on the web</h3>' +
+    '<ul class="rv-new-list">' +
+      '<li><b>Setup and your home place.</b> On a first visit you choose a home place, language and ayanamsa. When the browser cannot give a position, the nearest listed city to where your connection appears to be is offered, marked approximate. Run it again from Settings with Set up home place; every tool then opens on that place.</li>' +
+      '<li><b>Saved people.</b> People saved in <a href="#/birth-chart">Birth Chart</a> fill the birth details in <a href="#/fortuna-timing">Fortuna Timing</a>, <a href="#/natal-chart-trade">Natal Chart Trade</a> and <a href="#/ask-guruagasthiya">Ask GuruAgasthiya</a>.</li>' +
+      '<li><b>Share, print and calendar.</b> Every result has Copy, Print and Share (or Save as text), and timing lists add Jump to now and Add to calendar, an .ics file with an alert at each start.</li>' +
+      '<li><b>Long lists fold.</b> A result of more than 90 rows, such as a two-week <a href="#/guru-agasthiya-muhurtham">Guru Agasthiya Muhurtham</a>, shows 60 rows and a Show more bar. Copy, Print and Add to calendar still take every row.</li>' +
+      '<li><b>Tamil throughout.</b> In Tamil, the fields, buttons, dates, lord chains and the long help paragraphs are translated whole, and the 10.5 tools are covered too. Choose the language in Settings.</li>' +
+      '<li><b>Coloured tool tiles.</b> Each tool in the sidebar has an icon tile of its own colour, so tools are told apart at a glance, also when the sidebar is narrowed to icons.</li>' +
+    '</ul>';
+  pagesEl.appendChild(newPanel);
+  var newBtnEl = $('rvNewBtn');
+  if (newBtnEl) newBtnEl.addEventListener('click', function () { newPanel.classList.remove('hide'); });
+  newPanel.querySelector('#rvNewClose').addEventListener('click', function () { newPanel.classList.add('hide'); });
+  // The engine's Esc closes only the sheets it knows; this one closes itself.
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !newPanel.classList.contains('hide') && !document.querySelector('.sheet:not(.hide):not(#rvNewPanel)')) newPanel.classList.add('hide');
+  });
+  // About links to it from the top.
+  var abHead = document.querySelector('#abPanel > .sh-head');
+  if (abHead) {
+    var abLink = document.createElement('p');
+    abLink.className = 'rv-new-link';
+    abLink.innerHTML = '<a href="#/whats-new"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/></svg>What\'s new in 10.5 and on the web</a>';
+    abHead.parentNode.insertBefore(abLink, abHead.nextSibling);
+  }
+
   function openTool() {
     var o = [].slice.call(pagesEl.querySelectorAll('.sheet:not(.hide)'));
     return o.filter(function (x) { return !x.classList.contains('under'); }).pop() || o.pop() || null;

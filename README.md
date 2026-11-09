@@ -63,6 +63,14 @@ every calculation in the v10.5 engine stays as it was.
   - Question tools (GMP, Horary, Lost and Found) show a verdict card with a status colour.
   - Tables, tags and the chart toolbar follow the same design.
 
+- **What's new** (`#/whats-new`): the revamp's own page, listed beside About in the sidebar and linked from the
+  top of About. It says what engine 10.5 brought (Guru Agasthiya Muhurtham, Ask GuruAgasthiya, Natal Chart
+  Trade, the alarms master switch, the accessibility pass) and what the web version adds (setup and the
+  location fallback, saved people, share, print and calendar, folded long lists, Tamil, coloured tool tiles),
+  each item linking to its tool. The engine never sees this panel: it is built in `revamp.js` after the
+  engine's sheet stack, like the Now page, and only the revamp's routes open and close it. The English is in
+  `revamp.js`; the Tamil headings are in `i18n.js` and the paragraphs in `i18n-ta.js`.
+
 - **Disclaimer:** shown the first time a tool is opened each day. After it is accepted, it doesn't appear again
   until the next calendar day on that device. The original app showed it before every tool.
 
@@ -176,7 +184,10 @@ node scripts/style-diff.mjs          # compare after it: lists every style value
     re-run folds again; 40 rows get no bar.
   - When the city list has no match, the folded place line shows the search text (or "Place by
     coordinates"), not the engine's advice sentence.
-- **Pages** (`scripts/test-pages.mjs`): opens all 24 pages by their address in the Chrome installed on
+  - The What's new page: its sidebar entry sits beside About with `data-route="whats-new"`, `#/whats-new`
+    shows the panel and names the page, About links to it, in Tamil every heading and paragraph is
+    translated with the tool links kept, and ✕ returns to the page underneath.
+- **Pages** (`scripts/test-pages.mjs`): opens all 28 pages by their address in the Chrome installed on
   this computer (playwright-core). Each page is checked at 1440×900 and 390×844, its main button is
   pressed, and the run fails on missing content, a wrong address or highlight, a page wider than the
   screen, no result, or any script error.
@@ -187,8 +198,8 @@ The unchanged v7.7 port is kept read-only in `../guruagasthiya-v7.7-original/`.
 
 ### How the code is organised
 
-- `revamp/revamp.js`: the shell. Layout, sidebar and search, routes (`#/…`), settings, the phone tab bar,
-  the shared page watcher, and the problem notice.
+- `revamp/revamp.js`: the shell. Layout, sidebar and search, routes (`#/…`), the What's new page, settings,
+  the phone tab bar, the shared page watcher, and the problem notice.
 - `revamp/features.js`: added features. Sharing, calendar, question log, setup, the working state on main
   buttons, and the problem log.
 - `revamp/i18n.js`: translations.
