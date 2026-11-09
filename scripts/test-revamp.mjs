@@ -2,8 +2,8 @@
 // Behaviour tests for the revamp layer (revamp/*.js) on top of the engine.
 // Loads public/index.html headless (jsdom) with the revamp scripts in place and checks what they add:
 // saved people filling a tool's birth form, long result lists folding to a first page, the folded place
-// line falling back to the search text when the city list has no match, and the example card that
-// follows an Ask GuruAgasthiya reply no rule matched.
+// line falling back to the search text when the city list has no match, and Ask GuruAgasthiya: the example
+// card after a reply no rule matched, spelling and phrase fixes, small talk, and the log of unmatched questions.
 //
 //   npm run test:revamp
 import { JSDOM, VirtualConsole } from 'jsdom';
@@ -58,11 +58,11 @@ const settle = () => sleep(400);
 
 // ---------- checks ----------
 let failed = 0, passed = 0;
-function check(name, fn) {
-  try {
-    const why = fn();
-    if (why) { failed++; console.log(`FAIL  ${name}\n      ${why}`); } else { passed++; console.log(`PASS  ${name}`); }
-  } catch (e) { failed++; console.log(`FAIL  ${name}\n      ${String(e.message || e).split('\n')[0]}`); }
+function check(name, fn, isAsync) {
+  const report = (why) => { if (why) { failed++; console.log(`FAIL  ${name}\n      ${why}`); } else { passed++; console.log(`PASS  ${name}`); } };
+  const fail = (e) => { failed++; console.log(`FAIL  ${name}\n      ${String(e.message || e).split('\n')[0]}`); };
+  if (isAsync) return fn().then(report, fail);
+  try { report(fn()); } catch (e) { fail(e); }
 }
 const eq = (what, got, want) => (got === want ? '' : `${what}: expected ${JSON.stringify(want)}, got ${JSON.stringify(got)}`);
 const shownRows = (out) => [...out.querySelectorAll('li.row')].filter((li) => !li.classList.contains('rv-hide-more')).length;
@@ -172,7 +172,7 @@ check('ask fallback: an unmatched English reply gets a card with the closest cat
   if (!chips.length) return 'no example chips in the card';
   return eq('headings', heads.join(' | '), 'Closest to your question: | You can ask me about…') ||
     eq('first chip', chips[0].textContent.trim(), 'Lost itemsWill I find my lost item?') ||
-    eq('every category once', chips.length, 11) || eq('card language', card.getAttribute('lang'), 'en');
+    eq('every category once', chips.length, 13) || eq('card language', card.getAttribute('lang'), 'en');
 });
 check('ask fallback: tapping an example sends it like typing and pressing Send', () => {
   const chip = noMatchEn.nextElementSibling.querySelector('.ak-chip');
@@ -199,6 +199,46 @@ check('ask fallback: an unmatched Tamil reply gets the card in Tamil', () => {
     eq('first chip', chips[0].textContent.trim(), 'தொலைந்த பொருள்தொலைந்த பொருள் கிடைக்குமா?');
 });
 d.body.setAttribute('data-lang', 'bi'); await sleep(100);
+// Before the engine reads a question: spelling fixes, phrase hints, small talk; and the log of misses.
+const sendAsk = async (text) => { const before = akLog.children.length; $('akText').value = text; $('akForm').requestSubmit(); await sleep(150); return [...akLog.children].slice(before); };
+const NOMATCH_RX = /I could not match that to one question|அந்தக் கேள்வியை ஒன்றாகப் பொருத்த இயலவில்லை/;
+await check('ask fixes: a misspelt word is corrected before the engine reads it', async () => {
+  const added = await sendAsk('lotery numbers');
+  const user = added.find((n) => n.classList.contains('ak-u')), bot = added.find((n) => n.classList.contains('ak-b'));
+  if (!user || !bot) return 'no user bubble or reply';
+  return eq('user bubble', user.textContent.trim(), 'lottery numbers') || (NOMATCH_RX.test(bot.textContent) ? 'the engine still did not match it' : '');
+}, true);
+await check('ask fixes: an unknown phrase gets the canonical word in brackets, as the engine marks other languages', async () => {
+  const added = await sendAsk('rasi palan');
+  const user = added.find((n) => n.classList.contains('ak-u')), bot = added.find((n) => n.classList.contains('ak-b'));
+  if (!user || !bot) return 'no user bubble or reply';
+  return eq('user bubble', user.textContent.trim(), 'rasi palan [birth chart]') || (bot.querySelector('.ak-bn') ? '' : 'the reply is not the birth-chart form');
+}, true);
+await check('ask small talk: "thanks" is answered here, not by the no-match reply', async () => {
+  const added = await sendAsk('thanks');
+  const bots = added.filter((n) => n.classList.contains('ak-b'));
+  if (!bots.length) return 'no reply';
+  if (bots.some((n) => NOMATCH_RX.test(n.textContent))) return "the engine's no-match reply still appeared";
+  return eq('reply', bots[0].textContent.trim(), 'You are welcome. Ask me another question whenever you like.') || eq('composer cleared', $('akText').value, '');
+}, true);
+await check('ask small talk: "ok" gets an invitation with the example card', async () => {
+  const added = await sendAsk('ok');
+  const card = added.find((n) => n.classList.contains('rv-ak-help'));
+  if (!card) return 'no example card after "ok"';
+  return eq('reply', added.find((n) => n.classList.contains('ak-b')).textContent.trim(), 'Go ahead and ask your question, or tap one of these:') ||
+    eq('no "closest" section without a question', card.querySelectorAll('.rv-ak-h').length, 1);
+}, true);
+check('miss log: unmatched questions are kept on the device, with a count and a Clear button', () => {
+  const det = $('akPanel').querySelector('details.rv-askmiss');
+  if (!det) return 'no details.rv-askmiss under the message box';
+  const saved = JSON.parse(w.localStorage.getItem('rvAskMiss') || '[]');
+  if (!saved.find((e) => e.q === 'my laptop was stolen yesterday')) return `stolen laptop not logged: ${JSON.stringify(saved.map((e) => e.q))}`;
+  const rows = [...det.querySelectorAll('li b')].map((b) => b.textContent);
+  if (!rows.includes('my laptop was stolen yesterday')) return `row missing, rows: ${JSON.stringify(rows)}`;
+  if (saved.some((e) => /^(thanks|ok)$/.test(e.q))) return 'small talk was logged as a miss';
+  det.querySelector('button[data-k="clear"]').click();
+  return eq('cleared', w.localStorage.getItem('rvAskMiss'), '[]') || eq('count after clear', det.querySelector('.rv-log-n').textContent.trim(), 'empty');
+});
 
 // (5) What's new: the revamp's own page, at #/whats-new, listed beside About and linked from it.
 check('whats-new: the sidebar entry sits next to About with data-route="whats-new"', () => {

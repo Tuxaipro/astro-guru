@@ -951,6 +951,13 @@ body.rv #akPanel .rv-ak-help .ak-chip:focus-visible{outline:2px solid var(--acce
    message box never covers it. */
 body.rv .stage[data-view="mobile"] #akPanel .rv-ak-help .ak-chip{width:100%}
 body.rv .stage[data-view="mobile"] #akPanel .rv-ak-help:last-child{margin-bottom:14px}
+/* The unmatched-question log under the message box, and its copy / clear buttons */
+body.rv #akPanel details.rv-askmiss{margin:16px 0 0}
+body.rv #akPanel .rv-askmiss .rv-log-empty{margin-bottom:4px}
+body.rv #akPanel .rv-askmiss-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+body.rv #akPanel .rv-askmiss-a button{min-height:36px;padding:7px 14px;border:0;border-radius:var(--btn-r,10px);background:var(--fill);color:var(--accent);font:600 13.5px var(--sf);cursor:pointer}
+body.rv #akPanel .rv-askmiss-a button:hover{background:var(--tint)}
+body.rv .stage[data-view="mobile"] #akPanel details.rv-askmiss{margin-top:12px}
 
 /* ---------- Long result lists: first page, then "Show more" ---------- */
 body.rv .rv-hide-more{display:none!important}

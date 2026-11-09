@@ -395,40 +395,89 @@
     // The engine sets the shared place up 500 ms after loading, then watches its tools every 500 ms.
     setTimeout(function () { follow(); setInterval(follow, 500); }, 700);
   })();
-  /* Ask GuruAgasthiya draws its birth form inside the chat; offer the saved people there too.
-     And when none of its rules matches a question, it says "I could not match that to one question":
-     a card then follows with the covered categories closest to the question and one example each,
-     so the chat never ends in a dead end. */
+  /* Ask GuruAgasthiya is a rule-based router with no AI (public/js/02-app.js, route()). The revamp adds, around
+     its chat and without touching the engine:
+     - the saved people in the birth form the chat draws;
+     - spelling and phrase fixes before the engine reads a question ("jathakam", "lotery", "rasi palan"), the
+       phrases in the engine's own way: a bracketed canonical word after the text, as its normIn() does;
+     - small talk answered here ("thanks", "who are you", "ok") instead of the engine's no-match reply;
+     - after a reply no rule matched ("I could not match that to one question"), a card with the covered
+       categories closest to the question and one example question each, so the chat never ends in a dead end;
+     - a log of the unmatched questions, kept on this device only, with copy and clear, so the rules can be
+       widened from what people actually type. */
   (function () {
-    var log = $('akLog'); if (!log) return;
+    var log = $('akLog'), form = $('akForm'), input = $('akText'); if (!log) return;
     // The engine's no-match reply, in English (also the first line of "English + Tamil") and in Tamil.
     var NOMATCH = /^(I could not match that to one question\.|அந்தக் கேள்வியை ஒன்றாகப் பொருத்த இயலவில்லை\.)/;
-    // What the engine's rules cover: keywords that point to each category, its name and one question the
-    // rules do answer (English here; i18n.js holds the Tamil). Keyword lists mix English and Tamil.
+    // What the engine's rules cover: a name, one question the rules do answer (English here; i18n.js holds the
+    // Tamil), strong keywords (2 points each) and weak ones (1 point). Keyword lists mix English and Tamil.
     var ASK_CATS = [
       { name: 'Muhurtham', q: 'Muhurtham for marriage next week',
-        k: [/muhurt|auspicious|shubh|good (time|day|date|hour)|best (time|day|date)/, /wedding|engagement|housewarming|griha|naming|ear.?pierc|ceremony|function|puja|pooja|opening|inaugur/, /முகூர்த்|நல்ல நேரம்|நல்ல நாள்|சுப|திருமண|கல்யாண|கிரகப்பிரவேச/] },
+        s: [/muhurt|auspicious|shubh|nalla neram|good (time|day|date|hour)|best (time|day|date)/, /முகூர்த்|நல்ல நேரம்|நல்ல நாள்|சுப/],
+        w: [/wedding|engagement|housewarming|griha|naming|ear.?pierc|ceremony|function|puja|pooja|opening|inaugur/, /திருமண|கல்யாண|கிரகப்பிரவேச|பூஜை/] },
       { name: 'Birth chart', q: 'Read my birth chart',
-        k: [/birth|chart|horoscope|ja+thag|kundli|natal|rasi|lagna|nakshat/, /dasha|bhukti|transit|planet|my (life|future|fate|destiny)|predict/, /ஜாதக|தசை|ராசி|லக்ன|நட்சத்திர|எதிர்காலம்|கோள்|கிரக/] },
+        s: [/birth|chart|horoscop|ja+[td]h?[ae]?[gk]am|kundl|natal|rasi palan|dasha|\bdasa\b|bhukti/, /ஜாதக|தசை|புக்தி|என் பலன்/],
+        w: [/rasi|lagna|nakshat|transit|planet|my (life|future|fate|destiny)|predict/, /ராசி|லக்ன|நட்சத்திர|எதிர்காலம்|கோள்|கிரக/] },
       { name: 'Horary question', q: 'Will I clear my exam?',
-        k: [/\b(will|shall|can|could|should|would|am i|do i|when)\b|\?/, /exam|job|career|marr|love|abroad|visa|loan|court|case|health|child|baby|promotion|property|house|vehicle|interview|travel/, /வருமா|ஆகுமா|முடியுமா|எப்போது|தேர்வு|வேலை|காதல்|வெளிநாடு|கடன்|குழந்தை|வழக்கு|உடல்நல/] },
+        s: [/exam|job|career|marr|love|abroad|visa|loan|court|case|health|child|baby|promotion|property|house|vehicle|interview|travel|porutham/, /தேர்வு|வேலை|திருமண|காதல்|வெளிநாடு|கடன்|குழந்தை|வழக்கு|உடல்நல|பொருத்தம்/],
+        w: [/\b(will|shall|can|could|should|would|am i|do i|when)\b|\?/, /வருமா|ஆகுமா|முடியுமா|எப்போது/] },
       { name: 'Lost items', q: 'Will I find my lost item?',
-        k: [/\blost\b|missing|stolen|theft|thief|misplaced|where (is|are) my|find my|lost and found/, /தொலை|காணாம|திருடு|திருட்டு|கிடைக்குமா/] },
+        s: [/\blost\b|missing|stolen|theft|thief|misplaced|where (is|are) my|find my/, /தொலை|காணாம|திருடு|திருட்டு/], w: [/கிடைக்குமா/] },
       { name: 'Money', q: 'When will my money problems end?',
-        k: [/money|wealth|finance|financial|income|salary|debt|loan|rich|savings|cash|lakshmi/, /பணம்|பண|செல்வம்|வருமானம்|சம்பளம்|கடன்|லட்சுமி/] },
+        s: [/money|wealth|financ|income|salary|debt|rich|savings|cash|lakshmi/, /பணம்|பண|செல்வம்|வருமானம்|சம்பளம்|லட்சுமி/], w: [/loan|கடன்/] },
       { name: 'Trade and markets', q: 'Is today good for share trading?',
-        k: [/stock|share|market|trading|trade|nifty|sensex|forex|crypto|bitcoin|gold|silver|intraday|invest|profit|commodit/, /பங்கு|சந்தை|வர்த்தக|லாபம்|முதலீடு|தங்கம்/] },
+        s: [/stock|share|market|trading|trade|nifty|sensex|forex|crypto|bitcoin|intraday|commodit/, /பங்கு|சந்தை|வர்த்தக/], w: [/gold|silver|invest|profit|லாபம்|முதலீடு|தங்கம்/] },
       { name: 'Lottery', q: 'Lottery muhurtham and numbers',
-        k: [/lottery|lotto|jackpot|lucky number|gambl|betting|\bbet\b|prize|draw/, /லாட்டரி|அதிர்ஷ்ட|சீட்டு|பரிசு/] },
+        s: [/lott?e?ry|lotto|jackpot|lucky number|gambl|betting|\bbet\b/, /லாட்டரி|அதிர்ஷ்ட|சீட்டு/], w: [/prize|draw|luck|பரிசு/] },
       { name: 'Cricket', q: 'Who will win today’s cricket match?',
-        k: [/cricket|\bipl\b|t20|odi|test match|match|toss|wicket|team|football|\bgame\b|tournament/, /கிரிக்கெட்|போட்டி|அணி|ஆட்டம்/] },
+        s: [/cri[ck]+e?t|\bipl\b|t20|\bodi\b|test match|wicket|toss/, /கிரிக்கெட்/], w: [/match|team|football|\bgame\b|tournament|world cup|\bwin\b/, /போட்டி|அணி|ஆட்டம்/] },
       { name: 'Horse race', q: 'Horse race timings for today',
-        k: [/horse|\brace\b|racing|jockey|derby|turf/, /குதிரை|பந்தய/] },
+        s: [/horse|racing|jockey|derby|turf/, /குதிரை|பந்தய/], w: [/\brace\b/] },
+      { name: 'Today’s sky', q: 'Rahu kalam today',
+        s: [/rahu ?ka+lam|yamagand|gulik|tithi|panchang|sunrise|sunset|(nakshatra|star) today|today.{0,12}(good|bad|auspicious)/, /ராகு\s*கால|எமகண்ட|திதி|பஞ்சாங்க|சூரிய உதயம்/],
+        w: [/today|tonight|tomorrow|\bnow\b/, /இன்று|நாளை|இப்போது/] },
+      { name: 'Planets', q: 'Planet positions today',
+        s: [/planet|transit|position|peyarchi|\bsani\b|\bguru\b|\brahu\b|\bketu\b|saturn|jupiter|mercury|venus|\bmars\b|retrograde/, /கிரக|கோள்|பெயர்ச்சி|சனி|குரு|ராகு|கேது|வக்கிர/], w: [/\bsky\b|\bsign\b|degree/] },
       { name: 'World events', q: 'Any earthquake in the next 3 months?',
-        k: [/earthquake|quake|flood|cyclone|storm|tsunami|accident|crash|disaster|calamity|war|election|country|world|rain|weather|epidemic|fire/, /நிலநடுக்க|வெள்ள|புயல்|விபத்து|தேர்தல்|மழை|நாடு|உலக|தீ/] },
+        s: [/earthquake|quake|flood|cyclone|storm|tsunami|disaster|calamity|\bwar\b|election|epidemic/, /நிலநடுக்க|வெள்ள|புயல்|தேர்தல்|போர்/],
+        w: [/accident|crash|country|world|rain|weather|fire/, /நாடு|உலக|மழை|விபத்து|தீ/] },
       { name: 'About astrology', q: 'Explain the 12 houses',
-        k: [/what (is|are|does)|explain|meaning|define|how (does|do|is)|rules?|house|sub.?lord|cusp|\bkp\b|krishnamurti|significator|retrograde|yoga|dosha|planet/, /என்றால்|என்ன|விளக்கு|விதி|அர்த்தம்|பாவம்|உப அதிபதி|தோஷம்/] }
+        s: [/what (is|are|does)|explain|meaning|define|how (does|do|is)|rules?|sub.?lord|cusp|\bkp\b|krishnamurti|significator|yoga|dosha/, /என்றால்|என்ன|விளக்கு|விதி|அர்த்தம்|உப அதிபதி|தோஷம்/],
+        w: [/house|planet|star|sign|பாவம்/] }
     ];
+    // Spellings the rules do not know, replaced by the one they do.
+    var SPELL = [
+      [/\b(muhoortham|muhurtam|muhurat|muhoorat|muhurth|muhurtha|muhurtum|mugurtham|muhurtham's)\b/gi, 'muhurtham'],
+      [/\b(jathakam|jadhagam|jatakam|jaathakam|jathgam|jadagam|jathakom|jadhakam|jaadhagam)\b/gi, 'jathagam'],
+      [/\b(horoscop|horroscope|horoscpe|horoscpoe|horascope)\b/gi, 'horoscope'],
+      [/\b(kundali|kundalee|kundly|kundalini chart)\b/gi, 'kundli'],
+      [/\b(lotery|lottry|lotary|lotterry|lottary)\b/gi, 'lottery'],
+      [/\b(criket|crikcet|cricet|crickt|crickett)\b/gi, 'cricket']
+    ];
+    // Phrases the rules do not know, pointed at the rule that answers them. The canonical word goes in
+    // brackets after the text, the way the engine's own normIn() marks words from other languages.
+    var PHRASE = [
+      [/\b(ra+si|rashi) (palan|phal|phalan|palangal)\b/i, 'birth chart'],
+      [/\b(ipl|t20|odi|test match|world cup)\b/i, 'cricket'],
+      [/\b(nakshatra|star) (today|now)\b|\b(today|todays|today's) (nakshatra|star)\b|\bwhich star\b|\btoday\b.{0,10}\b(good|bad)\b|\bgood (or bad )?day\b/i, 'panchangam']
+    ];
+    function fixText(t) {
+      var out = t;
+      SPELL.forEach(function (x) { out = out.replace(x[0], x[1]); });
+      if (!/\[[^\]]+\]\s*$/.test(out)) {
+        var low = out.toLowerCase();
+        for (var i = 0; i < PHRASE.length; i++) { if (PHRASE[i][0].test(low) && low.indexOf(PHRASE[i][1]) < 0) { out += ' [' + PHRASE[i][1] + ']'; break; } }
+      }
+      return out;
+    }
+    // Small talk the rules do not cover, answered here. Tamil forms are in the patterns.
+    var SMALL = [
+      { rx: /^(thanks?( a lot| you| u)?|thank you( very much| so much)?|thx|ty|nandri|romba nandri|நன்றி|ரொம்ப நன்றி|மிக்க நன்றி)[\s!.]*$/i, reply: 'You are welcome. Ask me another question whenever you like.' },
+      { rx: /^(who are you|what are you|are you (an? )?(ai|bot|robot|human|real)|are you real|நீ யார்|நீங்கள் யார்)[\s?!.]*$/i, reply: 'I am this app’s question guide. I answer from its own KP rules and databases, fully offline, with no AI behind me. I understand questions phrased like these best:', card: true },
+      { rx: /^(ok|okay|k|yes|yeah|yep|no|nope|hmm+|fine|good|great|nice|super|cool|sure|சரி|ஆமாம்|ஆம்|இல்லை|ம்ம்)[\s!.]*$/i, reply: 'Go ahead and ask your question, or tap one of these:', card: true },
+      { rx: /^(bye|goodbye|good ?night|see you|போய்\s*வருகிறேன்|போய்\s*வரேன்)[\s!.]*$/i, reply: 'Goodbye. Come back whenever you have a question.' }
+    ];
+    function smallTalk(t) { for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; } return null; }
     // The question's language: the chat's own "Reply in" choice first, then the app language.
     function askT(text) {
       var sel = $('akLang'), v = sel ? sel.value : 'auto';
@@ -438,9 +487,15 @@
     }
     // Typing the question and pressing Send, through the engine's own form submit.
     function askSend(q) {
-      var input = $('akText'), form = $('akForm'); if (!input || !form) return;
+      if (!input || !form) return;
       input.value = q;
       if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+    function chatLang(el) {
+      var last = log.querySelector('.ak-m[lang]:last-of-type') || log.querySelector('.ak-m[lang]');
+      if (last && last.getAttribute('lang')) el.setAttribute('lang', last.getAttribute('lang'));
+      if (last && last.dir) el.dir = last.dir;
+      return el;
     }
     function askChip(c) {
       var b = document.createElement('button'); b.type = 'button'; b.className = 'ak-chip rv-ak-ex';
@@ -456,22 +511,82 @@
       cats.forEach(function (c) { ch.appendChild(askChip(c)); });
       card.appendChild(ch);
     }
+    // The card: with a question, the categories closest to it come first (strong keyword 2, weak 1, top 3).
+    function helpCard(question) {
+      var text = (question || '').toLowerCase().replace(/\s*\[[^\]]*\]\s*$/, '');
+      var score = function (c) { return c.s.reduce(function (a, rx) { return a + (rx.test(text) ? 2 : 0); }, 0) + c.w.reduce(function (a, rx) { return a + (rx.test(text) ? 1 : 0); }, 0); };
+      var top = text ? ASK_CATS.map(function (c) { return { c: c, n: score(c) }; }).filter(function (x) { return x.n > 0; })
+        .sort(function (a, b) { return b.n - a.n; }).slice(0, 3).map(function (x) { return x.c; }) : [];
+      var card = document.createElement('div'); card.className = 'ak-m ak-b rv-ak-help';
+      if (top.length) askSection(card, 'Closest to your question:', top);
+      askSection(card, 'You can ask me about…', ASK_CATS.filter(function (c) { return top.indexOf(c) < 0; }));
+      return card;
+    }
+    function scrollLog() { try { log.scrollTop = log.scrollHeight; } catch (e) {} }
     function noMatchHelp(reply) {
       if (reply.hasAttribute('data-rv-help')) return;
       reply.setAttribute('data-rv-help', '1');
       // The question is the user bubble just before the reply.
       var u = reply.previousElementSibling; while (u && !u.classList.contains('ak-u')) u = u.previousElementSibling;
-      var text = (u ? u.textContent : '').toLowerCase();
-      var scored = ASK_CATS.map(function (c) { return { c: c, n: c.k.reduce(function (a, rx) { return a + (rx.test(text) ? 1 : 0); }, 0) }; })
-        .filter(function (x) { return x.n > 0; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 3).map(function (x) { return x.c; });
-      var card = document.createElement('div'); card.className = 'ak-m ak-b rv-ak-help';
+      var q = u ? u.textContent.trim() : '';
+      var card = helpCard(q);
       if (reply.getAttribute('lang')) card.setAttribute('lang', reply.getAttribute('lang'));
       if (reply.dir) card.dir = reply.dir;
-      if (scored.length) askSection(card, 'Closest to your question:', scored);
-      askSection(card, 'You can ask me about…', ASK_CATS.filter(function (c) { return scored.indexOf(c) < 0; }));
       reply.insertAdjacentElement('afterend', card);
-      try { log.scrollTop = log.scrollHeight; } catch (e) {}
+      if (q) recordMiss(q);
+      scrollLog();
     }
+    // Small talk: the user bubble and the reply, drawn like the engine's.
+    function sayHere(userText, small) {
+      var u = chatLang(document.createElement('div')); u.className = 'ak-m ak-u'; u.textContent = userText; log.appendChild(u);
+      var b = chatLang(document.createElement('div')); b.className = 'ak-m ak-b rv-ak-small';
+      var p = document.createElement('p'); p.textContent = askT(small.reply); b.appendChild(p); log.appendChild(b);
+      if (small.card) log.appendChild(chatLang(helpCard('')));
+      scrollLog();
+    }
+    if (form && input) form.addEventListener('submit', function (e) {
+      var t = input.value.trim(); if (!t) return;
+      var small = smallTalk(t);
+      if (small) { e.preventDefault(); e.stopImmediatePropagation(); input.value = ''; sayHere(t, small); return; }
+      input.value = fixText(t);
+    }, true);
+
+    /* The unmatched questions, kept on this device: what to widen the rules from. */
+    var MISS = 'rvAskMiss';
+    function misses() { var l = store(MISS); return Array.isArray(l) ? l : []; }
+    function recordMiss(q) {
+      q = q.replace(/\s*\[[^\]]*\]\s*$/, '').trim(); if (!q) return;
+      var l = misses(), key = q.toLowerCase(), e = l.find(function (x) { return String(x.q).toLowerCase() === key; });
+      if (e) { e.n = (e.n || 1) + 1; e.last = Date.now(); } else l.unshift({ q: q, n: 1, last: Date.now() });
+      l.sort(function (a, b) { return b.last - a.last; }); store(MISS, l.slice(0, 200)); renderMiss();
+    }
+    var missEl;
+    function renderMiss() {
+      if (!missEl) return;
+      var l = misses(), body = missEl.querySelector('.rv-log-b');
+      missEl.querySelector('.rv-log-n').textContent = l.length ? String(l.length) : T('empty');
+      if (!l.length) { body.innerHTML = '<p class="rv-log-empty">' + esc(T('Nothing yet. Every question I could not match will be listed here.')) + '</p>'; return; }
+      body.innerHTML = '<p class="rv-log-empty">' + esc(T('Saved on this device only. Copy the list and share it, so the rules can learn these phrasings.')) + '</p><ul>' +
+        l.map(function (e) {
+          var when = new Date(e.last).toLocaleDateString();
+          return '<li><div class="rv-log-h"><b>' + esc(e.q) + '</b><span class="rv-log-m">' + (e.n > 1 ? esc(T('{n} times', { n: e.n })) + ' · ' : '') + esc(when) + '</span></div></li>';
+        }).join('') + '</ul><div class="rv-log-a rv-askmiss-a"><button type="button" data-k="copy">' + esc(T('Copy list')) + '</button><button type="button" data-k="clear">' + esc(T('Clear')) + '</button></div>';
+    }
+    if (form) {
+      missEl = document.createElement('details'); missEl.className = 'rv-log rv-askmiss';
+      missEl.innerHTML = '<summary><span class="rv-log-t">' + esc(T('Questions I could not match')) + '</span><span class="rv-log-n"></span></summary><div class="rv-log-b"></div>';
+      form.insertAdjacentElement('afterend', missEl);
+      missEl.addEventListener('click', function (ev) {
+        var b = ev.target.closest('button[data-k]'); if (!b) return;
+        if (b.dataset.k === 'clear') { store(MISS, []); renderMiss(); return; }
+        var text = misses().map(function (e) { return e.q + (e.n > 1 ? ' (' + e.n + ')' : ''); }).join('\n');
+        copyText(text).then(function () { toast(T('List copied')); }, function () { toast(T('Could not copy')); });
+      });
+      renderMiss();
+      // The log's texts follow the language like the rest of the page.
+      new MutationObserver(function () { renderMiss(); }).observe(document.body, { attributes: true, attributeFilter: ['data-lang'] });
+    }
+
     new MutationObserver(function (muts) {
       muts.forEach(function (m) {
         [].forEach.call(m.addedNodes, function (n) {
