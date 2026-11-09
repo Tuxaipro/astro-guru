@@ -237,6 +237,11 @@
     'Next 12 hours': 'அடுத்த 12 மணி நேரம்', 'Next 24 hours': 'அடுத்த 24 மணி நேரம்', 'Next 48 hours': 'அடுத்த 48 மணி நேரம்', 'Next 3 days': 'அடுத்த 3 நாள்', '31 days (or 366 for one place)': '31 நாள் (ஓர் இடத்திற்கு 366)',
     'Rahu kalam, Amavasya, Rikta, Vishti': 'ராகு காலம், அமாவாசை, ரிக்தை, விஷ்டி', 'Rahu kalam, Amavasya, Rikta tithi, Vishti karana': 'ராகு காலம், அமாவாசை, ரிக்தா திதி, விஷ்டி கரணம்',
     'Android phone:': 'ஆண்ட்ராய்டு போன்:', 'Windows:': 'விண்டோஸ்:', 'twice': 'இருமுறை',
+    // Revamp: long result lists
+    'Showing {shown} of {total}': '{total}இல் {shown} காட்டப்படுகிறது',
+    'Show {n} more': 'மேலும் {n} காட்டு',
+    'Show all': 'அனைத்தையும் காட்டு',
+
     // Engine 10.5: Guru Agasthiya Muhurtham, Natal Chart Trade, Ask GuruAgasthiya
     'Guru Agasthiya Muhurtham': 'குரு அகஸ்திய முகூர்த்தம்',
     'Natal Chart Trade': 'ஜாதக வர்த்தக பலன்',

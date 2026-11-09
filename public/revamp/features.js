@@ -302,6 +302,69 @@
     if (ft) new MutationObserver(function () { if (!ft.classList.contains('hide')) fill(); }).observe(ft, { attributes: true, attributeFilter: ['class'] });
   })();
 
+  /* ---------- Saved people in Natal Chart Trade (10.5) ---------- */
+  function peopleSelect(fillRow) {
+    var box = document.createElement('div');
+    box.className = 'rv-people';
+    box.innerHTML = '<label>Fill from a saved person</label><select></select>';
+    var sel = box.querySelector('select');
+    function fill() {
+      var l = people();
+      sel.innerHTML = l.length
+        ? '<option value="">Choose a person…</option>' + l.map(function (r, i) { return '<option value="' + i + '">' + esc((r.name || 'Unnamed') + ' · ' + r.date + ' ' + (r.time || '').slice(0, 5)) + '</option>'; }).join('')
+        : '<option value="">No saved people yet. Save one in Birth Chart.</option>';
+      sel.disabled = !l.length;
+    }
+    fill();
+    sel.addEventListener('focus', fill);
+    sel.addEventListener('change', function () {
+      var r = people()[+sel.value]; if (!r) return;
+      fillRow(r);
+      toast(T('Birth details filled in for {name}.', { name: r.name || T('this person') }));
+    });
+    box.refresh = fill;
+    return box;
+  }
+  (function () {
+    var dob = $('ntDob'), grp = dob && dob.closest('.group');
+    if (!grp) return;
+    var box = peopleSelect(function (r) {
+      var set = function (id, v) { var el = $(id); if (el && v !== undefined && v !== null) { el.value = v; fire(el, 'input'); fire(el, 'change'); } };
+      set('ntName', r.name || ''); set('ntDob', r.date); set('ntTob', (r.time || '').slice(0, 8));
+      set('ntLat', r.lat); set('ntLon', r.lon); set('ntTz', r.tz);
+      // Name the place in the folded place line without running a search (which would move the coordinates).
+      var q = $('ntSearch'); if (q && r.place) { q.value = r.place; var det = q.closest('details'); if (det) det.dispatchEvent(new Event('change')); }
+    });
+    grp.parentNode.insertBefore(box, grp);
+    var nt = $('ntPanel');
+    if (nt) new MutationObserver(function () { if (!nt.classList.contains('hide')) box.refresh(); }).observe(nt, { attributes: true, attributeFilter: ['class'] });
+  })();
+  /* Ask GuruAgasthiya draws its birth form inside the chat; offer the saved people there too. */
+  (function () {
+    var log = $('akLog'); if (!log) return;
+    new MutationObserver(function (muts) {
+      muts.forEach(function (m) {
+        [].forEach.call(m.addedNodes, function (n) {
+          if (n.nodeType !== 1) return;
+          var form = n.querySelector && n.querySelector('.ak-bn') ? n : null;
+          if (!form || form.querySelector('.rv-people') || !people().length) return;
+          var box = peopleSelect(function (r) {
+            var q = function (c) { return form.querySelector(c); };
+            if (q('.ak-bn')) q('.ak-bn').value = r.name || '';
+            if (q('.ak-bd')) q('.ak-bd').value = r.date || '';
+            if (q('.ak-bt')) q('.ak-bt').value = (r.time || '12:00:00').slice(0, 8);
+            // The place goes in through the form's own coordinate entry, so the chat records it as picked.
+            if (q('.ak-la') && q('.ak-lo') && q('.ak-tz') && q('.ak-go2')) {
+              q('.ak-la').value = r.lat; q('.ak-lo').value = r.lon; q('.ak-tz').value = r.tz || ''; q('.ak-go2').click();
+              if (q('.ak-in2')) q('.ak-in2').value = r.place || r.city || '';
+            }
+          });
+          form.insertBefore(box, form.firstChild.nextSibling || null);
+        });
+      });
+    }).observe(log, { childList: true });
+  })();
+
   /* ---------- Question log for GMP Prasnam, Horary and Lost and Found ---------- */
   var QKEY = 'rvQLog';
   function qlog() { var l = store(QKEY); return Array.isArray(l) ? l : []; }

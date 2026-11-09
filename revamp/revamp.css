@@ -935,3 +935,22 @@ body.rv #akPanel .ak-warn{border-left-color:var(--now)}
    box's bottom edge; the log is sized so header, chips, log and message box fit in one screen. */
 body.rv .stage[data-view="mobile"] #akPanel .ak-in{position:sticky;bottom:0;z-index:5;margin:0 -16px;padding:8px 16px 10px;background:var(--bg)}
 body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 470px);max-height:none;min-height:170px}
+
+/* ---------- Long result lists: first page, then "Show more" ---------- */
+body.rv .rv-hide-more{display:none!important}
+body.rv.rv-copying .rv-hide-more,#rvPrintRoot .rv-hide-more{display:revert!important}
+body.rv .rv-more-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:14px 4px 4px;border-top:1px solid var(--line);margin-top:10px}
+body.rv .rv-more-bar.hide{display:none}
+body.rv .rv-more-note{font:500 13px var(--sf);color:var(--muted);margin-right:auto}
+body.rv .rv-more-rows{min-height:36px;padding:0 14px;border:0;border-radius:var(--rv-r-sm);background:var(--fill);color:var(--accent);font:600 13px var(--sf);cursor:pointer}
+body.rv .rv-more-rows:hover{background:var(--tint)}
+#rvPrintRoot .rv-more-bar{display:none}
+/* Fold-out summaries: the text is one flex item, so it wraps like a sentence */
+body.rv details.howto summary .rv-sum{flex:1;min-width:0}
+body.rv details.howto summary .rv-sum .tt,body.rv details.howto summary .rv-sum .tm{margin-left:6px}
+/* Ask GuruAgasthiya on phones: both chip rows scroll sideways on one line each, so the chat keeps the room */
+body.rv .stage[data-view="mobile"] #akPanel .ak-bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:4px 0;padding-bottom:2px;scrollbar-width:none}
+body.rv .stage[data-view="mobile"] #akPanel .ak-bar::-webkit-scrollbar{display:none}
+body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip,body.rv .stage[data-view="mobile"] #akPanel .ak-lb{white-space:nowrap;flex:none}
+body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip{padding:4px 10px;font-size:12.5px}
+body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 440px)}

@@ -67,7 +67,7 @@
     // that is advice, not a place. Show what was searched for, or say the place is set by coordinates.
     var citySel = (cellBy(p.place, /City|Town/i) || p.det).querySelector('select');
     var noMatch = citySel && citySel.selectedIndex >= 0 && citySel.options[citySel.selectedIndex].value === '';
-    if (noMatch || /no match|type the latitude|search online/i.test(name)) name = ctrlVal(cellBy(p.place, /Search/i)) || '';
+    if (noMatch || /no match|type the latitude|search online/i.test(name)) { var si = p.det.querySelector('.cell.search input'); name = (si && si.value || '').trim(); }
     var c = p.coords || p.place, lat = ctrlVal(cellBy(c, /Latitude/i)), lon = ctrlVal(cellBy(c, /Longitude/i));
     var tz = ctrlVal(cellBy(c, /Time Zone/i));
     p.det.querySelector('.rv-place-t b').textContent = name || (lat && lon ? T('Place by coordinates') : T('Choose a place'));

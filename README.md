@@ -81,7 +81,11 @@ every calculation in the v10.5 engine stays as it was.
   - **Add to calendar:** a `.ics` file with an alert at each start. Past timings are skipped, and above 60
     timings only the tagged ones are included.
   - **Jump to now.**
-- **Saved people:** Fortuna's birth details can be filled from the people saved in Birth Chart.
+- **Saved people:** Fortuna's, Natal Chart Trade's and Ask GuruAgasthiya's birth details can be filled from
+  the people saved in Birth Chart.
+- **Long result lists** (more than 90 rows, such as a two-week Guru Agasthiya Muhurtham) show 60 rows and a
+  **Show more** bar; days with nothing left to show fold away with their heading. Copy, Print and Add to
+  calendar still take every row, and Jump to now unfolds the list first.
 - **Question log:** GMP Prasnam, Horary and Lost and Found save each answer on the device. Mark later whether it
   happened; the log counts how many readings came true.
 - **Alarms:** the alarm panel explains that alarms ring while the app is open and that calendar alerts work
