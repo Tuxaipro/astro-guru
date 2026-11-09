@@ -702,12 +702,15 @@ body.rv.rv-p-lagna.rv-peek .stage[data-view="desktop"] .rv-peek-x{display:grid;m
 @keyframes rvPeek{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
 
 /* Tamil mode: a paragraph shows its Tamil copy in place of the English text (see i18n.js). */
-body.rv[data-lang="ta"] .rv-ta-only{font-size:0}
+/* !important: Birth Chart's font-size option writes an inline size on every element of its output */
+body.rv[data-lang="ta"] .rv-ta-only{font-size:0!important}
 body.rv[data-lang="ta"] .rv-ta-only>*:not(.rv-ta-twin):not(input){display:none}
-body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-twin{display:inline;font-size:var(--rv-fs,14px);line-height:1.55}
+body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-twin{display:inline;font-size:var(--rv-fs,14px)!important;line-height:1.55}
 /* the engine wraps some copies in an inner Tamil span that it hides in single-language modes */
 body.rv[data-lang="ta"] .rv-ta-twin .tm,body.rv[data-lang="ta"] .rv-ta-twin .tam60{display:inline}
-body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-keep{display:inline;font-size:var(--rv-fs,14px);margin-right:6px}
+body.rv[data-lang="ta"] .rv-ta-only>.rv-ta-keep{display:inline;font-size:var(--rv-fs,14px)!important;margin-right:6px}
+/* an English paragraph whose Tamil twin paragraph (printed by the engine) is shown instead */
+body.rv[data-lang="ta"] p.rv-ta-hide,body.rv[data-lang="ta"] p.rv-ta-hide+button.rv-more{display:none}
 
 /* ==========================================================================
    Part 5: forms and sizes in every tool (desktop workspace).

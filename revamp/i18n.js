@@ -299,6 +299,107 @@
     '🎧 Hands-free conversation': '🎧 கைகள் இன்றி உரையாடல்',
     '⏹ Stop': '⏹ நிறுத்து',
 
+    // Engine 10.5: additions inside older tools
+    // Mundane Astrology: city-level indications
+    'Show indications': 'காட்டும் குறிப்புகள்', 'Watch and above': 'கவனம் மற்றும் மேல்', 'Elevated and above': 'கூடுதல் மற்றும் மேல்', 'High only': 'உயர் மட்டும்',
+    'Search Chennai, Tokyo, Istanbul': 'Chennai, Tokyo, Istanbul எனத் தேடுங்கள்', 'Search a city or town': 'நகரம் அல்லது ஊரைத் தேடு',
+    'All countries (use search)': 'எல்லா நாடுகளும் (தேடலைப் பயன்படுத்துங்கள்)', 'No match in the offline list': 'இணையமில்லாப் பட்டியலில் பொருத்தம் இல்லை',
+    'Month': 'மாதம்', 'Tendency': 'போக்கு', 'Event': 'நிகழ்வு', 'Events': 'நிகழ்வுகள்', 'Kind': 'வகை', 'Level': 'நிலை', 'Area': 'பகுதி', 'Show': 'காட்டுவது',
+    'Earth tremors': 'நில அதிர்வு', 'Heavy rain': 'கனமழை', 'Cyclones': 'புயல்', 'Drought': 'வறட்சி', 'Conflict': 'மோதல்', 'Economic': 'பொருளாதாரம்', 'Epidemic': 'தொற்று', 'Accidents (air': 'விபத்துகள்',
+    'Watch': 'கவனம்', 'Elevated': 'கூடுதல்', 'High indication': 'வலுவான குறிப்பு', 'Marked stress': 'தெளிவான அழுத்தம்', 'Mild stress': 'லேசான அழுத்தம்', 'No special stress': 'சிறப்பு அழுத்தம் இல்லை',
+    '(local)': '(உள்ளூர்)', 'Balanced or mixed': 'சமநிலை / கலவை',
+    'Choose the first and last date.': 'முதல், கடைசித் தேதிகளைத் தேர்ந்தெடுங்கள்.', 'The last date must be after the first date.': 'கடைசித் தேதி முதல் தேதிக்குப் பின் இருக்க வேண்டும்.',
+    'The last date must not be before the first date.': 'கடைசித் தேதி முதல் தேதிக்கு முன் இருக்கக்கூடாது.', 'Please choose at most about 26 months at a time.': 'ஒரு முறைக்கு சுமார் 26 மாதங்கள் வரை மட்டும் தேர்ந்தெடுங்கள்.',
+    'Please choose at most 15 days at a time.': 'ஒரு முறைக்கு 15 நாட்கள் வரை மட்டும் தேர்ந்தெடுங்கள்.', 'Enter the south, north, west and east limits of the area.': 'பகுதியின் தெற்கு, வடக்கு, மேற்கு, கிழக்கு எல்லைகளை உள்ளிடுங்கள்.',
+    'Planet positions need the astronomy library, which did not load.': 'கிரக நிலைகளுக்கு வானியல் நூலகம் தேவை; அது ஏற்றப்படவில்லை.',
+    'Location is not available here.': 'இங்கு இருப்பிடம் கிடைக்கவில்லை.', 'Finding your location…': 'உங்கள் இருப்பிடம் தேடப்படுகிறது…', 'Could not get your location.': 'உங்கள் இருப்பிடத்தைப் பெற முடியவில்லை.',
+    'Copied.': 'நகலெடுக்கப்பட்டது.', 'Copy is not available here.': 'இங்கு நகலெடுக்க முடியாது.', 'Setting the alarms…': 'அலாரங்கள் அமைக்கப்படுகின்றன…', 'No upcoming window to set.': 'அமைக்க வரவிருக்கும் சாளரம் இல்லை.',
+    // Mundane Astrology: aircraft accidents
+    'South': 'தெற்கு', 'North': 'வடக்கு', 'West': 'மேற்கு', 'East': 'கிழக்கு',
+    'Pattern': 'அமைப்பு', 'In the 20 crashes': '20 விபத்துகளில்', 'Expected by chance': 'தற்செயல் எதிர்பார்ப்பு', 'Chance of such a result': 'இப்படி வர வாய்ப்பு',
+    'Date (local)': 'தேதி (உள்ளூர்)', 'Event and place': 'நிகழ்வு, இடம்', 'Lost': 'உயிரிழப்பு', 'Hard planets': 'கடின கிரகங்கள்', 'Rule score': 'விதி மதிப்பெண்', 'What the rules found': 'விதிகள் கண்டவை',
+    'Hard planet on an angle of the site': 'இடத்தின் கோணத்தில் கடின கிரகம்', 'Hard planet on a chart angle there': 'அங்கு கோணத்தில் கடின கிரகம்', 'Moment (UTC)': 'தருணம் (UTC)', 'Latitude, longitude': 'அட்சரேகை, தீர்க்கரேகை', 'City or town': 'நகரம் / ஊர்', 'Lines': 'கோடுகள்',
+    'Ari': 'மேஷ', 'Tau': 'ரிஷ', 'Gem': 'மிது', 'Can': 'கடக', 'Vir': 'கன்', 'Lib': 'துலா', 'Sco': 'விரு', 'Sag': 'தனு', 'Cap': 'மகர', 'Aqu': 'கும்', 'Pis': 'மீன',
+    'World map (works offline)': 'உலக வரைபடம் (இணையம் இன்றி)', 'Zoom in': 'பெரிதாக்கு', 'Zoom out': 'சிறிதாக்கு', 'Reset': 'மீட்டமை',
+    'Saturn on the Rahu–Ketu axis': 'சனி ராகு–கேது அச்சில்', 'Eclipse season: new or full Moon near the Rahu–Ketu axis': 'கிரகண காலம்: ராகு–கேது அச்சில் அமாவாசை / பௌர்ணமி', 'Eclipse season': 'கிரகண காலம்',
+    'Mercury afflicted by Mars, Saturn, Rahu or Ketu': 'புதன் செவ்வாய், சனி, ராகு, கேதுவால் பாதிப்பு', 'Mercury afflicted by a hard planet': 'புதன் கடின கிரகத்தால் பாதிப்பு', 'Mercury burnt near the Sun': 'புதன் அஸ்தங்கம்',
+    'Mars–Saturn hard aspect': 'செவ்வாய்–சனி கடின பார்வை', 'Mars with Rahu or Ketu': 'செவ்வாய் ராகு / கேதுவுடன்', 'Two or more hard planets in air signs': 'இரு அல்லது மேற்பட்ட கடின கிரகங்கள் காற்று ராசிகளில்',
+    // Mundane Astrology: astrocartography study
+    'With exact time': 'சரியான நேரத்துடன்', 'Rule-score level (50% = chance)': 'விதி மதிப்பெண் நிலை (50% = தற்செயல்)', 'Hard-planet line within 2° of the site': 'இடத்துக்கு 2°க்குள் கடின கிரகக் கோடு',
+    'Strongest single pattern (chance of such a result)': 'வலுவான தனி அமைப்பு (இப்படி வர வாய்ப்பு)', 'Nearest hard-planet line': 'அருகிலுள்ள கடின கிரகக் கோடு', 'Patterns present': 'உள்ள அமைப்புகள்', '(day only)': '(நாள் மட்டும்)',
+    'Aircraft accident': 'விமான விபத்து', 'Earthquake': 'நில அதிர்வு', 'Flood': 'வெள்ளம்', 'Leader death': 'தலைவர் மரணம்', 'Market shock': 'சந்தை அதிர்ச்சி', 'Mass casualty': 'பெருமளவு உயிரிழப்பு', 'Political violence': 'அரசியல் வன்முறை', 'All': 'எல்லாம்',
+    'Flood and heavy rain': 'வெள்ளம், கனமழை', 'Cyclone and storm': 'புயல்', 'Political violence and unrest': 'அரசியல் வன்முறை, கலகம்', 'Market shock (stock exchanges)': 'சந்தை அதிர்ச்சி (பங்குச் சந்தைகள்)',
+    'Death of a senior leader (place and date only)': 'மூத்த தலைவரின் மரணம் (இடம், தேதி மட்டும்)', 'Industrial or transport accident': 'தொழிற்சாலை, போக்குவரத்து விபத்து',
+    'Moment at the place (local, hh:mm:ss)': 'அந்த இடத்தின் தருணம் (உள்ளூர், hh:mm:ss)', 'Place (latitude, longitude)': 'இடம் (அட்சரேகை, தீர்க்கரேகை)', 'Planet lines over the place': 'இடத்தின் மேல் கிரகக் கோடுகள்',
+    'Time zone (hours from UTC)': 'நேர மண்டலம் (UTC இலிருந்து மணிகள்)',
+    // Horary Answers: winning muhurtham
+    'What will you do': 'என்ன செய்யப் போகிறீர்கள்', 'Pick one stage at a time': 'ஒரு நிலையை மட்டும் தேர்ந்தெடுங்கள்', 'From date': 'தொடக்கத் தேதி', 'To date': 'முடிவுத் தேதி', 'Up to 15 days': '15 நாட்கள் வரை',
+    'Earliest time of day': 'நாளின் தொடக்க நேரம்', 'Latest time of day': 'நாளின் கடைசி நேரம்', 'For example when the exam starts': 'உதாரணம்: தேர்வு தொடங்கும் நேரம்',
+    'Day': 'நாள்', 'Window': 'சாளரம்', 'Min': 'நிமி', 'Lagna lords': 'லக்ன அதிபதிகள்', 'Ruling planets': 'ஆளும் கிரகங்கள்',
+    'Alarm before the window': 'சாளரத்துக்கு முன் அலாரம்', 'Gives you time to get ready': 'தயாராக நேரம் தரும்', 'Exact start: 2 melodies (+1 melody 2 min before)': 'சரியான தொடக்கம்: 2 இசைகள் (+1 இசை 2 நிமிடம் முன்)',
+    // Practical Electional Muhurtham: Method and KP question rules
+    'Western books, or the KP question rules': 'மேற்கத்திய நூல்கள், அல்லது KP கேள்வி விதிகள்', 'Western classical': 'மேற்கத்திய செவ்வியல்', 'KP question rules (sub-lord method)': 'KP கேள்வி விதிகள் (உப அதிபதி முறை)',
+    'Rule strictness': 'விதிக் கடுமை', 'Strict also keeps 8 and 12 away': 'கடுமை முறை 8, 12-ஐயும் விலக்கும்', 'Strict (8 and 12 kept out)': 'கடுமை (8, 12 விலக்கி)', 'Standard (book rule only)': 'வழக்கம் (நூல் விதி மட்டும்)',
+    'Shortest window': 'குறைந்தபட்ச சாளரம்', 'Any': 'ஏதேனும்', '1 minute': '1 நிமிடம்', '3 minutes': '3 நிமிடங்கள்', '6 minutes': '6 நிமிடங்கள்', '10 minutes': '10 நிமிடங்கள்', '20 minutes': '20 நிமிடங்கள்',
+    'Sort by': 'வரிசை', 'Best confidence': 'நம்பிக்கை வரிசை', 'Date & time': 'தேதி, நேரம்', 'Show Details': 'விவரங்களைக் காட்டு', 'Hide Details': 'விவரங்களை மறை',
+    'Rules are from the KP question method; results are tendencies, not guarantees. Touch a window for its star-lord totals.': 'விதிகள் KP கேள்வி முறையிலிருந்து; முடிவுகள் போக்குகளே, உத்தரவாதம் அல்ல. நட்சத்திர அதிபதியின் மொத்த நேரத்துக்கு ஒரு சாளரத்தைத் தொடுங்கள்.',
+    'Alarm OFF. Tap to switch it on. Press and hold to choose what it is for.': 'அலாரம் அணைந்துள்ளது. இயக்கத் தட்டுங்கள். எதற்காக என்பதைத் தேர்ந்தெடுக்க அழுத்திப் பிடியுங்கள்.',
+    'Alarm ON. Tap to switch it off. Press and hold to change what it is for.': 'அலாரம் இயங்குகிறது. அணைக்கத் தட்டுங்கள். எதற்காக என்பதை மாற்ற அழுத்திப் பிடியுங்கள்.',
+    // Birth Chart: print options
+    'Font size': 'எழுத்து அளவு', 'Font style': 'எழுத்து வடிவம்', 'App default': 'செயலியின் இயல்பு', 'Clean sans': 'எளிய சான்ஸ்', 'Serif': 'செரிஃப்', 'Monospace': 'ஒற்றை அகலம்', 'Rounded': 'வட்ட வடிவம்', 'Humanist': 'ஹியூமனிஸ்ட்', 'Handwriting': 'கையெழுத்து', 'Classic book': 'பழைய நூல் வடிவம்',
+    'For printing or PDF': 'அச்சு அல்லது PDFக்கு', 'Narrow 6 mm': 'குறுகிய 6 மிமீ', 'Normal 11 mm': 'வழக்கம் 11 மிமீ', 'Wide 16 mm': 'அகலம் 16 மிமீ', 'Extra wide 22 mm': 'மிக அகலம் 22 மிமீ', 'Fit to page width': 'பக்க அகலத்துக்குப் பொருத்து',
+    'Print or save as PDF button': 'அச்சிடு / PDF சேமி பொத்தான்', 'Everything': 'எல்லாம்', 'Charts and predictions': 'சக்கரங்கள், பலன்கள்', 'Predictions only': 'பலன்கள் மட்டும்', 'New page for each section': 'ஒவ்வொரு பகுதிக்கும் புதிய பக்கம்', 'Continuous': 'தொடர்ச்சி',
+    // Birth Chart: predictions and Moon windows
+    'Matter': 'விஷயம்', 'Promise / risk': 'உறுதி / அபாயம்', 'Next supportive (or care) period': 'அடுத்த சாதக (அல்லது கவன) காலம்', 'Year': 'ஆண்டு', 'Dasha / bhukti': 'தசை / புக்தி',
+    'Matters that are supported': 'ஆதரவு பெறும் விஷயங்கள்', 'Take extra care': 'கூடுதல் கவனம்', 'Star / sub': 'நட்சத்திரம் / உப', 'Natal house': 'ஜாதக பாவம்', 'Star lord gives': 'நட்சத்திர அதிபதி தருவது',
+    'Answer': 'விடை', 'Best period (dasha / bhukti, transit month)': 'சிறந்த காலம் (தசை / புக்தி, கோசார மாதம்)', 'Profit': 'லாபம்', 'Best months': 'சிறந்த மாதங்கள்',
+    'Weak / delayed': 'பலவீனம் / தாமதம்', 'Mixed': 'கலவை', 'Promised': 'உறுதி', 'Strongly promised': 'வலுவான உறுதி', 'Low risk': 'குறைந்த அபாயம்', 'Some risk': 'சிறு அபாயம்', 'Elevated risk': 'கூடுதல் அபாயம்', 'High risk': 'அதிக அபாயம்',
+    'e.g. apply for a job, visa or exam': 'உதா.: வேலை, விசா அல்லது தேர்வு விண்ணப்பம்', 'Time zone for the times': 'நேரங்களுக்கான நேர மண்டலம்', 'Up to 31 days': '31 நாட்கள் வரை',
+    'No Excellent or Good window in these dates. Try other dates.': 'இந்த நாட்களில் சிறப்பு அல்லது நல்ல சாளரம் இல்லை. வேறு தேதிகளை முயலுங்கள்.', 'Set alarms for the earliest 30 windows': 'முதல் 30 சாளரங்களுக்கு அலாரம் அமை',
+    // Lost & Found: horary number
+    'Horary number (optional)': 'ஹோரரி எண் (விருப்பம்)', '1 to 249; leave empty to use the time now': '1 முதல் 249; இப்போதைய நேரத்துக்கு வெறுமையாக விடுங்கள்',
+    // Birth Chart predictions: the 120 matters, as the engine names them in Tamil
+    'Good health and vitality': 'நல்ல ஆரோக்கியம், உயிர்ச்சக்தி', 'Recovery from illness': 'நோய் குணமாகுதல்', 'Control of a long-term illness': 'நீண்டகால நோய் கட்டுப்பாடு',
+    'Fame and public recognition': 'புகழ், பொது அங்கீகாரம்', 'Success of your own efforts': 'சுய முயற்சியின் வெற்றி', 'Leadership and authority': 'தலைமை, அதிகாரம்',
+    'Peace of mind and confidence': 'மன அமைதி, தன்னம்பிக்கை', 'Spiritual life and inner change': 'ஆன்மிக வாழ்வு, உள் மாற்றம்', 'Safety from danger and mishaps': 'ஆபத்து, விபத்திலிருந்து பாதுகாப்பு',
+    'A fresh start or change of lifestyle': 'புதிய தொடக்கம் / வாழ்க்கை மாற்றம்', 'Steady earnings and savings': 'நிலையான வருமானம், சேமிப்பு', 'Bank balance and deposits': 'வங்கி இருப்பு, வைப்புத் தொகை',
+    'Gold, jewels and ornaments': 'தங்கம், நகை, ஆபரணம்', 'Family harmony and growth': 'குடும்ப ஒற்றுமை, வளர்ச்சி', 'Success through speech and voice': 'பேச்சு, குரல் மூலம் வெற்றி',
+    'Eye trouble': 'கண் பிரச்சினை', 'Loss of money or savings': 'பணம் / சேமிப்பு இழப்பு', 'Wealth through family support': 'குடும்பம் மூலம் செல்வம்',
+    'Separation from family': 'குடும்பப் பிரிவு', 'Extra income from side sources': 'பக்க வருமானம்', 'Support and happiness through siblings': 'சகோதர ஆதரவு, மகிழ்ச்சி',
+    'Short journeys and local travel': 'குறுகிய, உள்ளூர்ப் பயணம்', 'Communication, writing and media': 'தகவல் தொடர்பு, எழுத்து, ஊடகம்', 'Successful negotiation': 'வெற்றிகரமான பேச்சுவார்த்தை',
+    'Signing contracts and agreements': 'ஒப்பந்தம் கையெழுத்து', 'Courage to start and compete': 'தொடங்கும், போட்டியிடும் துணிவு', 'Success in interviews': 'நேர்முகத் தேர்வு வெற்றி',
+    'Good news and letters': 'நல்ல செய்தி, கடிதம்', 'Publishing a book or creative writing': 'நூல் வெளியீடு / படைப்பு எழுத்து', 'Sales, marketing and brokerage': 'விற்பனை, சந்தைப்படுத்தல், தரகு',
+    'Buying a house': 'வீடு வாங்குதல்', 'Buying land or a plot': 'நிலம் / மனை வாங்குதல்', 'Constructing a house': 'வீடு கட்டுதல்',
+    'Buying a vehicle': 'வாகனம் வாங்குதல்', 'Comforts, furniture and appliances': 'சுகம், தளவாடம், உபகரணம்', 'Mother’s support and wellbeing': 'தாயின் ஆதரவு, நலம்',
+    'Peace and harmony at home': 'வீட்டில் அமைதி, இணக்கம்', 'Change of residence': 'குடியிருப்பு மாற்றம்', 'School and college studies': 'பள்ளி / கல்லூரிப் படிப்பு',
+    'Selling property': 'சொத்து விற்பனை', 'Child birth': 'குழந்தை பாக்கியம்', 'Child’s health and progress': 'குழந்தையின் நலம், முன்னேற்றம்',
+    'A love affair turning into marriage': 'காதல் திருமணமாக மாறுதல்', 'Romance and love luck': 'காதல் அதிர்ஷ்டம்', 'Intelligence and creative success': 'புத்திக்கூர்மை, படைப்பு வெற்றி',
+    'Worship, mantra and devotion': 'வழிபாடு, மந்திரம், பக்தி', 'Music, arts and performing success': 'இசை, கலை, நிகழ்த்து வெற்றி', 'Gains in speculation and shares': 'ஊகம், பங்குகளில் லாபம்',
+    'Lottery and prize money': 'லாட்டரி, பரிசுப் பணம்', 'Success in sports and games': 'விளையாட்டில் வெற்றி', 'Getting a job': 'வேலை கிடைத்தல்',
+    'Promotion and salary rise': 'பதவி / சம்பள உயர்வு', 'Success in competitive exams': 'போட்டித் தேர்வு வெற்றி', 'Getting a loan': 'கடன் கிடைத்தல்',
+    'Victory over enemies and rivals': 'பகைவர், போட்டியாளரை வெல்லுதல்', 'Success in litigation': 'வழக்கில் வெற்றி', 'A government or secure job': 'அரசு / பாதுகாப்பான வேலை',
+    'Illness and medical trouble': 'நோய், மருத்துவச் சிக்கல்', 'Getting a tenant or letting property': 'வாடகைதாரர் / வாடகைக்கு விடுதல்', 'Reliable employees and helpers': 'நம்பகமான பணியாளர், உதவியாளர்',
+    'Marriage': 'திருமணம்', 'Engagement and match-finding': 'நிச்சயதார்த்தம், வரன் அமைதல்', 'Harmonious married life': 'இணக்கமான திருமண வாழ்வு',
+    'Separation or divorce risk': 'பிரிவு / விவாகரத்து அபாயம்', 'Reunion after a separation': 'பிரிவுக்குப் பின் சேர்தல்', 'Spouse from abroad or far away': 'வெளிநாட்டு / தொலைவு வாழ்க்கைத் துணை',
+    'Second marriage': 'மறுமணம்', 'Business partnership': 'கூட்டுத் தொழில்', 'Success in public dealings': 'பொதுமக்கள் தொடர்பில் வெற்றி',
+    'Gain through customers and clients': 'வாடிக்கையாளர் மூலம் லாபம்', 'Inheritance and ancestral property': 'பூர்வீகச் சொத்து, வாரிசு', 'Insurance, gratuity and claims': 'காப்பீடு, பணிக்கொடை, உரிமைத் தொகை',
+    'Sudden or unexpected gains': 'திடீர் / எதிர்பாராத லாபம்', 'Wealth through the spouse': 'துணை மூலம் செல்வம்', 'Accident risk': 'விபத்து அபாயம்',
+    'Surgery risk': 'அறுவை சிகிச்சை அபாயம்', 'Long illness or prolonged treatment': 'நீண்ட நோய் / நீடித்த சிகிச்சை', 'Occult, research and hidden knowledge': 'மறைபொருள், ஆராய்ச்சி',
+    'Sudden setbacks and obstacles': 'திடீர் தடை, பின்னடைவு', 'Heavy borrowing and debts': 'அதிகக் கடன்', 'Higher education': 'உயர் கல்வி',
+    'Doctorate and further studies': 'முனைவர் பட்டம் / மேல்படிப்பு', 'Success in research': 'ஆராய்ச்சியில் வெற்றி', 'Good luck and fortune': 'நல்ல அதிர்ஷ்டம், பாக்கியம்',
+    'Father’s support and wellbeing': 'தந்தையின் ஆதரவு, நலம்', 'Pilgrimage and holy journeys': 'புனிதப் பயணம், யாத்திரை', 'A guru and spiritual guidance': 'குரு, ஆன்மிக வழிகாட்டல்',
+    'Becoming a teacher, scholar or adviser': 'ஆசிரியர், அறிஞர், ஆலோசகர் ஆதல்', 'Publishing technical or research work': 'தொழில்நுட்ப / ஆய்வு நூல் வெளியீடு', 'Charity and religious work': 'தர்மம், சமயப் பணி',
+    'Starting your own business': 'சொந்தத் தொழில் தொடங்குதல்', 'Profit in business': 'தொழில் லாபம்', 'Share-market business': 'பங்குச் சந்தைத் தொழில்',
+    'Job and business together': 'வேலை, தொழில் இரண்டும்', 'Import and export business': 'இறக்குமதி, ஏற்றுமதித் தொழில்', 'Awards and professional recognition': 'விருது, தொழில் அங்கீகாரம்',
+    'Change of job': 'வேலை மாற்றம்', 'Transfer of place': 'இடமாற்றம்', 'Loss of job or suspension': 'வேலை இழப்பு / இடைநீக்கம்',
+    'Politics and public life': 'அரசியல் / பொது வாழ்வு', 'High income and wealth': 'உயர் வருமானம், செல்வம்', 'Fulfilment of desires and goals': 'ஆசை, இலக்கு நிறைவேறல்',
+    'Helpful friends and network': 'உதவும் நண்பர்கள், தொடர்பு வட்டம்', 'Support of elders and elder siblings': 'மூத்தோர், மூத்த சகோதர ஆதரவு', 'Recovery of lost money or property': 'இழந்த பணம் / சொத்து மீட்பு',
+    'Winning elections and competitions': 'தேர்தல், போட்டியில் வெற்றி', 'Profit from investments': 'முதலீட்டில் லாபம்', 'Scholarship and financial aid': 'உதவித்தொகை, நிதி உதவி',
+    'Income from several sources': 'பல வழிகளில் வருமானம்', 'Success of an organisation or team': 'நிறுவனம் / குழு வெற்றி', 'Going abroad': 'வெளிநாடு செல்லுதல்',
+    'Visa, passport and permit success': 'விசா, பாஸ்போர்ட், அனுமதி வெற்றி', 'Settling abroad (PR or citizenship)': 'வெளிநாட்டில் குடியேற்றம்', 'Study abroad': 'வெளிநாட்டுக் கல்வி',
+    'Job or posting abroad': 'வெளிநாட்டு வேலை / பணி', 'Earning abroad': 'வெளிநாட்டு வருமானம்', 'Returning to the home country': 'தாயகம் திரும்புதல்',
+    'Hospital stay': 'மருத்துவமனையில் சேர்தல்', 'Heavy expenses and losses': 'அதிகச் செலவு, இழப்பு', 'Becoming free of debt': 'கடன் தீருதல்',
+
     // Engine: short help lines and table cells (whole text nodes)
     'Kaushik; off follows Khullar and Bosmia': 'Kaushik முறை; அணைத்தால் Khullar, Bosmia முறை',
     'Daily: up to 120 days · intraday: up to 7': 'தினசரி: 120 நாட்கள் வரை · நாளுக்குள்: 7 நாட்கள் வரை',
@@ -332,6 +433,19 @@
   var TA_LAGNA = { Aries: 'மேஷ', Taurus: 'ரிஷப', Gemini: 'மிதுன', Cancer: 'கடக', Leo: 'சிம்ம', Virgo: 'கன்னி', Libra: 'துலா',
     Scorpio: 'விருச்சிக', Sagittarius: 'தனுசு', Capricorn: 'மகர', Aquarius: 'கும்ப', Pisces: 'மீன' };
   function dur(s) { return s.replace(/(\d+)h/g, '$1ம').replace(/(\d+)m/g, '$1நி').replace(/(\d+)s/g, '$1வி'); }
+  var CHAIN = '(?:' + PLANET + ')(?:/(?:' + PLANET + '))+';
+  var SIGN_RX = /^(Aries|Taurus|Gemini|Cancer|Leo|Virgo|Libra|Scorpio|Sagittarius|Capricorn|Aquarius|Pisces)$/;
+  var GRADE = { Fair: 'சுமார்', Good: 'நல்லது', 'Very good': 'மிக நல்லது', Excellent: 'மிகச் சிறந்தது', Neutral: 'நடுநிலை' };
+  var ANGLE = { rising: 'உதயத்தில்', culminating: 'உச்சத்தில்', setting: 'அஸ்தமனத்தில்', 'at the lowest point': 'பாதாளத்தில்' };
+  var TA_DAYL = { Sunday: 'ஞாயிறு', Monday: 'திங்கள்', Tuesday: 'செவ்வாய்', Wednesday: 'புதன்', Thursday: 'வியாழன்', Friday: 'வெள்ளி', Saturday: 'சனி' };
+  var WORDS = { none: 'இல்லை', Sept: 'செப்' };
+  var TOKEN = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Sun|Mon|Tue|Wed|Thu|Fri|Sat|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|none)\b/g;
+  function chain(x) { return x.split('/').map(function (p) { return TA[p] || p; }).join('/'); }
+  // Tamil for a text whose only English words are month and weekday names (and "none"); null when other English remains.
+  function datesOnly(s) {
+    if (/[A-Za-z]/.test(s.replace(TOKEN, '').replace(/\b(UTC|IST|GMT)\b/g, ''))) return null;
+    return s.replace(TOKEN, function (w) { return TA_MON[w] || TA_DAY[w] || TA_DAYL[w] || WORDS[w] || w; });
+  }
   var TA_RX = [
     // "Sat, 7 Nov 2026" and "Sat, 7 Nov 2026 · from 22:00"
     [/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), (\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})( · from (\d{1,2}:\d{2}))?$/,
@@ -348,11 +462,14 @@
     [/^(\d+) sub-lord changes in 24 hours$/, function (m) { return '24 மணி நேரத்தில் ' + m[1] + ' உப அதிபதி மாற்றங்கள்'; }],
     [/^to (\d{1,2}:\d{2}(:\d{2})?)$/, function (m) { return m[1] + ' வரை'; }],
     // "English · தமிழ்" labels: keep the Tamil half
-    [/^[^஀-௿]*[A-Za-z][^஀-௿]* · ([஀-௿][\s\S]*)$/, function (m) { return m[1]; }],
+    [/^[^஀-௿]*[A-Za-z][^஀-௿]* · ((?:\d+-)?[஀-௿][\s\S]*)$/, function (m) { return m[1]; }],
     // "பணம் (வரவு) · houses 2, 6, 11"
     [/^(.*?)\s*· houses ([\d, ]+)$/, function (m) { return m[1] + ' · பாவங்கள் ' + m[2]; }],
     [/^(\d+)(st|nd|rd|th) lord$/, function (m) { return m[1] + '-ஆம் அதிபதி'; }],
-    [/^(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})(.*)$/, function (m) { return m[1] + ' ' + TA_MON[m[2]] + ' ' + m[3] + m[4]; }],
+    [/^(\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})(.*)$/, function (m) {
+      var rest = m[4];
+      if (/[A-Za-z]/.test(rest)) { var core = rest.replace(/^\s*·\s*/, ''), t = translate(core, 'ta'); if (!t) return null; rest = rest.slice(0, rest.indexOf(core)) + t; }
+      return m[1] + ' ' + TA_MON[m[2]] + ' ' + m[3] + rest; }],
     [/^(Rules|விதிகள்) \(a timing is listed only if every ticked rule is met\)$/, function () { return 'விதிகள் (தேர்ந்த எல்லா விதிகளும் பொருந்தும் நேரம் மட்டுமே பட்டியலிடப்படும்)'; }],
     [/^Time zone now: (.+)$/, function (m) { return 'இப்போதைய நேர மண்டலம்: ' + m[1]; }],
     [/^Using the place you chose \(or your saved place\)\. Time zone now: (.+)$/, function (m) { return 'நீங்கள் தேர்ந்தெடுத்த (அல்லது சேமித்த) இடம் பயன்படுத்தப்படுகிறது. இப்போதைய நேர மண்டலம்: ' + m[1]; }],
@@ -365,7 +482,60 @@
     [/^💰 Money profit (A\+B|A|B) · 2·11 cusp-lord link( ✓)?$/, function (m) { return '💰 பண லாபம் ' + m[1] + ' · 2·11 பாவ முனை அதிபதித் தொடர்பு' + (m[2] || ''); }],
     // "Aquarius 18°51′ · Saturn/Rahu/Moon ·"
     [new RegExp('^(\\w+) ([\\d°′″]+) · ((?:' + PLANET + ')(?:/(?:' + PLANET + '))*)( ·)?$'), function (m) {
-      return TA[m[1]] ? TA[m[1]] + ' ' + m[2] + ' · ' + m[3].split('/').map(function (x) { return TA[x]; }).join('/') + (m[4] || '') : null; }]
+      return TA[m[1]] ? TA[m[1]] + ' ' + m[2] + ' · ' + m[3].split('/').map(function (x) { return TA[x]; }).join('/') + (m[4] || '') : null; }],
+
+    /* ---- Engine 10.5: additions inside older tools ---- */
+    // Chains and grades in result tables: "Capricorn Saturn/Mars/Rahu", "Libra 22°48′23″", "3/3 Excellent", "Good (1)", "Moon · Venus/Mars"
+    [new RegExp('^(\\w+) (' + CHAIN + ')$'), function (m) { return TA[m[1]] && SIGN_RX.test(m[1]) ? TA[m[1]] + ' ' + chain(m[2]) : null; }],
+    [/^(\w+) ([\d°′″]+)$/, function (m) { return TA[m[1]] && SIGN_RX.test(m[1]) ? TA[m[1]] + ' ' + m[2] : null; }],
+    [/^(\d)\/(\d) (Fair|Good|Very good|Excellent)$/, function (m) { return m[1] + '/' + m[2] + ' ' + GRADE[m[3]]; }],
+    [/^(Good|Fair|Neutral) \((\d+)\)$/, function (m) { return GRADE[m[1]] + ' (' + m[2] + ')'; }],
+    [new RegExp('^Moon · (' + CHAIN + ')$'), function (m) { return 'சந்திரன் · ' + chain(m[1]); }],
+    [/^ruling planets (\d)\/(\d)$/, function (m) { return 'ஆளும் கிரகங்கள் ' + m[1] + '/' + m[2]; }],
+    // Timing rows: "Ketu star lord", "· Mula · 08:09:47 – 09:07:37 · total", "lasts 5m 37s", "Venus star lord total: 10:00:00 – 10:40:00 (40m 0s)"
+    [new RegExp('^(' + PLANET + ') star lord$'), function (m) { return TA[m[1]] + ' நட்சத்திர அதிபதி'; }],
+    [/^· ([A-Za-z ]+) · ([\d:]+) – ([\d:]+) · total$/, function (m) { return TA[m[1]] ? '· ' + TA[m[1]] + ' · ' + m[2] + ' – ' + m[3] + ' · மொத்தம்' : null; }],
+    [/^lasts ((?:\d+h )?(?:\d+m )?\d+s|(?:\d+h )?\d+m|\d+h)$/, function (m) { return dur(m[1]) + ' நீடிக்கும்'; }],
+    [new RegExp('^(' + PLANET + ') star lord total: ([\\d:]+) – ([\\d:]+) \\(([\\dhms ]+)\\)$'), function (m) { return TA[m[1]] + ' நட்சத்திர அதிபதி மொத்தம்: ' + m[2] + ' – ' + m[3] + ' (' + dur(m[4]) + ')'; }],
+    // "20 Nov 2026 · Sagittarius ascendant · Jupiter/Ketu/Saturn", with any date or time before it
+    [new RegExp('^(.*?)(\\w+) ascendant · (' + CHAIN + ')$'), function (m) {
+      if (!TA_LAGNA[m[2]]) return null; var pre = m[1] ? datesOnly(m[1]) : '';
+      return pre == null ? null : pre + TA_LAGNA[m[2]] + ' லக்னம் · ' + chain(m[3]); }],
+    [/^(.+)\. Press Enter for details\.$/, function (m) { var t = translate(m[1], 'ta') || datesOnly(m[1]); return t == null ? null : t + '. விவரங்களுக்கு Enter அழுத்துங்கள்.'; }],
+    // KP question rules (Practical Electional Muhurtham)
+    [/^· KP question rules · (\S+) to (\S+) · (\d+) window\(s\)$/, function (m) { return '· KP கேள்வி விதிகள் · ' + m[1] + ' முதல் ' + m[2] + ' வரை · ' + m[3] + ' சாளரம்(கள்)'; }],
+    [/^(\d+) window\(s\)\. Excellent (\d+) · Very good (\d+) · Good (\d+) · Fair (\d+)\. Times are local to the place\.$/,
+      function (m) { return m[1] + ' சாளரம்(கள்). மிகச் சிறந்தது ' + m[2] + ' · மிக நல்லது ' + m[3] + ' · நல்லது ' + m[4] + ' · சுமார் ' + m[5] + '. நேரங்கள் அந்த இடத்தின் உள்ளூர் நேரம்.'; }],
+    [new RegExp('^(\\d+)(?:st|nd|rd|th) cusp star/sub: (' + PLANET + ')/(' + PLANET + ') · 11th cusp star/sub: (' + PLANET + ')/(' + PLANET + ') · (\\d+)(?:st|nd|rd|th) lord (' + PLANET + '), 11th lord (' + PLANET + ') \\(checked at the middle of the window\\)$'),
+      function (m) { return m[1] + '-ஆம் பாவ முனை நட்சத்திர/உப அதிபதி: ' + TA[m[2]] + '/' + TA[m[3]] + ' · 11-ஆம் பாவ முனை நட்சத்திர/உப அதிபதி: ' + TA[m[4]] + '/' + TA[m[5]] + ' · ' + m[6] + '-ஆம் அதிபதி ' + TA[m[7]] + ', 11-ஆம் அதிபதி ' + TA[m[8]] + ' (சாளரத்தின் நடுவில் சோதித்தது)'; }],
+    [/^Ruling planets now: (.+?) · lagna (✔|✘) (\d+)(?:st|nd|rd|th) (✔|✘)(?: 11th (✔|✘))?$/, function (m) {
+      return 'இப்போதைய ஆளும் கிரகங்கள்: ' + m[1].split(', ').map(function (x) { return TA[x] || x; }).join(', ') + ' · லக்னம் ' + m[2] + ' · ' + m[3] + '-ஆம் ' + m[4] + (m[5] ? ' · 11-ஆம் ' + m[5] : ''); }],
+    [/^(\d+) alarms? set\. Stop each one with Success\.(?: (\d+) could not be set\.)?$/, function (m) { return m[1] + ' அலாரம் அமைக்கப்பட்டது. ஒவ்வொன்றையும் Success என்று நிறுத்துங்கள்.' + (m[2] ? ' ' + m[2] + ' அமைக்க முடியவில்லை.' : ''); }],
+    // Birth Chart: Moon windows
+    [/^(\d+) windows · Excellent (\d+) · Good (\d+)$/, function (m) { return m[1] + ' சாளரங்கள் · சிறப்பு ' + m[2] + ' · நல்லது ' + m[3]; }],
+    [/^Checking day (\d+) of (\d+)…$/, function (m) { return 'நாள் ' + m[1] + ' / ' + m[2] + ' சோதிக்கப்படுகிறது…'; }],
+    [/^Reading the sky for (\d+) days…$/, function (m) { return m[1] + ' நாட்களின் வானம் படிக்கப்படுகிறது…'; }],
+    // Mundane Astrology: aircraft and astrocartography studies
+    [new RegExp('^Mercury \\(air travel\\) (joined by|opposed by|squared by) (' + PLANET + ')$'), function (m) { return 'புதன் (வான்வழி) ' + TA[m[2]] + ' ' + { 'joined by': 'உடன் இணைவு', 'opposed by': 'எதிர்ப் பார்வை', 'squared by': 'சதுரப் பார்வை' }[m[1]]; }],
+    [/^Mercury burnt up near the Sun \(([\d.]+)°\)$/, function (m) { return 'புதன் சூரியனுக்கு அருகில் அஸ்தங்கம் (' + m[1] + '°)'; }],
+    [/^Mars joined with (Rahu|Ketu)$/, function (m) { return 'செவ்வாய் ' + TA[m[1]] + ' உடன் இணைவு'; }],
+    [/^(\d) hard planets in air signs \(Gemini, Libra, Aquarius\)$/, function (m) { return m[1] + ' கடின கிரகங்கள் காற்று ராசிகளில் (மிதுனம், துலாம், கும்பம்)'; }],
+    [/^Mars and Saturn (squared|opposed|joined)$/, function (m) { return 'செவ்வாய்–சனி ' + { squared: 'சதுரப் பார்வை', opposed: 'எதிர்ப் பார்வை', joined: 'இணைவு' }[m[1]]; }],
+    // "Rahu setting, Ketu rising" and "Mars culminating · Saturn rising"
+    [new RegExp('^(' + PLANET + ') (rising|culminating|setting|at the lowest point)((?:, | · )(?:' + PLANET + ') (?:rising|culminating|setting|at the lowest point))*$'), function (m) {
+      return m[0].replace(new RegExp('(' + PLANET + ') (rising|culminating|setting|at the lowest point)', 'g'), function (x, p, a) { return TA[p] + ' ' + ANGLE[a]; }); }],
+    // "Mars Sagittarius · Saturn Taurus · Rahu Gemini"
+    [new RegExp('^(' + PLANET + ') (\\w+)(?: · (?:' + PLANET + ') \\w+)*$'), function (m) {
+      var ok = true, r = m[0].split(' · ').map(function (x) { var y = x.split(' '); if (!TA[y[0]] || !TA[y[1]] || !SIGN_RX.test(y[1])) ok = false; return TA[y[0]] + ' ' + TA[y[1]]; });
+      return ok ? r.join(' · ') : null; }],
+    [/^(\d+) of (\d+) \(([\d.]+) expected\)$/, function (m) { return m[2] + 'இல் ' + m[1] + ' (' + m[3] + ' எதிர்பார்ப்பு)'; }],
+    [/^(.+): (\d+) vs ([\d.]+) expected \(p ([\d.]+)\)$/, function (m) { var t = translate(m[1], 'ta'); return t ? t + ': ' + m[2] + ' / எதிர்பார்ப்பு ' + m[3] + ' (p ' + m[4] + ')' : null; }],
+    [/^Lines for (.+) UTC\. Solid: culminating\. Dashed: lowest point\. Fine line: rising \(left\) and setting \(right\)\.$/, function (m) {
+      return 'கோடுகள்: ' + (datesOnly(m[1]) || m[1]) + ' UTC. தடித்த கோடு: உச்சம். புள்ளிக் கோடு: பாதாளம். மெல்லிய கோடு: உதயம் (இடது), அஸ்தமனம் (வலது).'; }],
+    // Several phrases joined with "; " (patterns found on one day): each one is translated on its own
+    [/^[^;]+(?:; [^;]+)+$/, function (m) { var ok = true, r = m[0].split('; ').map(function (x) { var t = translate(x, 'ta'); if (!t) ok = false; return t; }); return ok ? r.join('; ') : null; }],
+    // Text whose only English is dates, weekdays or a few fixed words: "Wednesday 11 Nov 2026,", "குரு/ராகு 18 May 2036 → 11 Oct 2038", "சாதகம் none"
+    [/[A-Za-z]/, function (m) { return datesOnly(m.input); }]
   ];
 
   /* ---------- Dictionaries ---------- */
@@ -471,19 +641,22 @@
   /* Tamil mode: the engine prints many rules and notes in English with a Tamil copy inside the
      same paragraph, and hides the copy in every single-language mode. Show the copy instead. */
   var TWIN = '.ta,.tm,.tt,.gt,.gta', twinT;
+  // Whole Tamil paragraphs the engine prints after an English one (10.5 blocks): shown in place of the English.
+  var TWINP = 'p[style*="var(--ta)"],p[style*="var(--tamil)"]';
   // The engine hides its Tamil copies in single-language modes with display:none!important inside its
   // cascade layer, which no revamp stylesheet rule can override; an inline !important can.
-  function showTwin(e) {
+  function showTwin(e, disp) {
     [e].concat([].slice.call(e.querySelectorAll(TWIN + ',.tam60'))).forEach(function (x) {
       if (x.hasAttribute('data-rvshow')) return;
       // keep the element's own style attribute, to put back exactly as it was
       x.setAttribute('data-rvshow', x.hasAttribute('style') ? 's' + x.getAttribute('style') : 'n');
-      x.style.setProperty('display', 'inline', 'important');
+      x.style.setProperty('display', x === e && disp || 'inline', 'important');
     });
   }
   function twins(on) {
     document.querySelectorAll('.rv-ta-only').forEach(function (p) { if (!on) p.classList.remove('rv-ta-only'); });
     document.querySelectorAll('.rv-ta-twin').forEach(function (e) { if (!on) e.classList.remove('rv-ta-twin'); });
+    if (!on) document.querySelectorAll('.rv-ta-hide').forEach(function (p) { p.classList.remove('rv-ta-hide'); });
     if (!on) {
       document.querySelectorAll('[data-rvshow]').forEach(function (x) {
         var o = x.getAttribute('data-rvshow');
@@ -507,6 +680,14 @@
         if (lead && lead !== e && /^(B|STRONG)$/.test(lead.tagName) && /^[A-Z]?\d+[.):]?$/.test(lead.textContent.trim())) lead.classList.add('rv-ta-keep');
       }
       e.classList.add('rv-ta-twin'); p.classList.add('rv-ta-only'); showTwin(e);
+    });
+    document.querySelectorAll(TWINP).forEach(function (e) {
+      var p = e.previousElementSibling;
+      while (p && p.tagName === 'BUTTON' && p.classList.contains('rv-more')) p = p.previousElementSibling; // the revamp's Read more button
+      if (!p || p.tagName !== 'P' || p.matches(TWINP) || p.classList.contains('rv-ta-hide')) return;
+      if (!/[஀-௿]/.test(e.textContent) || (p.textContent.match(/[A-Za-z]/g) || []).length < 12) return;
+      if (paraKept(p, paraRec.get(p))) return; // already translated from i18n-ta.js
+      p.classList.add('rv-ta-hide'); showTwin(e, 'block');
     });
   }
   /* Tamil mode: long help paragraphs. A paragraph is split into several text nodes around <b>/<i>,
@@ -538,7 +719,7 @@
     }
     HELP.forEach(function (e) {
       document.querySelectorAll(e[0]).forEach(function (el) {
-        if (paraKept(el, paraRec.get(el))) return;
+        if (paraKept(el, paraRec.get(el)) || el.classList.contains('rv-ta-hide')) return;
         var text = el.textContent.replace(/\s+/g, ' ').trim(), html = null;
         if (typeof e[1] === 'string') { if (text.indexOf(e[1]) >= 0) html = typeof e[2] === 'function' ? e[2]() : e[2]; }
         else { var m = text.match(e[1]); if (m) html = e[2](m); }
