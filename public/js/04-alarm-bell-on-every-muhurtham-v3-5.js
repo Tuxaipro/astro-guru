@@ -182,7 +182,7 @@ function toggle(b){
   var li=b.closest('li.row'); if(!li)return;
   var ev=info(li);
   if(isOn(ev)){setOff(ev,function(){say('Alarm OFF for '+ev.names.slice(0,2).join(', ')+'.');});return;}
-  var lead=+lg('gaAlmLead','0')||0, pur=purpose();
+  var lead=0, pur=purpose();
   setOn(ev,lead,pur,function(ok){
     if(!ok)return;
     var A=fmt(ev.s,ev.tz), k=K();
@@ -204,7 +204,7 @@ function mk(){
       '<div class="abk-sum"><span class="abk-t" id="abkTitle"></span><span class="abk-s" id="abkWhen"></span><span class="abk-n" id="abkNm"></span><span class="abk-ta" id="abkTa"></span><span class="abk-l" id="abkLag"></span></div>'+
       '<div class="abk-r"><label for="abkFor">This muhurtham is for</label><select id="abkFor">'+FOR.map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>';}).join('')+'</select></div>'+
       '<div class="abk-r hide" id="abkForRow"><label for="abkForTxt">Alarm says</label><input id="abkForTxt" maxlength="40" placeholder="e.g. Open new account" autocomplete="off"></div>'+
-      '<div class="abk-r"><label for="abkLead">Remind me</label><select id="abkLead"><option value="0">Alert at start</option><option value="5">Also 5 min before</option><option value="10">Also 10 min before</option><option value="15">Also 15 min before</option></select></div>'+
+      '<div class="abk-r"><label for="abkLead">Remind me</label><select id="abkLead"><option value="0" selected>Exact start: 2 melodies (+1 melody 2 min before)</option></select></div>'+
       '<p class="abk-hint" id="abkHint" role="status"></p>'+
       '<p class="abk-mode" id="abkMode"></p>'+
       '<button type="button" class="abk-lnk" id="abkTest">Test the alarm now (rings in 10 seconds)</button>'+
@@ -232,7 +232,7 @@ function mk(){
 }
 function upHint(){
   if(!cur)return;
-  var now=Date.now(), lead=+sel.value||0, msg='', bad=false;
+  var now=Date.now(), lead=0, msg='', bad=false;
   if(cur.e<=now){msg='This muhurtham is already over.';bad=true;}
   else if(cur.s<=now+3000){msg='This muhurtham has already started, so there is no start time left to ring.';bad=true;}
   else if(lead>0&&cur.s-lead*60000<=now){msg='The '+lead+'-minute early reminder time has already passed. The alert at the start will still ring.';}
@@ -268,7 +268,7 @@ function close(){
 function add(){
   if(!cur)return;
   if(cur.e<=Date.now()||cur.s<=Date.now()+3000){upHint();return;}
-  var ev=cur, lead=+sel.value||0, pur=purpose();
+  var ev=cur, lead=0, pur=purpose();
   setOn(ev,lead,pur,function(ok){
     if(!ok)return;
     close(); var A=fmt(ev.s,ev.tz);
@@ -277,7 +277,7 @@ function add(){
 }
 function icsAdd(){
   if(!cur)return;
-  var ev=cur, lead=+sel.value||0, res;
+  var ev=cur, lead=2, res;
   try{res=icsText(ev,lead);}catch(e){hint.textContent='Could not prepare the file: '+e.message;hint.classList.add('err');return;}
   close();
   window.GA_CAL(res,'GuruAgasthiya-Alarm-'+fmt(ev.s,ev.tz).f+'.ics',ev.title).then(function(how){say(window.GA_CAL_MSG(how,1));});

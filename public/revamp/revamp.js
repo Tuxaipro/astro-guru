@@ -77,10 +77,10 @@
 
   /* ---------- Tool groups ---------- */
   var GROUPS = [
-    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'ftBtn'] },
+    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'ftBtn'] },
     { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'cuspBtn', 'acBtn'] },
-    { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['gpBtn', 'hqBtn', 'lostBtn'] },
-    { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'mkBtn', 'spBtn', 'ltBtn'] },
+    { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['akBtn', 'gpBtn', 'hqBtn', 'lostBtn'] },
+    { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'ntBtn', 'mkBtn', 'spBtn', 'ltBtn'] },
     { id: 'sport', name: 'Sport', ta: 'விளையாட்டு', tools: ['ckBtn', 'raceBtn'] },
     { id: 'research', name: 'Research', ta: 'ஆய்வு', tools: ['eqBtn'] },
   ];

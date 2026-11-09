@@ -113,7 +113,7 @@ new MutationObserver(function(ms){
 
 /* ---------- Sheets ---------- */
 var sheets=[].slice.call(document.querySelectorAll('.sheet'));
-var CLOSE={chartPop:'cpClose',lostPanel:'lostClose',rangePanel:'rgClose',racePanel:'rcClose',gpPanel:'gpClose',cmPanel:'cmClose',abPanel:'abClose',cuspPanel:'cuspClose',bpPanel:'bpClose',acPanel:'acClose',ltPanel:'ltClose',mmPanel:'mmClose',ckPanel:'ckClose',m3Panel:'m3Close',tpPanel:'tpClose',mkPanel:'mkClose',clPanel:'clClose',spPanel:'spClose',mpPanel:'mpClose',eqPanel:'eqClose',ftPanel:'ftClose'};
+var CLOSE={chartPop:'cpClose',lostPanel:'lostClose',rangePanel:'rgClose',racePanel:'rcClose',gpPanel:'gpClose',cmPanel:'cmClose',abPanel:'abClose',cuspPanel:'cuspClose',bpPanel:'bpClose',acPanel:'acClose',ltPanel:'ltClose',mmPanel:'mmClose',ckPanel:'ckClose',m3Panel:'m3Close',tpPanel:'tpClose',mkPanel:'mkClose',clPanel:'clClose',spPanel:'spClose',mpPanel:'mpClose',eqPanel:'eqClose',ftPanel:'ftClose',gamPanel:'gamClose',ntPanel:'ntClose'};
 var lastFocus=null;
 var STACK=[];
 function restack(){STACK=STACK.filter(function(s){var h=s.classList.contains('hide');if(h)s.classList.remove('under');return !h;});var top=null;STACK.forEach(function(s,i){s.style.zIndex=s.id==='chartPop'?80:50+i;if(s.id!=='chartPop')top=s;});STACK.forEach(function(s){s.classList.toggle('under',s.id!=='chartPop'&&s!==top);});}
@@ -130,7 +130,7 @@ function closeAll(except){openSheet().forEach(function(s){if(s!==except){var b=d
 document.querySelector('.tools').addEventListener('click',function(e){
   var b=e.target.closest('.tool'); if(!b)return;
   lastFocus=b;
-  var map={lostBtn:'lostPanel',rangeBtn:'rangePanel',raceBtn:'racePanel',gpBtn:'gpPanel',cmBtn:'cmPanel',abBtn:'abPanel',cuspBtn:'cuspPanel',bpBtn:'bpPanel',acBtn:'acPanel',ltBtn:'ltPanel',mmBtn:'mmPanel',ckBtn:'ckPanel',m3Btn:'m3Panel',tpBtn:'tpPanel',mkBtn:'mkPanel',clBtn:'clPanel',spBtn:'spPanel',mpBtn:'mpPanel',eqBtn:'eqPanel',ftBtn:'ftPanel'};
+  var map={lostBtn:'lostPanel',rangeBtn:'rangePanel',raceBtn:'racePanel',gpBtn:'gpPanel',cmBtn:'cmPanel',abBtn:'abPanel',cuspBtn:'cuspPanel',bpBtn:'bpPanel',acBtn:'acPanel',ltBtn:'ltPanel',mmBtn:'mmPanel',ckBtn:'ckPanel',m3Btn:'m3Panel',tpBtn:'tpPanel',mkBtn:'mkPanel',clBtn:'clPanel',spBtn:'spPanel',mpBtn:'mpPanel',eqBtn:'eqPanel',ftBtn:'ftPanel',gamBtn:'gamPanel',ntBtn:'ntPanel'};
   closeAll(document.getElementById(map[b.id]));
 },true);
 function closeTop(){var pop=document.getElementById('chartPop');if(!pop.classList.contains('hide')){pop.classList.add('hide');return;}var o=openSheet(),t=o[o.length-1];if(t){var b=document.getElementById(CLOSE[t.id]);if(b)b.click();}}
