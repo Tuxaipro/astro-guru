@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'public');
-const apk = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-7.7.apk'));
+const apk = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-10.5.apk'));
 
 const html = execFileSync('unzip', ['-p', apk, 'assets/index.html'], { maxBuffer: 64 << 20 }).toString('utf8');
 if (!html.includes('<html')) throw new Error('assets/index.html not found in ' + apk);

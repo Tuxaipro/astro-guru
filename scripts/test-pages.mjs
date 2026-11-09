@@ -18,6 +18,7 @@ const BASE = `http://localhost:${PORT}/`;
 // Pages whose main button needs input first, and what to enter.
 const PREPARE = {
   'horary-answers': async (p) => { await p.fill('#hqNum', '108'); },
+  'natal-chart-trade': async (p) => { await p.fill('#ntDob', '1990-06-15'); }, // the time field has a default
 };
 // Pages with no result to wait for after the main button (it sets alarms or draws a map).
 const NO_OUTPUT = new Set(['live-transit-clock', 'astrocartography', 'cuspal-chart', 'about', 'now', 'lagna-timings']);

@@ -1,6 +1,6 @@
 # GuruAgasthiya web
 
-The GuruAgasthiya Android app (v7.7) as a plain website.
+The GuruAgasthiya Android app (v10.5) as a plain website.
 
 ## How it was made
 
@@ -25,7 +25,7 @@ worker: the site is not installable and needs a connection, like any website.
 
 `revamp/` holds the new interface. `npm run import` copies it into `public/revamp/` and loads it after the
 original styles and scripts. It only moves and restyles existing elements, so every element ID and
-every calculation in the v7.7 engine stays as it was.
+every calculation in the v10.5 engine stays as it was.
 
 - **Design:** "panchangam ink and turmeric". Indigo ink carries text and actions, and turmeric marks only the
   sign rising now. Text is set in IBM Plex Sans, with Mukta Malar for Tamil. Light and dark themes are both
@@ -189,7 +189,7 @@ A script error shows one short notice ("Something went wrong on this page") with
 ## Use
 
 ```bash
-npm run build           # rebuild public/ from ../GuruAgasthiya-7.7.apk and revamp/
+npm run build           # rebuild public/ from ../GuruAgasthiya-10.5.apk and revamp/
 npm start               # http://localhost:4173
 npm run dev             # build, then start
 npm run import -- ../GuruAgasthiya-7.8.apk   # regenerate public/ from a newer APK

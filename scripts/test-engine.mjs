@@ -20,9 +20,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const errors = [];
 const vc = new VirtualConsole();
 vc.on('jsdomError', (e) => errors.push(String(e.message).split('\n')[0]));
-// Test the calculation engine only: leave out the interface scripts (the revamp layer and the original
-// layout helpers), whose page watchers make jsdom very slow on large reports.
-const UI_SCRIPTS = /<script src="(revamp\/[^"]+|js\/0[3-6]-[^"]+)"><\/script>\n?/g;
+// Test the calculation engine only (blocks 01 and 02): leave out the interface scripts (the revamp layer
+// and the original layout helpers from block 03 on), whose page watchers make jsdom very slow on large
+// reports. 10.5's block 08 relabels form controls on every DOM change and never finishes under jsdom.
+const UI_SCRIPTS = /<script src="(revamp\/[^"]+|js\/(?:0[3-9]|[1-9][0-9])-[^"]+)"><\/script>\n?/g;
 const html = readFileSync(PAGE, 'utf8').replace(UI_SCRIPTS, '').replace(/<link rel="stylesheet"[^>]*>\n?/g, ''); // styles are not needed to calculate
 const dom = new JSDOM(html, {
   url: pathToFileURL(PAGE).href, runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true, virtualConsole: vc,
