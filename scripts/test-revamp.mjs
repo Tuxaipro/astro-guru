@@ -1,0 +1,144 @@
+#!/usr/bin/env node
+// Behaviour tests for the revamp layer (revamp/*.js) on top of the engine.
+// Loads public/index.html headless (jsdom) with the revamp scripts in place and checks what they add:
+// saved people filling a tool's birth form, long result lists folding to a first page, and the folded
+// place line falling back to the search text when the city list has no match.
+//
+//   npm run test:revamp
+import { JSDOM, VirtualConsole } from 'jsdom';
+import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PAGE = join(ROOT, 'public', 'index.html');
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const started = Date.now();
+
+// ---------- load the app ----------
+const errors = [];
+const vc = new VirtualConsole();
+vc.on('jsdomError', (e) => errors.push(String(e.message).split('\n')[0]));
+// Keep the engine (blocks 01, 02) and every revamp script. Leave out the original layout helpers from
+// block 03 on: 10.5's block 08 relabels form controls on every DOM change and never finishes under jsdom.
+const LAYOUT_SCRIPTS = /<script src="js\/(?:0[3-9]|[1-9][0-9])-[^"]+"><\/script>\n?/g;
+const html = readFileSync(PAGE, 'utf8').replace(LAYOUT_SCRIPTS, '').replace(/<link rel="stylesheet"[^>]*>\n?/g, ''); // no layout, no styles
+const PERSON = { name: 'Meena', date: '1990-06-15', time: '10:30:00', lat: '13.0827', lon: '80.2707', tz: 'Asia/Kolkata', place: 'Chennai, Tamil Nadu, India' };
+const dom = new JSDOM(html, {
+  url: pathToFileURL(PAGE).href, runScripts: 'dangerously', resources: 'usable', pretendToBeVisual: true, virtualConsole: vc,
+  beforeParse(w) {
+    // Browser features jsdom does not have.
+    w.matchMedia = w.matchMedia || (() => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} }));
+    w.Element.prototype.scrollTo = function () {}; w.Element.prototype.scrollIntoView = function () {}; w.scrollTo = function () {};
+    w.requestIdleCallback = (fn) => setTimeout(fn, 1);
+    // jsdom refuses pushState/replaceState on a file: page; the revamp's routes write #/<tool> through them.
+    const setHash = (state, title, url) => { if (typeof url === 'string' && url.startsWith('#')) w.location.hash = url; };
+    w.History.prototype.pushState = setHash; w.History.prototype.replaceState = setHash;
+    w.HTMLDialogElement && (w.HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); }, w.HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); });
+    // file: pages have no localStorage in jsdom; give the app a fresh in-memory one.
+    const mem = new Map();
+    const ls = { getItem: (k) => (mem.has(k) ? mem.get(k) : null), setItem: (k, v) => mem.set(k, String(v)), removeItem: (k) => mem.delete(k), clear: () => mem.clear(), key: (i) => [...mem.keys()][i] ?? null, get length() { return mem.size; } };
+    Object.defineProperty(w, 'localStorage', { value: ls, configurable: true });
+    ls.setItem('rvSetup', '1'); // no first-run dialog
+    ls.setItem('gaBirthList', JSON.stringify([PERSON])); // one saved person, as Birth Chart would save it
+  },
+});
+await new Promise((r) => dom.window.addEventListener('load', r));
+await sleep(300);
+const w = dom.window, d = w.document, $ = (id) => d.getElementById(id);
+const fire = (el, t) => el.dispatchEvent(new w.Event(t, { bubbles: true }));
+// The revamp's page watcher runs its hooks 150 ms after the last DOM change.
+const settle = () => sleep(400);
+
+// ---------- checks ----------
+let failed = 0, passed = 0;
+function check(name, fn) {
+  try {
+    const why = fn();
+    if (why) { failed++; console.log(`FAIL  ${name}\n      ${why}`); } else { passed++; console.log(`PASS  ${name}`); }
+  } catch (e) { failed++; console.log(`FAIL  ${name}\n      ${String(e.message || e).split('\n')[0]}`); }
+}
+const eq = (what, got, want) => (got === want ? '' : `${what}: expected ${JSON.stringify(want)}, got ${JSON.stringify(got)}`);
+const shownRows = (out) => [...out.querySelectorAll('li.row')].filter((li) => !li.classList.contains('rv-hide-more')).length;
+
+// (1) Saved people fill Natal Chart Trade's birth form.
+// The engine shows its disclaimer before the first tool; accepting it opens the tool and the revamp
+// remembers the acceptance for the day (localStorage rvDiscDay).
+$('ntBtn').click(); await settle();
+check('disclaimer: the first tool click shows the disclaimer, OK opens the tool', () => {
+  const disc = $('gaDisc');
+  if (!disc || disc.classList.contains('hide')) return 'gaDisc not showing after the tool click';
+  $('gaDiscOk').click();
+  return eq('gaDisc hidden after OK', disc.classList.contains('hide'), true) || eq('rvDiscDay saved', !!w.localStorage.getItem('rvDiscDay'), true);
+});
+await settle();
+check('saved people: Natal Chart Trade opens with a people list', () => {
+  const panel = $('ntPanel'), sel = panel.querySelector('.rv-people select');
+  if (panel.classList.contains('hide')) return 'ntPanel still hidden';
+  if (!sel) return 'no .rv-people select in ntPanel';
+  if (sel.disabled) return 'people select is disabled';
+  const names = [...sel.options].map((o) => o.text);
+  if (!names.some((t) => t.startsWith('Meena'))) return `person not listed, options: ${JSON.stringify(names)}`;
+});
+{
+  const sel = $('ntPanel').querySelector('.rv-people select');
+  const i = [...sel.options].findIndex((o) => o.text.startsWith('Meena'));
+  sel.selectedIndex = i; fire(sel, 'change'); await settle();
+}
+check('saved people: choosing the person fills name, date, time and coordinates', () =>
+  eq('#ntName', $('ntName').value, PERSON.name) || eq('#ntDob', $('ntDob').value, PERSON.date) || eq('#ntTob', $('ntTob').value, PERSON.time) ||
+  eq('#ntLat', $('ntLat').value, PERSON.lat) || eq('#ntLon', $('ntLon').value, PERSON.lon) || eq('#ntTz', $('ntTz').value, PERSON.tz));
+check('saved people: the folded place line names the saved place', () => {
+  const b = $('ntPanel').querySelector('.rv-place-t b');
+  if (!b) return 'no .rv-place-t b in ntPanel';
+  return eq('place line', b.textContent.trim(), PERSON.place);
+});
+
+// (2) Long result lists fold to a first page.
+const out = $('gamOut');
+const rowsHtml = (n, from = 1) => Array.from({ length: n }, (_, i) => `<li class="row"><span class="t"><b>Row ${from + i}</b></span></li>`).join('');
+const twoLists = (n) => `<h4>Day 1</h4><ul>${rowsHtml(n / 2)}</ul><h4>Day 2</h4><ul>${rowsHtml(n / 2, n / 2 + 1)}</ul>`;
+out.innerHTML = twoLists(120); await settle();
+check('list folding: 120 rows fold to 60 with a "Showing 60 of 120" bar', () => {
+  const bar = out.querySelector(':scope > .rv-more-bar');
+  if (!bar) return 'no .rv-more-bar in #gamOut';
+  const note = bar.querySelector('.rv-more-note');
+  return eq('visible rows', shownRows(out), 60) || eq('note', note && note.textContent.trim(), 'Showing 60 of 120') ||
+    eq('second list hidden', out.querySelectorAll('ul')[1].classList.contains('rv-hide-more'), true) || eq('bar hidden', bar.classList.contains('hide'), false);
+});
+check('list folding: the first button shows the rest', () => {
+  const bar = out.querySelector(':scope > .rv-more-bar');
+  bar.querySelector('button').click();
+  return eq('visible rows after click', shownRows(out), 120) || eq('note', bar.querySelector('.rv-more-note').textContent.trim(), 'Showing 120 of 120') ||
+    eq('second list shown', out.querySelectorAll('ul')[1].classList.contains('rv-hide-more'), false) || eq('bar hidden', bar.classList.contains('hide'), true);
+});
+out.innerHTML = twoLists(120); await settle();
+check('list folding: a re-run with 120 rows folds again', () => {
+  const bar = out.querySelector(':scope > .rv-more-bar');
+  if (!bar) return 'no .rv-more-bar after re-render';
+  return eq('visible rows', shownRows(out), 60) || eq('note', bar.querySelector('.rv-more-note').textContent.trim(), 'Showing 60 of 120');
+});
+out.innerHTML = `<ul>${rowsHtml(40)}</ul>`; await settle();
+check('list folding: 40 rows get no bar', () =>
+  eq('bar present', !!out.querySelector(':scope > .rv-more-bar'), false) || eq('visible rows', shownRows(out), 40));
+out.innerHTML = '';
+
+// (3) The place line falls back to the search text when the city list has no match.
+const ADVICE = 'No match in the offline list. Type the latitude and longitude below, or search online.';
+$('ntCity').innerHTML = `<option value="">${ADVICE}</option>`; $('ntCity').selectedIndex = 0;
+$('ntSearch').value = 'Chennai, India'; fire($('ntSearch'), 'change'); await sleep(50);
+check('place picker: a no-match city list shows the search text, not the advice', () => {
+  const b = $('ntPanel').querySelector('.rv-place-t b').textContent.trim();
+  if (/no match|type the latitude|search online/i.test(b)) return `advice shown as the place: ${JSON.stringify(b)}`;
+  return eq('place line', b, 'Chennai, India');
+});
+$('ntSearch').value = ''; fire($('ntSearch'), 'change'); await sleep(50);
+check('place picker: with no search text and coordinates set, it says "Place by coordinates"', () =>
+  eq('place line', $('ntPanel').querySelector('.rv-place-t b').textContent.trim(), 'Place by coordinates'));
+
+// ---------- result ----------
+const scriptErrors = errors.filter((e) => !/scrollTo|getContext|Not implemented/.test(e));
+if (scriptErrors.length) { failed++; console.log(`FAIL  no script errors\n      ${scriptErrors.slice(0, 5).join('\n      ')}`); } else { passed++; console.log('PASS  no script errors'); }
+console.log(`\n${failed ? `${failed} check(s) failed, ${passed} passed` : `All ${passed} checks passed`} (${((Date.now() - started) / 1000).toFixed(1)}s)`);
+process.exitCode = failed ? 1 : 0;
+process.exit();

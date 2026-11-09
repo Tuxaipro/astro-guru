@@ -10,8 +10,9 @@
     "start": "node scripts/serve.mjs",
     "dev": "npm run build && npm start",
     "test": "node scripts/check-contract.mjs && node scripts/test-engine.mjs",
+    "test:revamp": "node scripts/test-revamp.mjs",
     "test:pages": "node scripts/test-pages.mjs",
-    "test:all": "npm test && npm run test:pages"
+    "test:all": "npm test && npm run test:revamp && npm run test:pages"
   },
   "engines": {
     "node": ">=18"

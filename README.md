@@ -147,8 +147,9 @@ Edit files in `revamp/`, then run `npm run build` (the same as `npm run import`)
 
 ```bash
 npm test                 # import check + engine results (fast)
+npm run test:revamp      # the revamp layer headless: saved people, list folding, place line (fast)
 npm run test:pages       # every page in Chrome, desktop and phone: loads, main button works, no script errors
-npm run test:all         # both
+npm run test:all         # all three
 npm test -- --update     # accept the current engine results as the new reference
 node scripts/style-diff.mjs --save   # record every element's style (before a CSS refactor)
 node scripts/style-diff.mjs          # compare after it: lists every style value that changed
@@ -165,6 +166,14 @@ node scripts/style-diff.mjs          # compare after it: lists every style value
     - Chennai, 1 Sep 1942 (India's wartime UTC+6:30).
 
   Any change in a time, a lord or a planet position is shown line by line.
+- **Revamp layer** (`scripts/test-revamp.mjs`): loads the app headless (jsdom) with the `revamp/`
+  scripts in place and checks what they add on top of the engine:
+  - The disclaimer opens the tool on OK and is remembered for the day.
+  - A person saved in Birth Chart fills Natal Chart Trade's name, date, time, coordinates and place line.
+  - A result list of 120 rows folds to 60 with a "Showing 60 of 120" bar; "Show more" shows the rest; a
+    re-run folds again; 40 rows get no bar.
+  - When the city list has no match, the folded place line shows the search text (or "Place by
+    coordinates"), not the engine's advice sentence.
 - **Pages** (`scripts/test-pages.mjs`): opens all 24 pages by their address in the Chrome installed on
   this computer (playwright-core). Each page is checked at 1440×900 and 390×844, its main button is
   pressed, and the run fails on missing content, a wrong address or highlight, a page wider than the
