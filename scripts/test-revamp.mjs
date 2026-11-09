@@ -228,6 +228,18 @@ await check('ask small talk: "ok" gets an invitation with the example card', asy
   return eq('reply', added.find((n) => n.classList.contains('ak-b')).textContent.trim(), 'Go ahead and ask your question, or tap one of these:') ||
     eq('no "closest" section without a question', card.querySelectorAll('.rv-ak-h').length, 1);
 }, true);
+await check('ask sub-lord timings: the engine\'s crashing list is replaced by a pointer to Lagna Timings', async () => {
+  const added = await sendAsk('lagna timings today');
+  const bots = added.filter((n) => n.classList.contains('ak-b'));
+  if (!bots.length) return 'no reply';
+  if (bots.some((n) => /something went wrong|Maximum call stack/i.test(n.textContent))) return 'the engine\'s crash reply still appeared';
+  const chip = bots[0].querySelector('.ak-chip');
+  if (!chip) return 'no chip in the reply';
+  const why = eq('chip', chip.textContent.trim(), 'Open: Lagna Timings'); if (why) return why;
+  chip.click(); await sleep(50);
+  return eq('chat closed', $('akPanel').classList.contains('hide'), true) || eq('address', w.location.hash, '#/lagna-timings');
+}, true);
+$('akBtn').click(); await sleep(100); // reopen the chat for the next checks
 check('miss log: unmatched questions are kept on the device, with a count and a Clear button', () => {
   const det = $('akPanel').querySelector('details.rv-askmiss');
   if (!det) return 'no details.rv-askmiss under the message box';
@@ -235,7 +247,7 @@ check('miss log: unmatched questions are kept on the device, with a count and a 
   if (!saved.find((e) => e.q === 'my laptop was stolen yesterday')) return `stolen laptop not logged: ${JSON.stringify(saved.map((e) => e.q))}`;
   const rows = [...det.querySelectorAll('li b')].map((b) => b.textContent);
   if (!rows.includes('my laptop was stolen yesterday')) return `row missing, rows: ${JSON.stringify(rows)}`;
-  if (saved.some((e) => /^(thanks|ok)$/.test(e.q))) return 'small talk was logged as a miss';
+  if (saved.some((e) => /^(thanks|ok|lagna timings today)$/.test(e.q))) return 'small talk or the sub-lord question was logged as a miss';
   det.querySelector('button[data-k="clear"]').click();
   return eq('cleared', w.localStorage.getItem('rvAskMiss'), '[]') || eq('count after clear', det.querySelector('.rv-log-n').textContent.trim(), 'empty');
 });

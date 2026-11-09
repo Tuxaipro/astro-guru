@@ -286,6 +286,8 @@
     'I am this app’s question guide. I answer from its own KP rules and databases, fully offline, with no AI behind me. I understand questions phrased like these best:': 'நான் இந்தச் செயலியின் கேள்வி வழிகாட்டி. இதன் சொந்த KP விதிகள், தரவுகளிலிருந்தே பதில் சொல்கிறேன்; முழுவதும் ஆஃப்லைன், பின்னால் AI எதுவும் இல்லை. இவை போன்ற வடிவில் கேட்டால் நன்றாகப் புரிந்துகொள்வேன்:',
     'Go ahead and ask your question, or tap one of these:': 'உங்கள் கேள்வியைக் கேளுங்கள், அல்லது இவற்றில் ஒன்றைத் தொடுங்கள்:',
     'Goodbye. Come back whenever you have a question.': 'போய் வாருங்கள். கேள்வி இருக்கும்போது மீண்டும் வாருங்கள்.',
+    'Lagna and sub-lord timings for a day are in the Lagna Timings tool. It lists every change of lagna, star lord and sub lord at your place.': 'ஒரு நாளின் லக்ன, உப அதிபதி நேரங்கள் லக்ன நேரங்கள் கருவியில் உள்ளன. உங்கள் இடத்தில் லக்னம், நட்சத்திர அதிபதி, உப அதிபதி மாறும் ஒவ்வொரு நேரத்தையும் அது பட்டியலிடும்.',
+    'Open: Lagna Timings': 'திற: லக்ன நேரங்கள்',
     'Questions I could not match': 'பொருத்த முடியாத கேள்விகள்',
     'Nothing yet. Every question I could not match will be listed here.': 'இன்னும் எதுவும் இல்லை. நான் பொருத்த முடியாத ஒவ்வொரு கேள்வியும் இங்கே பட்டியலிடப்படும்.',
     'Saved on this device only. Copy the list and share it, so the rules can learn these phrasings.': 'இந்தச் சாதனத்தில் மட்டும் சேமிக்கப்படும். பட்டியலை நகலெடுத்துப் பகிர்ந்தால், இந்த வடிவங்களை விதிகளில் சேர்க்கலாம்.',

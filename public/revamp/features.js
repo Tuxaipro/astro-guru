@@ -400,7 +400,8 @@
      - the saved people in the birth form the chat draws;
      - spelling and phrase fixes before the engine reads a question ("jathakam", "lotery", "rasi palan"), the
        phrases in the engine's own way: a bracketed canonical word after the text, as its normIn() does;
-     - small talk answered here ("thanks", "who are you", "ok") instead of the engine's no-match reply;
+     - small talk answered here ("thanks", "who are you", "ok") instead of the engine's no-match reply, and the
+       sub-lord timing questions that crash the engine pointed at the Lagna Timings tool;
      - after a reply no rule matched ("I could not match that to one question"), a card with the covered
        categories closest to the question and one example question each, so the chat never ends in a dead end;
      - a log of the unmatched questions, kept on this device only, with copy and clear, so the rules can be
@@ -477,7 +478,18 @@
       { rx: /^(ok|okay|k|yes|yeah|yep|no|nope|hmm+|fine|good|great|nice|super|cool|sure|சரி|ஆமாம்|ஆம்|இல்லை|ம்ம்)[\s!.]*$/i, reply: 'Go ahead and ask your question, or tap one of these:', card: true },
       { rx: /^(bye|goodbye|good ?night|see you|போய்\s*வருகிறேன்|போய்\s*வரேன்)[\s!.]*$/i, reply: 'Goodbye. Come back whenever you have a question.' }
     ];
-    function smallTalk(t) { for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; } return null; }
+    // Engine 10.5 bug: its sub-lord timing list (subList, SUBRE) recurses forever (a local `sg` arrow calls
+    // itself) and every such question ends in "Sorry, something went wrong". The engine is never edited, so
+    // those questions are answered here with the tool that shows the same timings.
+    var SUBLIST = { rx: /sub\s*-?\s*lords?|உப\s*அதிபதி|lagna\s*timing|ascendant\s*timing|லக்ன\s*நேரம்/i,
+      when: /list|timing|\btimes?\b|today|tomorrow|yesterday|\bnext\b|this (week|month)|\d|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\b(mon|tues|wednes|thurs|fri|satur|sun)day\b|நேரம்|பட்டியல்|இன்று|நாளை/i,
+      reply: 'Lagna and sub-lord timings for a day are in the Lagna Timings tool. It lists every change of lagna, star lord and sub lord at your place.',
+      chips: [['Open: Lagna Timings', function () { var x = $('akClose'), b = $('homeBtn'); if (x) x.click(); if (b) b.click(); }]] };
+    function smallTalk(t) {
+      for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; }
+      if (SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
+      return null;
+    }
     // The question's language: the chat's own "Reply in" choice first, then the app language.
     function askT(text) {
       var sel = $('akLang'), v = sel ? sel.value : 'auto';
@@ -540,7 +552,13 @@
     function sayHere(userText, small) {
       var u = chatLang(document.createElement('div')); u.className = 'ak-m ak-u'; u.textContent = userText; log.appendChild(u);
       var b = chatLang(document.createElement('div')); b.className = 'ak-m ak-b rv-ak-small';
-      var p = document.createElement('p'); p.textContent = askT(small.reply); b.appendChild(p); log.appendChild(b);
+      var p = document.createElement('p'); p.textContent = askT(small.reply); b.appendChild(p);
+      if (small.chips) {
+        var ch = document.createElement('div'); ch.className = 'ak-ch';
+        small.chips.forEach(function (c) { var x = document.createElement('button'); x.type = 'button'; x.className = 'ak-chip'; x.textContent = askT(c[0]); x.addEventListener('click', c[1]); ch.appendChild(x); });
+        b.appendChild(ch);
+      }
+      log.appendChild(b);
       if (small.card) log.appendChild(chatLang(helpCard('')));
       scrollLog();
     }
