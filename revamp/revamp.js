@@ -210,8 +210,21 @@
      The browser's back and forward buttons, reload and bookmarks all work. */
   var ROUTES = {}, BTN_ROUTE = {};
   function slugOf(t) { return t.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  // Each tool's address is fixed here, so a link works whatever language the sidebar starts in (with Tamil
+  // stored, the engine has already translated the button titles by the time the routes are built, and a
+  // slug made from a Tamil title is empty). A tool from a newer APK falls back to its English title, then
+  // to its id.
+  var SLUGS = {
+    homeBtn: 'lagna-timings', clBtn: 'live-transit-clock', m3Btn: '3-11-muhurtham', cmBtn: 'chandra-muhurtham',
+    rangeBtn: 'date-range-muhurtham', epBtn: 'practical-electional-muhurtham', gamBtn: 'guru-agasthiya-muhurtham',
+    ftBtn: 'fortuna-timing', bpBtn: 'birth-chart', cuspBtn: 'cuspal-chart', acBtn: 'astrocartography',
+    akBtn: 'ask-guruagasthiya', gpBtn: 'gmp-prasnam', hqBtn: 'horary-answers', lostBtn: 'lost-and-found',
+    mmBtn: 'money-manifestation', mpBtn: 'money-profit-muhurtham', tpBtn: 'trade-profit', ntBtn: 'natal-chart-trade',
+    mkBtn: 'market-transit', spBtn: 'speculation-research', ltBtn: 'lottery-rules', ckBtn: 'cricket-wicket',
+    raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about'
+  };
   groupsEl.querySelectorAll('.tool').forEach(function (b) {
-    var r = b.id === 'rvNowBtn' ? 'now' : b.id === 'homeBtn' ? 'lagna-timings' : slugOf(b.title || b.id);
+    var r = b.id === 'rvNowBtn' ? 'now' : SLUGS[b.id] || slugOf(b.title || '') || slugOf(b.id.replace(/Btn$/, ''));
     ROUTES[r] = b.id; BTN_ROUTE[b.id] = r; b.dataset.route = r;
   });
   function isBase(r) { return r === 'now' || r === 'lagna-timings'; }

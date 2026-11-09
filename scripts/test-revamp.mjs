@@ -70,6 +70,12 @@ const shownRows = (out) => [...out.querySelectorAll('li.row')].filter((li) => !l
 // The engine shows its disclaimer before the first tool; accepting it opens the tool and the revamp
 // remembers the acceptance for the day (localStorage rvDiscDay).
 $('ntBtn').click(); await settle();
+// The sidebar buttons have no English title here (the engine sets titles in a layout script, left out
+// above), the same situation as a start-up with Tamil stored, where the titles are already Tamil.
+check('routes: tool addresses are fixed per tool, not read from the button titles', () =>
+  eq('ntBtn', $('ntBtn').dataset.route, 'natal-chart-trade') || eq('eqBtn', $('eqBtn').dataset.route, 'mundane-astrology') ||
+  eq('m3Btn', $('m3Btn').dataset.route, '3-11-muhurtham') || eq('homeBtn', $('homeBtn').dataset.route, 'lagna-timings'));
+
 check('disclaimer: the first tool click shows the disclaimer, OK opens the tool', () => {
   const disc = $('gaDisc');
   if (!disc || disc.classList.contains('hide')) return 'gaDisc not showing after the tool click';
