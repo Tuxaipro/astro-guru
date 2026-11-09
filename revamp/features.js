@@ -395,13 +395,88 @@
     // The engine sets the shared place up 500 ms after loading, then watches its tools every 500 ms.
     setTimeout(function () { follow(); setInterval(follow, 500); }, 700);
   })();
-  /* Ask GuruAgasthiya draws its birth form inside the chat; offer the saved people there too. */
+  /* Ask GuruAgasthiya draws its birth form inside the chat; offer the saved people there too.
+     And when none of its rules matches a question, it says "I could not match that to one question":
+     a card then follows with the covered categories closest to the question and one example each,
+     so the chat never ends in a dead end. */
   (function () {
     var log = $('akLog'); if (!log) return;
+    // The engine's no-match reply, in English (also the first line of "English + Tamil") and in Tamil.
+    var NOMATCH = /^(I could not match that to one question\.|அந்தக் கேள்வியை ஒன்றாகப் பொருத்த இயலவில்லை\.)/;
+    // What the engine's rules cover: keywords that point to each category, its name and one question the
+    // rules do answer (English here; i18n.js holds the Tamil). Keyword lists mix English and Tamil.
+    var ASK_CATS = [
+      { name: 'Muhurtham', q: 'Muhurtham for marriage next week',
+        k: [/muhurt|auspicious|shubh|good (time|day|date|hour)|best (time|day|date)/, /wedding|engagement|housewarming|griha|naming|ear.?pierc|ceremony|function|puja|pooja|opening|inaugur/, /முகூர்த்|நல்ல நேரம்|நல்ல நாள்|சுப|திருமண|கல்யாண|கிரகப்பிரவேச/] },
+      { name: 'Birth chart', q: 'Read my birth chart',
+        k: [/birth|chart|horoscope|ja+thag|kundli|natal|rasi|lagna|nakshat/, /dasha|bhukti|transit|planet|my (life|future|fate|destiny)|predict/, /ஜாதக|தசை|ராசி|லக்ன|நட்சத்திர|எதிர்காலம்|கோள்|கிரக/] },
+      { name: 'Horary question', q: 'Will I clear my exam?',
+        k: [/\b(will|shall|can|could|should|would|am i|do i|when)\b|\?/, /exam|job|career|marr|love|abroad|visa|loan|court|case|health|child|baby|promotion|property|house|vehicle|interview|travel/, /வருமா|ஆகுமா|முடியுமா|எப்போது|தேர்வு|வேலை|காதல்|வெளிநாடு|கடன்|குழந்தை|வழக்கு|உடல்நல/] },
+      { name: 'Lost items', q: 'Will I find my lost item?',
+        k: [/\blost\b|missing|stolen|theft|thief|misplaced|where (is|are) my|find my|lost and found/, /தொலை|காணாம|திருடு|திருட்டு|கிடைக்குமா/] },
+      { name: 'Money', q: 'When will my money problems end?',
+        k: [/money|wealth|finance|financial|income|salary|debt|loan|rich|savings|cash|lakshmi/, /பணம்|பண|செல்வம்|வருமானம்|சம்பளம்|கடன்|லட்சுமி/] },
+      { name: 'Trade and markets', q: 'Is today good for share trading?',
+        k: [/stock|share|market|trading|trade|nifty|sensex|forex|crypto|bitcoin|gold|silver|intraday|invest|profit|commodit/, /பங்கு|சந்தை|வர்த்தக|லாபம்|முதலீடு|தங்கம்/] },
+      { name: 'Lottery', q: 'Lottery muhurtham and numbers',
+        k: [/lottery|lotto|jackpot|lucky number|gambl|betting|\bbet\b|prize|draw/, /லாட்டரி|அதிர்ஷ்ட|சீட்டு|பரிசு/] },
+      { name: 'Cricket', q: 'Who will win today’s cricket match?',
+        k: [/cricket|\bipl\b|t20|odi|test match|match|toss|wicket|team|football|\bgame\b|tournament/, /கிரிக்கெட்|போட்டி|அணி|ஆட்டம்/] },
+      { name: 'Horse race', q: 'Horse race timings for today',
+        k: [/horse|\brace\b|racing|jockey|derby|turf/, /குதிரை|பந்தய/] },
+      { name: 'World events', q: 'Any earthquake in the next 3 months?',
+        k: [/earthquake|quake|flood|cyclone|storm|tsunami|accident|crash|disaster|calamity|war|election|country|world|rain|weather|epidemic|fire/, /நிலநடுக்க|வெள்ள|புயல்|விபத்து|தேர்தல்|மழை|நாடு|உலக|தீ/] },
+      { name: 'About astrology', q: 'Explain the 12 houses',
+        k: [/what (is|are|does)|explain|meaning|define|how (does|do|is)|rules?|house|sub.?lord|cusp|\bkp\b|krishnamurti|significator|retrograde|yoga|dosha|planet/, /என்றால்|என்ன|விளக்கு|விதி|அர்த்தம்|பாவம்|உப அதிபதி|தோஷம்/] }
+    ];
+    // The question's language: the chat's own "Reply in" choice first, then the app language.
+    function askT(text) {
+      var sel = $('akLang'), v = sel ? sel.value : 'auto';
+      if (v === 'en' || v === 'both') return text;
+      if (v === 'ta' && window.rvTa) return window.rvTa(text);
+      return T(text);
+    }
+    // Typing the question and pressing Send, through the engine's own form submit.
+    function askSend(q) {
+      var input = $('akText'), form = $('akForm'); if (!input || !form) return;
+      input.value = q;
+      if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+    function askChip(c) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'ak-chip rv-ak-ex';
+      var cat = document.createElement('span'); cat.className = 'rv-ak-cat'; cat.textContent = askT(c.name); b.appendChild(cat);
+      b.appendChild(document.createTextNode(askT(c.q)));
+      b.setAttribute('aria-label', askT(c.name) + ': ' + askT(c.q));
+      b.addEventListener('click', function () { askSend(askT(c.q)); });
+      return b;
+    }
+    function askSection(card, heading, cats) {
+      var p = document.createElement('p'); p.className = 'rv-ak-h'; p.textContent = askT(heading); card.appendChild(p);
+      var ch = document.createElement('div'); ch.className = 'ak-ch';
+      cats.forEach(function (c) { ch.appendChild(askChip(c)); });
+      card.appendChild(ch);
+    }
+    function noMatchHelp(reply) {
+      if (reply.hasAttribute('data-rv-help')) return;
+      reply.setAttribute('data-rv-help', '1');
+      // The question is the user bubble just before the reply.
+      var u = reply.previousElementSibling; while (u && !u.classList.contains('ak-u')) u = u.previousElementSibling;
+      var text = (u ? u.textContent : '').toLowerCase();
+      var scored = ASK_CATS.map(function (c) { return { c: c, n: c.k.reduce(function (a, rx) { return a + (rx.test(text) ? 1 : 0); }, 0) }; })
+        .filter(function (x) { return x.n > 0; }).sort(function (a, b) { return b.n - a.n; }).slice(0, 3).map(function (x) { return x.c; });
+      var card = document.createElement('div'); card.className = 'ak-m ak-b rv-ak-help';
+      if (reply.getAttribute('lang')) card.setAttribute('lang', reply.getAttribute('lang'));
+      if (reply.dir) card.dir = reply.dir;
+      if (scored.length) askSection(card, 'Closest to your question:', scored);
+      askSection(card, 'You can ask me about…', ASK_CATS.filter(function (c) { return scored.indexOf(c) < 0; }));
+      reply.insertAdjacentElement('afterend', card);
+      try { log.scrollTop = log.scrollHeight; } catch (e) {}
+    }
     new MutationObserver(function (muts) {
       muts.forEach(function (m) {
         [].forEach.call(m.addedNodes, function (n) {
           if (n.nodeType !== 1) return;
+          if (n.classList.contains('ak-b') && !n.classList.contains('rv-ak-help') && NOMATCH.test(n.textContent.trim())) noMatchHelp(n);
           var form = n.querySelector && n.querySelector('.ak-bn') ? n : null;
           if (!form || form.querySelector('.rv-people') || !people().length) return;
           var box = peopleSelect(function (r) {

@@ -938,6 +938,19 @@ body.rv #akPanel .ak-warn{border-left-color:var(--now)}
    box's bottom edge; the log is sized so header, chips, log and message box fit in one screen. */
 body.rv .stage[data-view="mobile"] #akPanel .ak-in{position:sticky;bottom:0;z-index:5;margin:0 -16px;padding:8px 16px 10px;background:var(--bg)}
 body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 470px);max-height:none;min-height:170px}
+/* No rule matched the question: the revamp's follow-up card, with the closest covered categories and
+   one example question each. It is a bot bubble like the engine's, so it follows the same theme tokens. */
+body.rv #akPanel .rv-ak-help{background:var(--fill2);box-shadow:0 0 0 1px var(--line);max-width:100%}
+body.rv #akPanel .rv-ak-help .rv-ak-h{margin:0 0 6px;color:var(--muted);font:600 12.5px/1.4 var(--sf)}
+body.rv #akPanel .rv-ak-help .ak-ch{margin:0 0 12px;gap:6px}
+body.rv #akPanel .rv-ak-help .ak-ch:last-child{margin-bottom:0}
+body.rv #akPanel .rv-ak-help .ak-chip{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;max-width:100%;min-height:40px;padding:6px 12px;border-radius:12px;text-align:left;white-space:normal;line-height:1.3}
+body.rv #akPanel .rv-ak-help .rv-ak-cat{color:var(--muted);font:500 11px/1.3 var(--sf)}
+body.rv #akPanel .rv-ak-help .ak-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* On phones the chips go full width, one per row, with room under the last card so the sticky
+   message box never covers it. */
+body.rv .stage[data-view="mobile"] #akPanel .rv-ak-help .ak-chip{width:100%}
+body.rv .stage[data-view="mobile"] #akPanel .rv-ak-help:last-child{margin-bottom:14px}
 
 /* ---------- Long result lists: first page, then "Show more" ---------- */
 body.rv .rv-hide-more{display:none!important}
@@ -957,3 +970,24 @@ body.rv .stage[data-view="mobile"] #akPanel .ak-bar::-webkit-scrollbar{display:n
 body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip,body.rv .stage[data-view="mobile"] #akPanel .ak-lb{white-space:nowrap;flex:none}
 body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip{padding:4px 10px;font-size:12.5px}
 body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 440px)}
+
+/* ==========================================================================
+   What's new: the revamp's own page (#/whats-new), styled like About.
+   ========================================================================== */
+body.rv .rv-new .rv-new-intro{font:400 17px/1.6 var(--sf);color:var(--ink);max-width:62ch;margin:6px 0 4px}
+body.rv .rv-new h3{margin:28px 0 12px}
+body.rv .rv-new-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+body.rv .rv-new-list li{position:relative;margin:0;padding:14px 18px 14px 40px;border-radius:var(--rv-r);background:var(--surface);
+  box-shadow:0 0 0 1px var(--line);font:400 15.5px/1.6 var(--sf);color:var(--ink2)}
+body.rv .rv-new-list li::before{content:"";position:absolute;left:18px;top:23px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+body.rv .rv-new-list li b{color:var(--ink);font-weight:600}
+body.rv .rv-new-list a{color:var(--accent);font-weight:600;text-decoration:none}
+body.rv .rv-new-list a:hover{text-decoration:underline}
+body.rv .stage[data-view="mobile"] .rv-new-list li{padding:12px 14px 12px 34px;font-size:15px}
+body.rv .stage[data-view="mobile"] .rv-new-list li::before{left:14px;top:21px}
+/* The link to it at the top of About */
+body.rv .rv-new-link{margin:4px 0 14px;max-width:none;text-align:left}
+body.rv .rv-new-link a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 12px;border-radius:999px;background:var(--tint);color:var(--accent);
+  font:600 13.5px/1.3 var(--sf);text-decoration:none}
+body.rv .rv-new-link a:hover{background:var(--fill)}
+body.rv .rv-new-link svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;flex:none}

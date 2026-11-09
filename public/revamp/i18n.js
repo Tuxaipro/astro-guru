@@ -260,6 +260,23 @@
     'Type it for any village': 'எந்தக் கிராமத்தையும் தட்டச்சு செய்யலாம்',
     'Name like America/New_York, or hours like 5.5': 'America/New_York போன்ற பெயர், அல்லது 5.5 போன்ற மணிகள்',
     'Local time of the place': 'அந்த இடத்தின் உள்ளூர் நேரம்',
+    // Revamp: Ask GuruAgasthiya, when no rule matched the question
+    'Closest to your question:': 'உங்கள் கேள்விக்கு நெருக்கமானவை:',
+    'You can ask me about…': 'நீங்கள் என்னிடம் கேட்கலாம்…',
+    'Muhurtham': 'முகூர்த்தம்', 'Birth chart': 'ஜாதகம்', 'Horary question': 'பிரசன்னக் கேள்வி', 'Lost items': 'தொலைந்த பொருள்',
+    'Money': 'பணம்', 'Trade and markets': 'வர்த்தகம், சந்தை', 'Lottery': 'லாட்டரி', 'Cricket': 'கிரிக்கெட்',
+    'Horse race': 'குதிரைப் பந்தயம்', 'World events': 'உலக நிகழ்வுகள்', 'About astrology': 'ஜோதிடம் பற்றி',
+    'Muhurtham for marriage next week': 'அடுத்த வாரம் திருமண முகூர்த்தம்',
+    'Read my birth chart': 'என் ஜாதகத்தைப் பார்',
+    'Will I clear my exam?': 'நான் தேர்வில் வெற்றி பெறுவேனா?',
+    'Will I find my lost item?': 'தொலைந்த பொருள் கிடைக்குமா?',
+    'When will my money problems end?': 'என் பணக் கஷ்டம் எப்போது தீரும்?',
+    'Is today good for share trading?': 'இன்று பங்கு வர்த்தகம் செய்யலாமா?',
+    'Lottery muhurtham and numbers': 'லாட்டரி முகூர்த்தம், எண்கள்',
+    'Who will win today’s cricket match?': 'இன்றைய கிரிக்கெட் போட்டியில் யார் வெல்வார்?',
+    'Horse race timings for today': 'இன்றைய குதிரைப் பந்தய நேரங்கள்',
+    'Any earthquake in the next 3 months?': 'அடுத்த 3 மாதத்தில் நிலநடுக்கம் வருமா?',
+    'Explain the 12 houses': '12 பாவங்களை விளக்கு',
     'Ascendant lord, star lord, sub lord (Rahu, Ketu excepted)': 'லக்னாதிபதி, நட்சத்திர அதிபதி, உப அதிபதி (ராகு, கேது தவிர)',
     'Copy from the place above': 'மேலே உள்ள இடத்திலிருந்து நகலெடு',
     'Save this place': 'இந்த இடத்தைச் சேமி',
@@ -570,6 +587,8 @@
     var t = translate(text, l); if (!t) return text;
     OUT.add(t.replace(/\{\w+\}/g, '').trim()); return t;
   };
+  // Tamil for a given text whatever the page language: the chat uses it when its own "Reply in" is Tamil.
+  window.rvTa = function (text) { var t = translate(text, 'ta'); if (t) OUT.add(t.replace(/\{\w+\}/g, '').trim()); return t || text; };
   function ours(el) {
     if (el.hasAttribute('data-rvtr')) return true;
     if (el.matches('.ta,.tm,.tt,.gt,.gta')) return false; // the engine's own Tamil copies stay as they are

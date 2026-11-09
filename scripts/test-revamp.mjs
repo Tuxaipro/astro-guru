@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // Behaviour tests for the revamp layer (revamp/*.js) on top of the engine.
 // Loads public/index.html headless (jsdom) with the revamp scripts in place and checks what they add:
-// saved people filling a tool's birth form, long result lists folding to a first page, and the folded
-// place line falling back to the search text when the city list has no match.
+// saved people filling a tool's birth form, long result lists folding to a first page, the folded place
+// line falling back to the search text when the city list has no match, and the example card that
+// follows an Ask GuruAgasthiya reply no rule matched.
 //
 //   npm run test:revamp
 import { JSDOM, VirtualConsole } from 'jsdom';
@@ -155,6 +156,49 @@ check('place picker: a no-match city list shows the search text, not the advice'
 $('ntSearch').value = ''; fire($('ntSearch'), 'change'); await sleep(50);
 check('place picker: with no search text and coordinates set, it says "Place by coordinates"', () =>
   eq('place line', $('ntPanel').querySelector('.rv-place-t b').textContent.trim(), 'Place by coordinates'));
+
+// (4) Ask GuruAgasthiya: a reply the engine could not match gets a card with example questions.
+// The reply nodes are appended by hand, exactly as the engine's add() writes them, so the check does not
+// depend on which question the engine's rules fail to match.
+const akLog = $('akLog');
+const akBubble = (cls, text) => { const n = d.createElement('div'); n.className = 'ak-m ' + cls; n.innerHTML = `<p>${text}</p>`; n.setAttribute('lang', cls === 'ak-b' ? 'en' : 'en'); akLog.appendChild(n); return n; };
+akBubble('ak-u', 'my laptop was stolen yesterday');
+const noMatchEn = akBubble('ak-b', 'I could not match that to one question. Try a form like these:'); await sleep(50);
+check('ask fallback: an unmatched English reply gets a card with the closest category and example chips', () => {
+  const card = noMatchEn.nextElementSibling;
+  if (!card || !card.classList.contains('rv-ak-help')) return 'no .rv-ak-help card after the reply';
+  const heads = [...card.querySelectorAll('.rv-ak-h')].map((p) => p.textContent.trim());
+  const chips = [...card.querySelectorAll('.ak-chip')];
+  if (!chips.length) return 'no example chips in the card';
+  return eq('headings', heads.join(' | '), 'Closest to your question: | You can ask me about…') ||
+    eq('first chip', chips[0].textContent.trim(), 'Lost itemsWill I find my lost item?') ||
+    eq('every category once', chips.length, 11) || eq('card language', card.getAttribute('lang'), 'en');
+});
+check('ask fallback: tapping an example sends it like typing and pressing Send', () => {
+  const chip = noMatchEn.nextElementSibling.querySelector('.ak-chip');
+  const before = akLog.children.length;
+  chip.click();
+  const added = [...akLog.children].slice(before);
+  const user = added.find((n) => n.classList.contains('ak-u'));
+  if (!user) return `no user bubble appended, ${added.length} node(s) added`;
+  return eq('sent text', user.textContent.trim(), 'Will I find my lost item?') || eq('composer cleared', $('akText').value, '') ||
+    (added.some((n) => n.classList.contains('ak-b')) ? '' : 'the engine gave no reply to the example');
+});
+d.body.setAttribute('data-lang', 'ta'); await sleep(100);
+akBubble('ak-u', 'என் லேப்டாப் நேற்று திருடு போனது');
+const noMatchTa = akBubble('ak-b', 'அந்தக் கேள்வியை ஒன்றாகப் பொருத்த இயலவில்லை. இது போன்ற வடிவில் கேளுங்கள்:'); await sleep(50);
+check('ask fallback: an unmatched Tamil reply gets the card in Tamil', () => {
+  const card = noMatchTa.nextElementSibling;
+  if (!card || !card.classList.contains('rv-ak-help')) return 'no .rv-ak-help card after the Tamil reply';
+  const heads = [...card.querySelectorAll('.rv-ak-h')].map((p) => p.textContent.trim());
+  const chips = [...card.querySelectorAll('.ak-chip')];
+  if (!chips.length) return 'no example chips in the card';
+  const english = chips.map((c) => c.textContent).filter((t) => /[A-Za-z]/.test(t));
+  return eq('headings', heads.join(' | '), 'உங்கள் கேள்விக்கு நெருக்கமானவை: | நீங்கள் என்னிடம் கேட்கலாம்…') ||
+    (english.length ? `chips left in English: ${JSON.stringify(english.slice(0, 3))}` : '') ||
+    eq('first chip', chips[0].textContent.trim(), 'தொலைந்த பொருள்தொலைந்த பொருள் கிடைக்குமா?');
+});
+d.body.setAttribute('data-lang', 'bi'); await sleep(100);
 
 // ---------- result ----------
 const scriptErrors = errors.filter((e) => !/scrollTo|getContext|Not implemented/.test(e));
