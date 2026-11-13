@@ -341,6 +341,11 @@
       var id = ROUTES[r], panel = panelOf(id);
       // Open it when hidden, or when another tool's mode of a shared panel is showing.
       if (panel && (panel.classList.contains('hide') || (shownBy[panel.id] && shownBy[panel.id] !== id))) { routing = true; $(id).click(); routing = false; }
+      // A shared panel is named after the tool showing it (Vehicle or Agriculture Muhurtham); i18n.js
+      // translates the name like any other spoken label.
+      if (panel && Object.keys(PANEL_OF).some(function (k) { return PANEL_OF[k] === panel.id; })) {
+        var tx = $(id).querySelector('.tx'); if (tx) panel.setAttribute('aria-label', ((tx.firstChild && tx.firstChild.textContent) || tx.textContent).trim());
+      }
       document.body.classList.add('rv-p-tool');
       if (changed) {
         var sc = $('scroller'); if (sc) sc.scrollTop = 0;

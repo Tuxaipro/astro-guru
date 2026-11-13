@@ -262,12 +262,39 @@ await check('ask sub-lord timings: the engine\'s crashing list is replaced by a 
 }, true);
 $('akBtn').click(); await sleep(100); // reopen the chat for the next checks
 
+// 11.2 reports in Tamil: the engine prints their reasons in English only and hides its own Tamil there.
+check('tamil reports: 11.2 reasons are rebuilt from the engine templates, unrelated text is left alone', () => {
+  const R = w.RV_TA_REPORTS; if (!R) return 'no window.RV_TA_REPORTS';
+  const look = () => null, t = (s) => R.tr(s, look);
+  return eq('reason list', t('Tithi Chaturthi (Shukla) is to be avoided; Panchaka: Roga (disease) (remainder 8)'), 'திதி வளர்பிறை சதுர்த்தி தவிர்க்கவும்; பஞ்சகம்: ரோக (நோய்) (மீதி 8)') ||
+    eq('person', t('Person 1: Tara 2 Sampat is good'), 'நபர் 1: தாரை 2 சம்பத் நல்லது') ||
+    eq('planets', t('Benefics in kendra or trikona: Jupiter, Venus'), 'கேந்திர, கோணத்தில் சுப கிரகங்கள்: குரு, சுக்கிரன்') ||
+    eq('market', t('0 bullish, 20 bearish and 1 neutral days of 21 · volatility 78%'), '21 நாட்களில் 0 ஏற்றம், 20 இறக்கம், 1 நடுநிலை · ஏற்ற இறக்கம் 78%') ||
+    eq('unrelated', t('Banana split'), null);
+});
+d.body.setAttribute('data-lang', 'ta'); await sleep(100);
+{
+  const box = $('cmpOut'), hold = d.createElement('div');
+  hold.innerHTML = '<div class="lf-sec"><h3>தனிப்பட்ட சந்திர முகூர்த்த அறிக்கை</h3></div><p class="rv-t-reason">Tithi Chaturthi (Shukla) is to be avoided</p><p>Aries<br><small>மேஷம்</small></p>';
+  box.appendChild(hold); await sleep(50);
+  hold.querySelector('h3').classList.add('tam60'); hold.querySelector('small').classList.add('tam60'); await sleep(50);
+  const outside = d.createElement('p'); outside.textContent = 'Tithi Chaturthi (Shukla) is to be avoided'; $('cmPanel').appendChild(outside); await sleep(50);
+  check('tamil reports: in Tamil, a reason in a report box is translated and engine-written Tamil stays visible', () =>
+    eq('reason', hold.querySelector('.rv-t-reason').textContent, 'திதி வளர்பிறை சதுர்த்தி தவிர்க்கவும்') ||
+    eq('heading not hidden as a copy', hold.querySelector('h3').classList.contains('tam60'), false) ||
+    eq('small copy still hidden', hold.querySelector('small').classList.contains('tam60'), true) ||
+    eq('outside the report boxes', outside.textContent, 'Tithi Chaturthi (Shukla) is to be avoided'));
+  hold.remove(); outside.remove();
+}
+d.body.setAttribute('data-lang', 'bi'); await sleep(100);
+
 // Vehicle and Agriculture Muhurtham share one engine panel (agPanel) in two modes.
 const agHead = () => ($('agPanel').querySelector('.ak-m') || {}).textContent || '';
 w.location.hash = '#/vehicle-muhurtham'; await settle();
 await check('shared panel: #/vehicle-muhurtham opens the panel in its vehicle mode', async () =>
   eq('agPanel shown', $('agPanel').classList.contains('hide'), false) || eq('marked', $('vhBtn').classList.contains('rv-on'), true) ||
-  (/^Vehicle purchase muhurtham/.test(agHead()) ? '' : `panel shows ${JSON.stringify(agHead().slice(0, 60))}`), true);
+  (/^Vehicle purchase muhurtham/.test(agHead()) ? '' : `panel shows ${JSON.stringify(agHead().slice(0, 60))}`) ||
+  eq('spoken name', $('agPanel').getAttribute('aria-label'), 'Vehicle Muhurtham'), true);
 w.location.hash = '#/agriculture-muhurtham'; await settle();
 await check('shared panel: #/agriculture-muhurtham switches the open panel to its farming mode', async () =>
   eq('address', w.location.hash, '#/agriculture-muhurtham') || eq('marked', $('agBtn').classList.contains('rv-on'), true) ||

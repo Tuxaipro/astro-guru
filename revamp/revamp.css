@@ -1051,6 +1051,13 @@ body.rv #mkxOpt .cell,body.rv #mkxOpt .cell .cl,body.rv #mkxOpt .mkxis,body.rv #
 body.rv #mkxOpt .cell.chk{align-items:center}
 body.rv #mkxTrF input,body.rv #mkxTrF select{text-align:left;text-align-last:left;direction:ltr}
 body.rv #mkxTrF input::-webkit-date-and-time-value{text-align:left}
+/* The 11.2 reports (market forecast, personal Chandra Muhurtham, the lottery studio that reuses it) list
+   their advice as li.row > .m3t, the class the revamp lays out as a timing row with a right-aligned time
+   cell that does not wrap. Those lines were pushed right and cut off: they are plain notes here. */
+body.rv #mkxRep ul.list li.row,body.rv #cmpOut ul.list li.row,body.rv #lnRepAll ul.list li.row{display:block;padding:10px 14px;cursor:default;grid-template-columns:none}
+body.rv #mkxRep ul.list li.row::before,body.rv #cmpOut ul.list li.row::before,body.rv #lnRepAll ul.list li.row::before{display:none}
+body.rv #mkxRep ul.list li.row .m3t,body.rv #cmpOut ul.list li.row .m3t,body.rv #lnRepAll ul.list li.row .m3t{
+  text-align:left;white-space:normal;overflow:visible;font:400 14px/1.55 var(--sf);color:var(--ink)}
 
 /* ---------- Long result lists: first page, then "Show more" ---------- */
 body.rv .rv-hide-more{display:none!important}

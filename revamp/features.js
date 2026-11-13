@@ -966,11 +966,18 @@
       if (b.classList.contains('rv-busy')) { e.stopImmediatePropagation(); e.preventDefault(); return; }
       e.stopImmediatePropagation(); e.preventDefault();
       b.classList.add('rv-busy'); b.setAttribute('aria-busy', 'true');
-      requestAnimationFrame(function () {
+      // After the next paint, so "working" shows first. Hidden tabs pause animation frames, so a timer
+      // stands in after 150 ms: a busy button must never stay stuck and swallow every later click.
+      var started = false;
+      function next(fn) { var go = function () { if (!started) { started = true; fn(); } }; requestAnimationFrame(go); setTimeout(go, 150); }
+      next(function () {
         setTimeout(function () {
           var t0 = performance.now(); replay = true;
           try { b.click(); } finally { replay = false; }
-          var sheet = b.closest('.sheet'), out = sheet && sheet.querySelector('[id$="Out"]');
+          // The result box that follows this button: tools with a second search (11.2's personal Chandra
+          // Muhurtham, the lottery number studio) write below their own button, not in the first box.
+          var sheet = b.closest('.sheet'), outs = sheet ? [].slice.call(sheet.querySelectorAll('[id$="Out"]')) : [];
+          var out = outs.filter(function (o) { return b.compareDocumentPosition(o) & Node.DOCUMENT_POSITION_FOLLOWING; })[0] || outs[0] || null;
           var finished = false;
           function done() { if (finished) return; finished = true; b.classList.remove('rv-busy'); b.removeAttribute('aria-busy'); }
           if (performance.now() - t0 > 80 || !out) { done(); return; } // the work already ran

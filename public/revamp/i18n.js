@@ -391,6 +391,9 @@
     'Rahu kalam today': 'இன்று ராகு காலம்', 'Planet positions today': 'இன்றைய கிரக நிலைகள்',
     'Vehicles': 'வாகனங்கள்', 'Farming': 'விவசாயம்', 'Vehicle muhurtham': 'வாகன முகூர்த்தம்', 'Agriculture muhurtham': 'விவசாய முகூர்த்தம்',
     'Name numerology': 'பெயர் எண் கணிதம்',
+    // 11.2 leftovers: Practical Electional's KP rows, close buttons' spoken name, the shared farming panel
+    'Lagna': 'லக்னம்', '· favourable': '· சாதகம்', '7th cusp': '7-ஆம் பாவ முனை', '11th cusp': '11-ஆம் பாவ முனை',
+    'Close': 'மூடு', 'Agriculture Muhurtham': 'விவசாய முகூர்த்தம்', 'Vehicle Muhurtham': 'வாகன முகூர்த்தம்',
     'Name and number readings are in two tools: Nameology & Numerology for a name (yours, a baby’s or a business’s), and Mobile Numerology for a mobile or vehicle number.': 'பெயர், எண் பலன்கள் இரண்டு கருவிகளில் உள்ளன: ஒரு பெயருக்கு (உங்களுடையது, குழந்தையுடையது அல்லது தொழிலுடையது) பெயர் மற்றும் எண் கணிதம்; மொபைல் அல்லது வாகன எண்ணுக்கு மொபைல் எண் கணிதம்.',
     'Open: Nameology & Numerology': 'திற: பெயர் மற்றும் எண் கணிதம்', 'Open: Mobile Numerology': 'திற: மொபைல் எண் கணிதம்',
     'You are welcome. Ask me another question whenever you like.': 'மகிழ்ச்சி. எப்போது வேண்டுமானாலும் இன்னொரு கேள்வி கேளுங்கள்.',
@@ -590,6 +593,8 @@
     return s.replace(TOKEN, function (w) { return TA_MON[w] || TA_DAY[w] || TA_DAYL[w] || WORDS[w] || w; });
   }
   var TA_RX = [
+    // Mobile Numerology's header line: "Meena · 1990-06-15 · Age 36"
+    [/^(.+) · (\d{4}-\d{2}-\d{2}) · Age (\d+)$/, function (m) { return m[1] + ' · ' + m[2] + ' · வயது ' + m[3]; }],
     // "Sat, 7 Nov 2026" and "Sat, 7 Nov 2026 · from 22:00"
     [/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat), (\d{1,2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4})( · from (\d{1,2}:\d{2}))?$/,
       function (m) { return TA_DAY[m[1]] + ', ' + m[2] + ' ' + TA_MON[m[3]] + ' ' + m[4] + (m[6] ? ' · ' + m[6] + ' முதல்' : ''); }],
@@ -692,17 +697,23 @@
 
   function lang() { return document.body.getAttribute('data-lang') || 'bi'; }
   function active(l) { return l !== 'bi' && l !== 'en' && !!MAP[l]; }
-  function translate(core, l) {
+  function translate(core, l, node) {
     var hit = MAP[l][core];
     if (hit) return hit;
     if (l === 'ta') for (var i = 0; i < TA_RX.length; i++) {
       var m = core.match(TA_RX[i][0]); if (m) { var r = TA_RX[i][1](m); if (r) return r; }
     }
+    // 11.2 reports printed in English only (i18n-ta-reports.js), inside their own boxes
+    var REP = window.RV_TA_REPORTS, el = node && node.parentNode;
+    if (l === 'ta' && REP && el && el.closest && el.closest(REP.scope)) {
+      var t = REP.tr(core, function (s) { return translate(s, 'ta'); });
+      if (t && t !== core) return t;
+    }
     return null;
   }
-  function tr(text, l) {
+  function tr(text, l, node) {
     var core = text.trim(); if (!core || !/[A-Za-z]/.test(core)) return text;
-    var out = translate(core, l); if (out == null) return text;
+    var out = translate(core, l, node); if (out == null) return text;
     var at = text.indexOf(core);
     return text.slice(0, at) + out + text.slice(at + core.length);
   }
@@ -735,7 +746,7 @@
   function doText(n, l) {
     var r = rec.get(n);
     if (!r || n.nodeValue !== r.t) r = { o: n.nodeValue };
-    var v = tr(r.o, l);
+    var v = tr(r.o, l, n);
     if (v !== n.nodeValue) n.nodeValue = v;
     r.t = v; rec.set(n, r);
     if (v !== r.o) { touched.add(n); mine(n.parentNode); }
@@ -743,6 +754,14 @@
   }
   // The engine marks elements whose text is all Tamil as "Tamil copies" (class tam60) and hides them
   // in single-language modes, and never unmarks them. Text translated here is the main text, not a copy.
+  // 11.2: in Tamil the engine writes its reports in Tamil, then its older language layer marks every all-Tamil
+  // element as a "Tamil copy" and hides it. It exempts Ask, Agriculture and Mobile Numerology, but not
+  // Nameology or the 11.2 reports inside older tools, where titles, headings and instrument names vanished.
+  // There, only the <small> lines under a translated name are real copies.
+  function mainTamil(el) {
+    var REP = window.RV_TA_REPORTS;
+    return current === 'ta' && !!REP && el.tagName !== 'SMALL' && !!el.closest && !!el.closest(REP.main);
+  }
   function mine(el) {
     if (!el || el.nodeType !== 1) return;
     el.setAttribute('data-rvtr', '');
@@ -908,7 +927,7 @@
     ms.forEach(function (m) {
       if (m.type === 'characterData') { if (!skipped(m.target.parentNode)) doText(m.target, current); return; }
       if (m.type === 'attributes') {
-        if (m.attributeName === 'class') { if (m.target.classList.contains('tam60') && ours(m.target)) mine(m.target); return; }
+        if (m.attributeName === 'class') { if (m.target.classList.contains('tam60') && (ours(m.target) || mainTamil(m.target))) mine(m.target); return; }
         if (!skipped(m.target)) doAttrs(m.target, current); return;
       }
       m.addedNodes.forEach(function (a) { walk(a, current); });
