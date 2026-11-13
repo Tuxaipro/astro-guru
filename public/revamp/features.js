@@ -291,6 +291,30 @@
     });
   })();
 
+  /* ---------- 11.2 bilingual labels ----------
+     Mobile Numerology and Nameology write "English / <span class=tm>Tamil</span>". Every other tool shows the
+     Tamil right after the English as a quieter second part, so the " / " before a Tamil copy is dropped. The
+     engine rewrites these labels when the language changes, so the panels are watched. */
+  (function () {
+    var sel = 'label, label > span, .mn-sm, button, .ak-lb > span, h3';
+    function tidy(root) {
+      [].forEach.call(root.querySelectorAll('.tm'), function (tm) {
+        var host = tm.parentNode, prev = tm.previousSibling;
+        if (!host || !host.matches || !host.matches(sel)) return;
+        if (prev && prev.nodeType === 3 && /\s\/\s*$/.test(prev.nodeValue)) prev.nodeValue = prev.nodeValue.replace(/\s*\/\s*$/, ' ');
+      });
+    }
+    ['mnPanel', 'nmPanel'].forEach(function (id) {
+      var p = $(id); if (!p) return;
+      var t, busy = false;
+      tidy(p);
+      new MutationObserver(function () {
+        if (busy) return; clearTimeout(t);
+        t = setTimeout(function () { busy = true; tidy(p); setTimeout(function () { busy = false; }, 0); }, 30);
+      }).observe(p, { childList: true, subtree: true, characterData: true });
+    });
+  })();
+
   /* ---------- Saved people in Fortuna's birth details ---------- */
   function people() { var l = store('gaBirthList'); return Array.isArray(l) ? l : []; }
   (function () {

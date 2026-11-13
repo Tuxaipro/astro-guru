@@ -961,13 +961,7 @@ body.rv #akPanel .rv-askmiss-a button{min-height:36px;padding:7px 14px;border:0;
 body.rv #akPanel .rv-askmiss-a button:hover{background:var(--tint)}
 body.rv .stage[data-view="mobile"] #akPanel details.rv-askmiss{margin-top:12px}
 
-/* ---------- Engine 11.2 ----------
-   Nameology's name categories: the engine's own CSS sets width:auto on these checkboxes, which the base
-   engine styles draw as 51 px switches, so the knob covered the labels. They are small tick boxes here. */
-body.rv #nmPanel .nm-cats input[type=checkbox]{-webkit-appearance:checkbox!important;appearance:auto!important;width:18px!important;height:18px!important;
-  min-height:0;margin:0;padding:0;border-radius:4px;background:none;accent-color:var(--accent-fill);flex:none}
-body.rv #nmPanel .nm-cats input[type=checkbox]::after{content:none;display:none}
-body.rv #nmPanel .nm-cats label{cursor:pointer}
+/* ---------- Engine 11.2 ---------- */
 /* 11.x opens with an error strip for the Android build (red, fixed at the bottom). The revamp has its own
    error note and problem log, so the strip stays hidden on the web. */
 body.rv #gaDiag{display:none!important}
@@ -979,6 +973,84 @@ body.rv .sh-head > div:not([class]){flex:1 1 auto;min-width:0}
 body.rv .sh-head .gaOutBar{flex:none}
 body.rv .stage[data-view="mobile"] .sh-head .gaOutBar{gap:2px!important;margin-inline:auto 0!important}
 body.rv .stage[data-view="mobile"] .sh-head .gaOutBar .ak-chip{padding:4px 6px!important;min-height:30px!important}
+
+/* ---------- 11.2 tools in the revamp's form design ----------
+   Mobile Numerology and Nameology draw their own form (.mn-card > .mn-form, labels with the field inside).
+   It takes the look of the other tools' form cards: a surface card, a grid of stacked fields, medium labels
+   with the Tamil as a quieter second part, 40 px fields on the page colour, full-width buttons. */
+body.rv .sheet .mn-card{background:var(--surface);color:var(--ink);border-radius:var(--rv-r-lg);box-shadow:0 0 0 1px var(--line);
+  padding:16px;margin:12px 0 0;font:400 14.5px/1.55 var(--sf)}
+body.rv .sheet .mn-card h3{margin:0 0 8px;font:600 15px/1.35 var(--sf);color:var(--ink)}
+body.rv .sheet .mn-card .ta{color:var(--accent);font:500 13px/1.45 var(--tamil)}
+body.rv .sheet .mn-form{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px 16px;margin:0}
+body.rv .sheet .mn-form .mn-full{grid-column:1/-1}
+body.rv .sheet .mn-form label{display:flex;flex-direction:column;gap:6px;min-width:0;font:500 13px/1.35 var(--sf);color:var(--ink2)}
+body.rv .sheet .mn-form label>span:first-child{margin-bottom:auto}
+body.rv .sheet .mn-form label .tm,body.rv .sheet .mn-sm .tm{font:400 12px/1.35 var(--tamil);color:var(--muted2)}
+body.rv .sheet .mn-sm{font:500 13px/1.35 var(--sf);color:var(--ink2);margin-bottom:6px}
+body.rv .sheet .mn-form input:not([type=checkbox]):not([type=radio]),body.rv .sheet .mn-form select{
+  width:100%;max-width:100%;min-width:0;height:40px;min-height:40px;box-sizing:border-box;padding:8px 12px;border:1px solid var(--line-strong);
+  border-radius:var(--rv-r-sm);background-color:var(--bg);color:var(--ink);font:400 15px/1.3 var(--sf);box-shadow:none;flex:none}
+body.rv .sheet .mn-form select{-webkit-appearance:none;appearance:none;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M2 6l3-3 3 3M2 10l3 3 3-3' fill='none' stroke='%238E8E93' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;background-size:10px 16px}
+body.rv .sheet .mn-form input:focus,body.rv .sheet .mn-form select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+/* the place: one row like the folded place line, the change button at the end */
+body.rv .sheet .mn-form>.mn-full:has(>.ak-who){display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 12px;
+  border-radius:var(--rv-r);background:var(--bg);box-shadow:0 0 0 1px var(--line)}
+body.rv .sheet .mn-form>.mn-full>.ak-who{flex:1 1 auto;margin:0;font:600 14px/1.35 var(--sf);color:var(--ink)}
+body.rv .sheet .mn-form>.mn-full>.ak-chip{flex:none;min-height:34px;padding:0 12px;border:0;border-radius:var(--rv-r-sm);background:var(--fill);
+  color:var(--accent);font:600 13px var(--sf);cursor:pointer}
+body.rv .sheet .mn-form>.mn-full>.ak-chip:hover{background:var(--tint)}
+body.rv .sheet .mn-form>.mn-full>.ak-chip .tm{font-weight:500;opacity:.85}
+body.rv .sheet .mn-form>.mn-full>div:not(.ak-who):not(:empty){flex:1 1 100%}
+/* buttons: the main one full width in the accent, the others full width in the light fill */
+body.rv .sheet .mn-card>.ak-row{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:16px}
+body.rv .sheet .mn-card>.ak-row>button{width:100%;min-height:44px;padding:10px 16px;border:0;border-radius:var(--rv-r-sm);
+  background:var(--fill);color:var(--accent);font:600 14.5px/1.3 var(--sf);cursor:pointer;box-shadow:none}
+body.rv .sheet .mn-card>.ak-row>button.primary{min-height:48px;border-radius:var(--rv-r);background:var(--accent-fill);color:var(--accent-ink);font-size:15.5px}
+body.rv .sheet .mn-card>.ak-row>button.primary:hover{filter:brightness(1.08)}
+body.rv .sheet .mn-card>.ak-row>button:not(.primary):hover{background:var(--tint)}
+body.rv .sheet .mn-card>.ak-row>button .tm{font-weight:500;opacity:.85}
+body.rv .sheet .mn-card>.ak-row>button:disabled{opacity:.55;cursor:default}
+body.rv .sheet .mn-card~.msg,body.rv .sheet .mn-card .msg{margin-top:10px}
+/* result tables keep to the card */
+body.rv .sheet .mn-tb{font:400 13.5px/1.45 var(--sf)}
+body.rv .sheet .mn-tbw,body.rv .sheet .nm-tbw{overflow-x:auto;margin:4px -4px 0;padding:0 4px}
+
+/* ---------- 11.2 tick lists as chips ----------
+   Nameology's name categories and Market Transit's instruments are checkboxes in labels. The engine's base
+   style draws every checkbox as a 51 px switch, which covered the names. They are chips here, like the
+   revamp's own filter chips, with a small tick inside; a chosen one is tinted. */
+body.rv .nm-cats,body.rv .mkxis{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 4px}
+body.rv .nm-cats label,body.rv .mkxis label{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:8px!important;
+  min-height:36px;padding:0 14px 0 11px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);
+  color:var(--ink);font:500 13.5px/1.25 var(--sf)!important;cursor:pointer;user-select:none}
+body.rv .nm-cats label:hover,body.rv .mkxis label:hover{border-color:var(--accent)}
+body.rv .nm-cats label:has(input:checked),body.rv .mkxis label:has(input:checked){background:var(--tint);border-color:var(--accent);color:var(--accent)}
+body.rv .nm-cats label:has(input:focus-visible),body.rv .mkxis label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+body.rv .nm-cats input[type=checkbox],body.rv .mkxis input[type=checkbox]{-webkit-appearance:checkbox!important;appearance:auto!important;
+  width:16px!important;height:16px!important;min-height:0!important;margin:0;padding:0;border-radius:4px;background:none;flex:none;accent-color:var(--accent-fill)}
+body.rv .nm-cats input[type=checkbox]::after,body.rv .mkxis input[type=checkbox]::after{content:none;display:none}
+body.rv .nm-cats label .tm{font:400 12.5px/1.25 var(--tamil);color:inherit;opacity:.8}
+
+/* ---------- Market Transit's forecast report (11.2) ----------
+   Its fields sit in a fold-out rather than a form card, so they take the card fields' look directly. */
+body.rv #mkxOpt .cell{display:flex!important;flex-direction:column;gap:8px;min-height:0;padding:14px 0 4px;background:none;box-shadow:none}
+body.rv #mkxOpt .cell.chk{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:10px;padding-bottom:10px}
+body.rv #mkxOpt .cell .cl{display:flex;flex-direction:column;gap:2px;font:500 13px/1.35 var(--sf);color:var(--ink2)}
+body.rv #mkxOpt .cell .cl small{font:400 12px/1.35 var(--sf);color:var(--muted2)}
+body.rv #mkxOpt .cell .btns{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 0;padding:0;background:none;border:0;position:static}
+body.rv #mkxOpt .cell .btns>button{flex:none;min-height:36px;height:auto;padding:0 14px;border:0;border-radius:var(--rv-r-sm);background:var(--fill);color:var(--accent);font:600 13px var(--sf)}
+body.rv #mkxTrF:not([style*="none"]){display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px 14px;padding:4px 0 14px}
+body.rv #mkxTrF .cell{padding:0!important;border:0!important;margin:0!important}
+body.rv #mkxTrF input,body.rv #mkxTrF select{width:100%;max-width:100%;min-width:0;height:40px;box-sizing:border-box;padding:8px 12px;border:1px solid var(--line-strong);
+  border-radius:var(--rv-r-sm);background-color:var(--bg);color:var(--ink);font:400 15px/1.3 var(--sf);box-shadow:none}
+body.rv #mkxTrF input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+body.rv #mkxTrF>:not(.cell){grid-column:1/-1}
+body.rv #mkxOpt .cell,body.rv #mkxOpt .cell .cl,body.rv #mkxOpt .mkxis,body.rv #mkxOpt .cell .btns{text-align:left;justify-content:flex-start;align-items:flex-start}
+body.rv #mkxOpt .cell.chk{align-items:center}
+body.rv #mkxTrF input,body.rv #mkxTrF select{text-align:left;text-align-last:left;direction:ltr}
+body.rv #mkxTrF input::-webkit-date-and-time-value{text-align:left}
 
 /* ---------- Long result lists: first page, then "Show more" ---------- */
 body.rv .rv-hide-more{display:none!important}
