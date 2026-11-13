@@ -1,17 +1,18 @@
 #!/usr/bin/env node
-// Rebuilds public/ from a GuruAgasthiya APK.
+// Rebuilds public/ from a GuruAgasthiya release: the APK, or the single HTML page it wraps.
 //
 // The Android app is a thin WebView shell around one self-contained
-// assets/index.html. Its code already runs in a plain browser (it detects
+// assets/index.html; newer releases also come as that page on its own (GuruAgasthiya-x.y.html). Its code already runs in a plain browser (it detects
 // window.GuruApp and falls back to web APIs), so this script only splits that
 // single file into cacheable pieces:
 //   - every <style> / <script> block  -> css/*.css, js/*.js (same order)
 //   - embedded @font-face fonts       -> fonts/*
 //   - embedded images                 -> img/*
 //   - cityData / landData JSON blocks -> data/*.js (window.GA_CITY / GA_LAND)
+//   - the gaNamesData text block      -> names.txt (the engine fetches /names.txt when the block is absent)
 // It is a plain website: no web app manifest, no service worker, nothing to install.
 //
-// Usage: node scripts/import-apk.mjs [path/to/GuruAgasthiya-x.y.apk]
+// Usage: node scripts/import-apk.mjs [path/to/GuruAgasthiya-x.y.apk | path/to/GuruAgasthiya-x.y.html]
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -21,10 +22,11 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'public');
-const apk = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-10.5.apk'));
+const src = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-11.2.html'));
 
-const html = execFileSync('unzip', ['-p', apk, 'assets/index.html'], { maxBuffer: 64 << 20 }).toString('utf8');
-if (!html.includes('<html')) throw new Error('assets/index.html not found in ' + apk);
+const html = /\.html?$/i.test(src) ? readFileSync(src, 'utf8')
+  : execFileSync('unzip', ['-p', src, 'assets/index.html'], { maxBuffer: 64 << 20 }).toString('utf8');
+if (!html.includes('<html')) throw new Error('no GuruAgasthiya page in ' + src);
 
 rmSync(OUT, { recursive: true, force: true });
 for (const d of ['css', 'js', 'fonts', 'img', 'data', 'icons']) mkdirSync(join(OUT, d), { recursive: true });
@@ -70,6 +72,12 @@ let out = html.replace(/<(style|script)([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, at
     return `<link rel="stylesheet" href="${write(name, layered)}">`;
   }
   // scripts
+  if (/text\/plain/.test(attrs)) {
+    // Data the engine reads as text. The names list (1.8 MB) becomes a file it fetches only when needed;
+    // anything else stays inline, so it is never run as a script.
+    if (id === 'gaNamesData') { write('names.txt', body); return ''; }
+    return all;
+  }
   if (/application\/json/.test(attrs)) {
     const glob = id === 'cityData' ? 'GA_CITY' : id === 'landData' ? 'GA_LAND' : null;
     if (!glob) return all; // unknown JSON block: keep inline
@@ -81,6 +89,9 @@ let out = html.replace(/<(style|script)([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, at
     return `<script src="${file}"></script>`;
   }
   if (/\bsrc=/.test(attrs)) return all;
+  // 11.x opens with an error reporter for the Android build. It is kept, unnumbered, so the engine's own
+  // scripts keep their file names (01-astronomy-engine.js, 02-app.js, …).
+  if (/getElementById\('gaDiag'\)/.test(body.slice(0, 400))) return `<script src="${write('js/00-diagnostics.js', body)}"></script>`;
   body = body
     .replace(/JSON\.parse\(\$\('cityData'\)\.textContent\)/g, 'window.GA_CITY')
     .replace(/JSON\.parse\(\$\('landData'\)\.textContent\)/g, 'window.GA_LAND');

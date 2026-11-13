@@ -7,7 +7,7 @@
 //
 //   npm run test:revamp
 import { JSDOM, VirtualConsole } from 'jsdom';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -76,6 +76,19 @@ $('ntBtn').click(); await settle();
 check('routes: tool addresses are fixed per tool, not read from the button titles', () =>
   eq('ntBtn', $('ntBtn').dataset.route, 'natal-chart-trade') || eq('eqBtn', $('eqBtn').dataset.route, 'mundane-astrology') ||
   eq('m3Btn', $('m3Btn').dataset.route, '3-11-muhurtham') || eq('homeBtn', $('homeBtn').dataset.route, 'lagna-timings'));
+
+check('routes: the 11.2 tools have fixed addresses and sit in their groups', () => {
+  const group = (id) => $(id).closest('.rv-group')?.dataset.g;
+  return eq('vhBtn', $('vhBtn').dataset.route, 'vehicle-muhurtham') || eq('agBtn', $('agBtn').dataset.route, 'agriculture-muhurtham') ||
+    eq('nmBtn', $('nmBtn').dataset.route, 'nameology-and-numerology') || eq('mnBtn', $('mnBtn').dataset.route, 'mobile-numerology') ||
+    eq('vhBtn group', group('vhBtn'), 'today') || eq('agBtn group', group('agBtn'), 'today') ||
+    eq('nmBtn group', group('nmBtn'), 'numbers') || eq('mnBtn group', group('mnBtn'), 'numbers');
+});
+check('import: the 11.2 names list is a file the engine fetches, not part of the page', () => {
+  if (!existsSync(join(ROOT, 'public', 'names.txt'))) return 'public/names.txt missing';
+  if (/id="gaNamesData"/.test(readFileSync(PAGE, 'utf8'))) return 'gaNamesData still inline in index.html';
+  return /^Aaron\|/.test(readFileSync(join(ROOT, 'public', 'names.txt'), 'utf8')) ? '' : 'names.txt does not start with the names list';
+});
 
 check('disclaimer: the first tool click shows the disclaimer, OK opens the tool', () => {
   const disc = $('gaDisc');
@@ -172,7 +185,7 @@ check('ask fallback: an unmatched English reply gets a card with the closest cat
   if (!chips.length) return 'no example chips in the card';
   return eq('headings', heads.join(' | '), 'Closest to your question: | You can ask me about…') ||
     eq('first chip', chips[0].textContent.trim(), 'Lost itemsWill I find my lost item?') ||
-    eq('every category once', chips.length, 13) || eq('card language', card.getAttribute('lang'), 'en');
+    eq('every category once', chips.length, 16) || eq('card language', card.getAttribute('lang'), 'en');
 });
 check('ask fallback: tapping an example sends it like typing and pressing Send', () => {
   const chip = noMatchEn.nextElementSibling.querySelector('.ak-chip');
@@ -228,6 +241,14 @@ await check('ask small talk: "ok" gets an invitation with the example card', asy
   return eq('reply', added.find((n) => n.classList.contains('ak-b')).textContent.trim(), 'Go ahead and ask your question, or tap one of these:') ||
     eq('no "closest" section without a question', card.querySelectorAll('.rv-ak-h').length, 1);
 }, true);
+await check('ask names and numbers: name questions point to the two 11.2 tools', async () => {
+  const added = await sendAsk('baby name');
+  const bot = added.find((n) => n.classList.contains('ak-b'));
+  if (!bot) return 'no reply';
+  const chips = [...bot.querySelectorAll('.ak-chip')].map((c) => c.textContent.trim());
+  return eq('chips', chips.join(' | '), 'Open: Nameology & Numerology | Open: Mobile Numerology') ||
+    (/horary|child birth/i.test(bot.textContent) ? 'still read as a horary question' : '');
+}, true);
 await check('ask sub-lord timings: the engine\'s crashing list is replaced by a pointer to Lagna Timings', async () => {
   const added = await sendAsk('lagna timings today');
   const bots = added.filter((n) => n.classList.contains('ak-b'));
@@ -240,6 +261,19 @@ await check('ask sub-lord timings: the engine\'s crashing list is replaced by a 
   return eq('chat closed', $('akPanel').classList.contains('hide'), true) || eq('address', w.location.hash, '#/lagna-timings');
 }, true);
 $('akBtn').click(); await sleep(100); // reopen the chat for the next checks
+
+// Vehicle and Agriculture Muhurtham share one engine panel (agPanel) in two modes.
+const agHead = () => ($('agPanel').querySelector('.ak-m') || {}).textContent || '';
+w.location.hash = '#/vehicle-muhurtham'; await settle();
+await check('shared panel: #/vehicle-muhurtham opens the panel in its vehicle mode', async () =>
+  eq('agPanel shown', $('agPanel').classList.contains('hide'), false) || eq('marked', $('vhBtn').classList.contains('rv-on'), true) ||
+  (/^Vehicle purchase muhurtham/.test(agHead()) ? '' : `panel shows ${JSON.stringify(agHead().slice(0, 60))}`), true);
+w.location.hash = '#/agriculture-muhurtham'; await settle();
+await check('shared panel: #/agriculture-muhurtham switches the open panel to its farming mode', async () =>
+  eq('address', w.location.hash, '#/agriculture-muhurtham') || eq('marked', $('agBtn').classList.contains('rv-on'), true) ||
+  (/^Agriculture, water, land and animals/.test(agHead()) ? '' : `panel shows ${JSON.stringify(agHead().slice(0, 60))}`), true);
+$('agClose').click(); await settle();
+$('akBtn').click(); await sleep(100);
 check('miss log: unmatched questions are kept on the device, with a count and a Clear button', () => {
   const det = $('akPanel').querySelector('details.rv-askmiss');
   if (!det) return 'no details.rv-askmiss under the message box';
@@ -265,8 +299,8 @@ check('whats-new: #/whats-new shows the panel, highlights the entry and names th
   if (!p) return 'no #rvNewPanel';
   return eq('panel hidden', p.classList.contains('hide'), false) || eq('address', w.location.hash, '#/whats-new') ||
     eq('sidebar highlight', d.querySelector('.rv-groups .tool.rv-on')?.id, 'rvNewBtn') || eq('title', d.title, "What's new · GuruAgasthiya") ||
-    eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 10.5 | New on the web') ||
-    eq('items', p.querySelectorAll('li').length, 11) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 7, true);
+    eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 11.2 | Earlier, in 10.5 | New on the web') ||
+    eq('items', p.querySelectorAll('li').length, 21) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 16, true);
 });
 check('whats-new: About links to it from the top', () => {
   const a = d.querySelector('#abPanel > .sh-head + .rv-new-link a');
@@ -277,10 +311,10 @@ check('whats-new: in Tamil, the headings and every paragraph are translated', ()
   const p = $('rvNewPanel');
   const paras = [...p.querySelectorAll('p.rv-new-intro, li')];
   const missing = paras.filter((el) => !el.querySelector(':scope > .rv-ta-para')).map((el) => el.textContent.trim().slice(0, 40));
-  return eq('heading', p.querySelector('h2').textContent.trim(), 'புதியவை') || eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'இயந்திரம் 10.5-இல் புதியவை | இணையப் பதிப்பில் புதியவை') ||
+  return eq('heading', p.querySelector('h2').textContent.trim(), 'புதியவை') || eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'இயந்திரம் 11.2-இல் புதியவை | முன்பு, 10.5-இல் | இணையப் பதிப்பில் புதியவை') ||
     eq('sidebar label', $('rvNewBtn').querySelector('.tx').firstChild.textContent.trim(), 'புதியவை') ||
     (missing.length ? `paragraphs without Tamil: ${JSON.stringify(missing)}` : '') ||
-    eq('links kept', p.querySelectorAll('.rv-ta-para a[href^="#/"]').length >= 7, true);
+    eq('links kept', p.querySelectorAll('.rv-ta-para a[href^="#/"]').length >= 16, true);
 });
 d.body.setAttribute('data-lang', 'bi'); await sleep(200);
 check('whats-new: back in bilingual mode the English is back and ✕ returns to the page underneath', () => {

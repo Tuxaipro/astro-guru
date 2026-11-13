@@ -249,12 +249,18 @@
       if (a === 'now') jumpToNow(target);
     });
     var t;
+    // 11.x tools carry the engine's own Copy, Share and Print (📋 ↗ 🖨) in their heading: the bar then
+    // keeps only Jump to now and Add to calendar, and only for timing lists.
+    function engineOwn() {
+      return !!scope && [].some.call(scope.querySelectorAll('.sh-head button'), function (b) { return b.textContent.trim() === '📋'; });
+    }
     function sync() {
       var has = (target.textContent || '').trim().length > 0 && !target.classList.contains('hide');
-      bar.classList.toggle('hide', !has);
-      var timed = has && target.querySelector('li.row[data-e]');
+      var timed = has && target.querySelector('li.row[data-e]'), own = engineOwn();
+      bar.classList.toggle('hide', !has || (own && !timed));
       bar.querySelector('[data-a="cal"]').classList.toggle('hide', !timed);
       bar.querySelector('[data-a="now"]').classList.toggle('hide', !timed);
+      ['copy', 'print', 'share'].forEach(function (k) { bar.querySelector('[data-a="' + k + '"]').classList.toggle('hide', own); });
     }
     new MutationObserver(function () { clearTimeout(t); t = setTimeout(sync, 150); })
       .observe(target, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
@@ -271,6 +277,19 @@
     var mainBar = wrap.previousElementSibling;
     if (mainBar && mainBar.classList.contains('rv-actions')) mainBar.classList.add('rv-actions-main');
   }
+
+  /* ---------- Nameology & Numerology: its names list ----------
+     The import writes the 1.8 MB list to names.txt instead of the page. The engine reads it with a blocking
+     request on the first search; fetching it in the background when the tool opens keeps the page responsive. */
+  (function () {
+    var b = $('nmBtn'); if (!b || !window.fetch) return;
+    var busy = false;
+    b.addEventListener('click', function () {
+      if (busy || window.GA_NAMES) return; busy = true;
+      fetch('names.txt').then(function (r) { return r.ok ? r.text() : ''; })
+        .then(function (t) { if (t && !window.GA_NAMES) window.GA_NAMES = t; busy = !!t; }, function () { busy = false; });
+    });
+  })();
 
   /* ---------- Saved people in Fortuna's birth details ---------- */
   function people() { var l = store('gaBirthList'); return Array.isArray(l) ? l : []; }
@@ -439,6 +458,12 @@
         w: [/today|tonight|tomorrow|\bnow\b/, /இன்று|நாளை|இப்போது/] },
       { name: 'Planets', q: 'Planet positions today',
         s: [/planet|transit|position|peyarchi|\bsani\b|\bguru\b|\brahu\b|\bketu\b|saturn|jupiter|mercury|venus|\bmars\b|retrograde/, /கிரக|கோள்|பெயர்ச்சி|சனி|குரு|ராகு|கேது|வக்கிர/], w: [/\bsky\b|\bsign\b|degree/] },
+      { name: 'Vehicles', q: 'Vehicle muhurtham',
+        s: [/vehicle|\bcar\b|bike|scooter|two.?wheeler|tractor|lorry|truck|\bvan\b/, /வாகன|கார்|பைக்|ஸ்கூட்டர்|டிராக்டர்/], w: [/delivery|\bbuy\b|purchase|வாங்க/] },
+      { name: 'Farming', q: 'Agriculture muhurtham',
+        s: [/agri|farm|sowing|plough|harvest|bore ?well|\bwell\b|pond|cattle|\bcows?\b|crop|seed/, /விவசாய|விதை|உழவு|அறுவடை|ஆழ்துளை|கிணறு|குளம்|கால்நடை|பசு|பயிர்/], w: [/\bland\b|field|water|நிலம்|நீர்/] },
+      { name: 'Names and numbers', q: 'Name numerology',
+        s: [/numerolog|nameolog|\bname\b|mobile number|phone number|vehicle number|lucky number/, /பெயர்|எண் கணித|மொபைல் எண்/], w: [/number|spelling|எண்/] },
       { name: 'World events', q: 'Any earthquake in the next 3 months?',
         s: [/earthquake|quake|flood|cyclone|storm|tsunami|disaster|calamity|\bwar\b|election|epidemic/, /நிலநடுக்க|வெள்ள|புயல்|தேர்தல்|போர்/],
         w: [/accident|crash|country|world|rain|weather|fire/, /நாடு|உலக|மழை|விபத்து|தீ/] },
@@ -460,6 +485,7 @@
     var PHRASE = [
       [/\b(ra+si|rashi) (palan|phal|phalan|palangal)\b/i, 'birth chart'],
       [/\b(ipl|t20|odi|test match|world cup)\b/i, 'cricket'],
+      [/வாகன(ம்)?\s*(முகூர்த்த|வாங்க|நல்ல\s*நேர)/, 'vehicle muhurtham'],
       [/\b(nakshatra|star) (today|now)\b|\b(today|todays|today's) (nakshatra|star)\b|\bwhich star\b|\btoday\b.{0,10}\b(good|bad)\b|\bgood (or bad )?day\b/i, 'panchangam']
     ];
     function fixText(t) {
@@ -485,9 +511,16 @@
       when: /list|timing|\btimes?\b|today|tomorrow|yesterday|\bnext\b|this (week|month)|\d|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\b(mon|tues|wednes|thurs|fri|satur|sun)day\b|நேரம்|பட்டியல்|இன்று|நாளை/i,
       reply: 'Lagna and sub-lord timings for a day are in the Lagna Timings tool. It lists every change of lagna, star lord and sub lord at your place.',
       chips: [['Open: Lagna Timings', function () { var x = $('akClose'), b = $('homeBtn'); if (x) x.click(); if (b) b.click(); }]] };
+    // 11.2 has tools for names and numbers but no chat rule: those questions fell to the no-match reply,
+    // and "baby name" was read as a horary question about a child. They are pointed at the tools.
+    function openTool(id) { return function () { var x = $('akClose'), b = $(id); if (x) x.click(); if (b) b.click(); }; }
+    var NAMES = { rx: /numerolog|nameolog|(lucky|good|best|suitable) (mobile|phone|cell|vehicle|car|bike) numbers?|மொபைல் எண்|name numbers?|lucky name|baby names?|names? for (my|a|the|our) (baby|child|son|daughter|business|company|shop)|business names?|name correction|change (my|the) name|பெயர் எண்|எண் கணித|குழந்தைப் பெயர்|குழந்தைக்குப் பெயர்|தொழில் பெயர்/i,
+      reply: 'Name and number readings are in two tools: Nameology & Numerology for a name (yours, a baby’s or a business’s), and Mobile Numerology for a mobile or vehicle number.',
+      chips: [['Open: Nameology & Numerology', openTool('nmBtn')], ['Open: Mobile Numerology', openTool('mnBtn')]] };
     function smallTalk(t) {
       for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; }
       if (SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
+      if (NAMES.rx.test(t)) return NAMES;
       return null;
     }
     // The question's language: the chat's own "Reply in" choice first, then the app language.

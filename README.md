@@ -1,10 +1,11 @@
 # GuruAgasthiya web
 
-The GuruAgasthiya Android app (v10.5) as a plain website.
+The GuruAgasthiya Android app (v11.2) as a plain website.
 
 ## How it was made
 
-The APK is a thin native shell, a WebView loading a single 9 MB `assets/index.html`. That page already
+The APK is a thin native shell, a WebView loading a single self-contained `assets/index.html` (16 MB in
+11.2). Releases from 11.2 on also come as that page on its own, `GuruAgasthiya-11.2.html`. That page already
 detects the native `GuruApp` bridge and falls back to browser APIs when it is missing:
 
 | Android bridge (`GuruApp.*`)        | Web fallback already in the app code              |
@@ -18,14 +19,18 @@ detects the native `GuruApp` bridge and falls back to browser APIs when it is mi
 `scripts/import-apk.mjs` splits that file into normal assets. Every style and script block becomes a file
 in `public/css` or `public/js`, in its original order. The fonts, images and the city and land data become
 separate files too. The app code is unchanged, apart from two lines that now read the city and land data from
-`window.GA_CITY` and `window.GA_LAND` instead of inline JSON. There is no web app manifest and no service
+`window.GA_CITY` and `window.GA_LAND` instead of inline JSON. The 1.8 MB names list that 11.2's Nameology uses
+becomes `public/names.txt`, which the engine already fetches when the inline block is absent; the revamp
+starts that fetch in the background when the tool opens. 11.2's start-up error reporter for the Android build
+becomes `js/00-diagnostics.js`, so the engine's own scripts keep their names (`01-astronomy-engine.js`,
+`02-app.js`, …). There is no web app manifest and no service
 worker: the site is not installable and needs a connection, like any website.
 
 ## Revamp layer
 
 `revamp/` holds the new interface. `npm run import` copies it into `public/revamp/` and loads it after the
 original styles and scripts. It only moves and restyles existing elements, so every element ID and
-every calculation in the v10.5 engine stays as it was.
+every calculation in the v11.2 engine stays as it was.
 
 - **Design:** "panchangam ink and turmeric". Indigo ink carries text and actions, and turmeric marks only the
   sign rising now. Text is set in IBM Plex Sans, with Mukta Malar for Tamil. Light and dark themes are both
@@ -33,8 +38,9 @@ every calculation in the v10.5 engine stays as it was.
 - **Settings popup:** opens from **Settings** in the sidebar, or under the app name on phones. It has Appearance
   (Match device, Light, Dark), Language and Chart colour, and closes with ✕, Done, Esc or a click outside.
   On phones it rises from the bottom.
-- **Navigation:** the 22 tools are grouped (Timings, Charts, Questions, Money and markets, Sport, Research,
-  More) and searchable. Press `/` or `Ctrl/⌘ K` to search.
+- **Navigation:** the 30 tools are grouped (Timings, Charts, Questions, Money and markets, Names and numbers,
+  Sport, Research, More) and searchable. Press `/` or `Ctrl/⌘ K` to search. Vehicle Muhurtham opens Agriculture
+  Muhurtham's panel in its vehicle mode; `PANEL_OF` in `revamp.js` maps it, so each keeps its own address.
 - **Desktop:** two columns, the sidebar and one workspace that shows a single page at a time:
   - **Now** (the home page): Rising now across the top, then the transit chart beside the next six timings.
     Click a timing to jump to it in Lagna Timings.
@@ -64,8 +70,11 @@ every calculation in the v10.5 engine stays as it was.
   - Tables, tags and the chart toolbar follow the same design.
 
 - **What's new** (`#/whats-new`): the revamp's own page, listed beside About in the sidebar and linked from the
-  top of About. It says what engine 10.5 brought (Guru Agasthiya Muhurtham, Ask GuruAgasthiya, Natal Chart
-  Trade, the alarms master switch, the accessibility pass) and what the web version adds (setup and the
+  top of About. It says what engine 11.2 brought (Nameology & Numerology, Mobile Numerology, Vehicle and
+  Agriculture Muhurtham, personal Tara Bala in Chandra Muhurtham, the market forecast report, the lottery number
+  studio, traditional rules in Practical Electional), what 10.5 brought before it (Guru Agasthiya Muhurtham,
+  Ask GuruAgasthiya, Natal Chart Trade, the alarms master switch, the accessibility pass) and what the web
+  version adds (setup and the
   location fallback, saved people, share, print and calendar, folded long lists, Tamil, coloured tool tiles),
   each item linking to its tool. The engine never sees this panel: it is built in `revamp.js` after the
   engine's sheet stack, like the Now page, and only the revamp's routes open and close it. The English is in
@@ -120,7 +129,9 @@ The engine translates 109 labels into 44 languages. The revamp follows the same 
     results) are translated whole, with their bold and italic kept (`revamp/i18n-ta.js`). Names, book titles
     and city names stay as written.
   - The 10.5 tools (Guru Agasthiya Muhurtham, Natal Chart Trade, Ask GuruAgasthiya) are covered too: their
-    labels, hints, buttons, options, chips and help paragraphs. Ask GuruAgasthiya's own replies come from
+    labels, hints, buttons, options, chips and help paragraphs. The four 11.2 tools translate themselves; the
+    11.2 additions inside older tools (personal Tara Bala, the forecast report, the lottery number studio,
+    traditional rules) are translated here. Ask GuruAgasthiya's own replies come from
     the engine in the chosen language.
 - **The other 43 languages:** the main revamp labels are translated: sidebar groups, Now, Next timings,
   Settings, search, and the Copy, Print, Share and calendar buttons. Long help text stays in English, as it
@@ -187,9 +198,9 @@ node scripts/style-diff.mjs          # compare after it: lists every style value
   - The What's new page: its sidebar entry sits beside About with `data-route="whats-new"`, `#/whats-new`
     shows the panel and names the page, About links to it, in Tamil every heading and paragraph is
     translated with the tool links kept, and ✕ returns to the page underneath.
-- **Pages** (`scripts/test-pages.mjs`): opens all 28 pages by their address in the Chrome installed on
+- **Pages** (`scripts/test-pages.mjs`): opens all 32 pages by their address in the Chrome installed on
   this computer (playwright-core). Each page is checked at 1440×900 and 390×844, its main button is
-  pressed, and the run fails on missing content, a wrong address or highlight, a page wider than the
+  pressed (the 11.2 tools are filled in and run), and the run fails on missing content, a wrong address or highlight, a page wider than the
   screen, no result, or any script error.
 
 Run `npm run test:all` after importing a new APK, and before publishing.
@@ -218,10 +229,10 @@ A script error shows one short notice ("Something went wrong on this page") with
 ## Use
 
 ```bash
-npm run build           # rebuild public/ from ../GuruAgasthiya-10.5.apk and revamp/
+npm run build           # rebuild public/ from ../GuruAgasthiya-11.2.html and revamp/
 npm start               # http://localhost:4173
 npm run dev             # build, then start
-npm run import -- ../GuruAgasthiya-7.8.apk   # regenerate public/ from a newer APK
+npm run import -- ../GuruAgasthiya-11.3.html  # regenerate public/ from a newer release (.html or .apk)
 ```
 
 ### Updates and caching

@@ -1,8 +1,8 @@
 {
   "name": "guruagasthiya-web",
-  "version": "10.5.0",
+  "version": "11.2.0",
   "private": true,
-  "description": "GuruAgasthiya as a website, imported from the Android APK.",
+  "description": "GuruAgasthiya as a website, imported from the Android app's page (APK or HTML release).",
   "type": "module",
   "scripts": {
     "import": "node scripts/import-apk.mjs",

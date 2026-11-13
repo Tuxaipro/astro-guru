@@ -24,6 +24,8 @@
   --bad:#C8323A; --green:#1E8A5A; --greenlo:rgba(30,138,90,.11); --greenhi:rgba(30,138,90,.30);
   --glass:rgba(244,245,249,.86); --side:#FFFFFF;
   --shadow:none; --stage:var(--bg);
+  /* 11.2's new tools draw their cards with var(--card, #f2f2f7): the same surface as every other card here */
+  --card:var(--surface);
   --rv-hero:#1A1D3A; --rv-hero-ink:#F4F5F9; --rv-hero-muted:#A9ACC8; --rv-hero-hi:#F2B53A;
   --rv-r-lg:16px; --rv-r:12px; --rv-r-sm:9px;
   --rv-side:252px;
@@ -958,6 +960,25 @@ body.rv #akPanel .rv-askmiss-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:12
 body.rv #akPanel .rv-askmiss-a button{min-height:36px;padding:7px 14px;border:0;border-radius:var(--btn-r,10px);background:var(--fill);color:var(--accent);font:600 13.5px var(--sf);cursor:pointer}
 body.rv #akPanel .rv-askmiss-a button:hover{background:var(--tint)}
 body.rv .stage[data-view="mobile"] #akPanel details.rv-askmiss{margin-top:12px}
+
+/* ---------- Engine 11.2 ----------
+   Nameology's name categories: the engine's own CSS sets width:auto on these checkboxes, which the base
+   engine styles draw as 51 px switches, so the knob covered the labels. They are small tick boxes here. */
+body.rv #nmPanel .nm-cats input[type=checkbox]{-webkit-appearance:checkbox!important;appearance:auto!important;width:18px!important;height:18px!important;
+  min-height:0;margin:0;padding:0;border-radius:4px;background:none;accent-color:var(--accent-fill);flex:none}
+body.rv #nmPanel .nm-cats input[type=checkbox]::after{content:none;display:none}
+body.rv #nmPanel .nm-cats label{cursor:pointer}
+/* 11.x opens with an error strip for the Android build (red, fixed at the bottom). The revamp has its own
+   error note and problem log, so the strip stays hidden on the web. */
+body.rv #gaDiag{display:none!important}
+/* 11.2 tool cards (Mobile Numerology, Nameology, the chat-style Vehicle and Agriculture pages) */
+body.rv .mn-card{box-shadow:0 0 0 1px var(--line);color:var(--ink)}
+/* 11.x puts Copy, Share and Print (.gaOutBar, inline-styled) in the heading of its newer tools and of Ask.
+   The title takes the room that is left and wraps, so the row never pushes ✕ off a phone screen. */
+body.rv .sh-head > div:not([class]){flex:1 1 auto;min-width:0}
+body.rv .sh-head .gaOutBar{flex:none}
+body.rv .stage[data-view="mobile"] .sh-head .gaOutBar{gap:2px!important;margin-inline:auto 0!important}
+body.rv .stage[data-view="mobile"] .sh-head .gaOutBar .ak-chip{padding:4px 6px!important;min-height:30px!important}
 
 /* ---------- Long result lists: first page, then "Show more" ---------- */
 body.rv .rv-hide-more{display:none!important}

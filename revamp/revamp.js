@@ -76,11 +76,17 @@
   setTimeout(applyView, 300);
 
   /* ---------- Tool groups ---------- */
+  // A tool's panel is its button id with Panel for Btn, except where the engine shares one panel between
+  // tools: 11.2's Vehicle Muhurtham opens Agriculture Muhurtham's panel in its vehicle mode.
+  var PANEL_OF = { vhBtn: 'agPanel' };
+  function panelOf(btnId) { return $(PANEL_OF[btnId] || btnId.replace(/Btn$/, 'Panel')); }
+  var shownBy = {}; // panel id -> the button that last opened it
   var GROUPS = [
-    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'ftBtn'] },
+    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'vhBtn', 'agBtn', 'ftBtn'] },
     { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'cuspBtn', 'acBtn'] },
     { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['akBtn', 'gpBtn', 'hqBtn', 'lostBtn'] },
     { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'ntBtn', 'mkBtn', 'spBtn', 'ltBtn'] },
+    { id: 'numbers', name: 'Names and numbers', ta: 'பெயர், எண்', tools: ['nmBtn', 'mnBtn'] },
     { id: 'sport', name: 'Sport', ta: 'விளையாட்டு', tools: ['ckBtn', 'raceBtn'] },
     { id: 'research', name: 'Research', ta: 'ஆய்வு', tools: ['eqBtn'] },
   ];
@@ -107,7 +113,7 @@
     if (about) more.lastChild.appendChild(about);
     // "What's new" is the revamp's own page (its panel is built below, with the routes), listed beside About.
     var newBtn = document.createElement('button');
-    newBtn.type = 'button'; newBtn.id = 'rvNewBtn'; newBtn.className = 'tool'; newBtn.dataset.s = "What's new version 10.5 web changes release notes";
+    newBtn.type = 'button'; newBtn.id = 'rvNewBtn'; newBtn.className = 'tool'; newBtn.dataset.s = "What's new version 11.2 10.5 web changes release notes";
     newBtn.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/><path d="M18.5 3.5v3M17 5h3M19 16.5v3M17.5 18h3"/></svg></span>' +
       '<span class="tx">What\'s new<span class="tm">புதியவை</span></span>';
     more.lastChild.appendChild(newBtn);
@@ -200,7 +206,8 @@
   // which would stay open underneath, so close every other open tool before the new one opens.
   if (nav) nav.addEventListener('click', function (e) {
     var b = e.target.closest('.tool'); if (!b) return;
-    var target = b.id.replace(/Btn$/, 'Panel');
+    var tp = panelOf(b.id), target = tp ? tp.id : '';
+    if (target) shownBy[target] = b.id;
     document.querySelectorAll('.sheet:not(.hide)').forEach(function (s) {
       if (s.id === target) return;
       var x = s.querySelector('.sh-head .xbtn, [id$="Close"]'); if (x) x.click(); else s.classList.add('hide');
@@ -227,7 +234,8 @@
     akBtn: 'ask-guruagasthiya', gpBtn: 'gmp-prasnam', hqBtn: 'horary-answers', lostBtn: 'lost-and-found',
     mmBtn: 'money-manifestation', mpBtn: 'money-profit-muhurtham', tpBtn: 'trade-profit', ntBtn: 'natal-chart-trade',
     mkBtn: 'market-transit', spBtn: 'speculation-research', ltBtn: 'lottery-rules', ckBtn: 'cricket-wicket',
-    raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about', rvNewBtn: 'whats-new'
+    raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about', rvNewBtn: 'whats-new',
+    vhBtn: 'vehicle-muhurtham', agBtn: 'agriculture-muhurtham', nmBtn: 'nameology-and-numerology', mnBtn: 'mobile-numerology'
   };
   groupsEl.querySelectorAll('.tool').forEach(function (b) {
     var r = b.id === 'rvNowBtn' ? 'now' : SLUGS[b.id] || slugOf(b.title || '') || slugOf(b.id.replace(/Btn$/, ''));
@@ -253,9 +261,21 @@
   newPanel.innerHTML =
     '<div class="sh-head"><div><h2 id="rvNewT">What\'s new</h2><span class="tt">புதியவை</span></div>' +
     '<button class="xbtn" id="rvNewClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>' +
-    '<p class="rv-new-intro">GuruAgasthiya engine <b>10.5</b> brings three new tools, a master switch for the alarms and a pass over the whole app for screen readers. ' +
+    '<p class="rv-new-intro">GuruAgasthiya engine <b>11.2</b> adds four tools, for names and numbers, vehicles and farming, and extends Chandra Muhurtham, Market Transit, Lottery Rules and Practical Electional Muhurtham. ' +
       'The <b>web version</b> runs that same engine in the browser, with a new interface around it: setup, saved people, sharing, folded lists, Tamil throughout and coloured tool tiles.</p>' +
-    '<h3>New in the engine 10.5</h3>' +
+    '<h3>New in the engine 11.2</h3>' +
+    '<ul class="rv-new-list">' +
+      '<li><a href="#/nameology-and-numerology">Nameology &amp; Numerology</a> analyses a name and suggests better spellings, chooses names for a newborn baby, checks a name already chosen, and analyses or suggests business names. The names come from a list of Hindu and Sanskrit, Tamil, Christian, Bible, Muslim, Sikh and other Indian names.</li>' +
+      '<li><a href="#/mobile-numerology">Mobile Numerology</a> reads your present mobile or vehicle number against your name and date of birth, and suggests new numbers for what you want most: money, career, marriage, health and more.</li>' +
+      '<li><a href="#/vehicle-muhurtham">Vehicle Muhurtham</a> finds the minutes to buy, book, take delivery of or sell a car, two-wheeler or commercial vehicle, from the traditional rules and the KP test of the 4th and 11th cusps, and can make the result suit your birth chart.</li>' +
+      '<li><a href="#/agriculture-muhurtham">Agriculture Muhurtham</a> does the same for water (bore well, well, pond), land and field, ploughing and sowing, harvest and sale, and cattle. For a bore well it also gives the likely water quality and direction.</li>' +
+      '<li><b>Personal Tara Bala and Chandra Bala.</b> <a href="#/chandra-muhurtham">Chandra Muhurtham</a> can now check the Moon’s star and sign against one or more people, by birth details or birth star, along with Panchaka, the panchanga, Rahu kalam, Yamagandam, Gulika and Durmuhurta, and lists the best date and time.</li>' +
+      '<li><b>Market forecast report.</b> <a href="#/market-transit">Market Transit</a> adds a report for Nifty, Bank Nifty, Sensex, sectors, gold, silver, crude oil and the dollar-rupee rate, and can add your own trading days from your birth chart.</li>' +
+      '<li><b>Lottery number studio.</b> <a href="#/lottery-rules">Lottery Rules</a> now suggests ticket numbers for 3 to 6 digit games and number sets, combining your chart, numerology, the planets of the draw day and mathematical selection rules, with the best times to buy. A draw stays random: this is a study, not a promise.</li>' +
+      '<li><b>Traditional rules.</b> <a href="#/practical-electional-muhurtham">Practical Electional Muhurtham</a> can add the nakshatra, tithi, weekday, lagna and planet rules to the KP cusp test.</li>' +
+      '<li><b>Copy, Share and Print</b> sit at the top of the new tools and of Ask GuruAgasthiya, and <a href="#/birth-chart">Birth Chart</a> has an optional gender field.</li>' +
+    '</ul>' +
+    '<h3>Earlier, in 10.5</h3>' +
     '<ul class="rv-new-list">' +
       '<li><a href="#/guru-agasthiya-muhurtham">Guru Agasthiya Muhurtham</a> gives every ascendant window at your place marks from the lords of houses 1, 2, 3 and 11, counted from the transit ascendant, and lists the auspicious ones for the dates you choose. You can set the least marks to list, skip retrograde lords or keep only the highly auspicious windows.</li>' +
       '<li><a href="#/ask-guruagasthiya">Ask GuruAgasthiya</a> is a chat that answers from its own rules on the device, reads your birth chart when you give the birth details, and opens Horary Answers, GMP Prasnam and 3·11 Muhurtham from the conversation. It can read its replies aloud and listen to you, where the browser allows speech.</li>' +
@@ -269,7 +289,8 @@
       '<li><b>Saved people.</b> People saved in <a href="#/birth-chart">Birth Chart</a> fill the birth details in <a href="#/fortuna-timing">Fortuna Timing</a>, <a href="#/natal-chart-trade">Natal Chart Trade</a> and <a href="#/ask-guruagasthiya">Ask GuruAgasthiya</a>.</li>' +
       '<li><b>Share, print and calendar.</b> Every result has Copy, Print and Share (or Save as text), and timing lists add Jump to now and Add to calendar, an .ics file with an alert at each start.</li>' +
       '<li><b>Long lists fold.</b> A result of more than 90 rows, such as a two-week <a href="#/guru-agasthiya-muhurtham">Guru Agasthiya Muhurtham</a>, shows 60 rows and a Show more bar. Copy, Print and Add to calendar still take every row.</li>' +
-      '<li><b>Tamil throughout.</b> In Tamil, the fields, buttons, dates, lord chains and the long help paragraphs are translated whole, and the 10.5 tools are covered too. Choose the language in Settings.</li>' +
+      '<li><b>Ask GuruAgasthiya never ends in a dead end.</b> When no rule matches, a card suggests the closest topics with questions it does answer. Common misspellings and phrasings are corrected first, small talk gets a reply, and the questions it could not match are kept on your device so the rules can learn them.</li>' +
+      '<li><b>Tamil throughout.</b> In Tamil, the fields, buttons, dates, lord chains and the long help paragraphs are translated whole, and the 10.5 and 11.2 additions are covered too. Choose the language in Settings.</li>' +
       '<li><b>Coloured tool tiles.</b> Each tool in the sidebar has an icon tile of its own colour, so tools are told apart at a glance, also when the sidebar is narrowed to icons.</li>' +
     '</ul>';
   pagesEl.appendChild(newPanel);
@@ -285,7 +306,7 @@
   if (abHead) {
     var abLink = document.createElement('p');
     abLink.className = 'rv-new-link';
-    abLink.innerHTML = '<a href="#/whats-new"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/></svg>What\'s new in 10.5 and on the web</a>';
+    abLink.innerHTML = '<a href="#/whats-new"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/></svg>What\'s new in 11.2 and on the web</a>';
     abHead.parentNode.insertBefore(abLink, abHead.nextSibling);
   }
 
@@ -293,7 +314,12 @@
     var o = [].slice.call(pagesEl.querySelectorAll('.sheet:not(.hide)'));
     return o.filter(function (x) { return !x.classList.contains('under'); }).pop() || o.pop() || null;
   }
-  function routeOfSheet(sh) { return sh ? BTN_ROUTE[sh.id.replace(/Panel$/, 'Btn')] : null; }
+  function routeOfSheet(sh) {
+    if (!sh) return null;
+    // A shared panel belongs to the tool that opened it (Vehicle or Agriculture Muhurtham).
+    if (shownBy[sh.id] && BTN_ROUTE[shownBy[sh.id]]) return BTN_ROUTE[shownBy[sh.id]];
+    return BTN_ROUTE[sh.id.replace(/Panel$/, 'Btn')];
+  }
   var route = null, routing = false;
   function readRoute() { var h = decodeURIComponent(location.hash.replace(/^#\/?/, '')); return ROUTES[h] ? h : null; }
   function setUrl(r, push) {
@@ -312,8 +338,9 @@
       document.body.classList.remove('rv-p-tool');
       setPage(r === 'now' ? 'now' : 'lagna');
     } else {
-      var id = ROUTES[r], panel = $(id.replace(/Btn$/, 'Panel'));
-      if (panel && panel.classList.contains('hide')) { routing = true; $(id).click(); routing = false; }
+      var id = ROUTES[r], panel = panelOf(id);
+      // Open it when hidden, or when another tool's mode of a shared panel is showing.
+      if (panel && (panel.classList.contains('hide') || (shownBy[panel.id] && shownBy[panel.id] !== id))) { routing = true; $(id).click(); routing = false; }
       document.body.classList.add('rv-p-tool');
       if (changed) {
         var sc = $('scroller'); if (sc) sc.scrollTop = 0;

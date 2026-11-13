@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><script src="js/00-diagnostics.js?v=082ff00404"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>(function(){var d=document.documentElement;d.classList.add('rv-boot');try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);}catch(e){}addEventListener('load',function(){setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>
 <style>@layer rvfix, engine;html.rv-boot{background:#F4F5F9}html.rv-boot[data-theme=dark]{background:#0D1020}@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020}}html.rv-boot body{background:transparent!important}html.rv-boot body>*{visibility:hidden!important}html.rv-boot body::before{content:"GuruAgasthiya";position:fixed;inset:0;display:grid;place-items:center;font:600 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:#8B8FAE}</style>
-<title>GuruAgasthiya 10.5</title>
+<title>GuruAgasthiya 11.2</title>
 <meta name="application-name" content="GuruAgasthiya">
 <meta name="apple-mobile-web-app-title" content="GuruAgasthiya">
 <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
@@ -42,7 +42,7 @@
     <div class="app">
 
      <aside class="side">
-      <div class="brand"><h1 id="bigTitle">GuruAgasthiya<span class="ver">v10.5</span></h1><img class="logo" alt="Guru Agasthiya" width="44" height="44" src="img/guru-agasthiya-3682e3db0f.jpg"></div>
+      <div class="brand"><h1 id="bigTitle">GuruAgasthiya<span class="ver">v11.2</span></h1><img class="logo" alt="Guru Agasthiya" width="44" height="44" src="img/guru-agasthiya-3682e3db0f.jpg"></div>
       <div class="langrow"><label for="gaMaster">Alarms</label><button type="button" id="gaMaster" class="langsel" style="flex:1;text-align:left;font-weight:600"></button></div><div class="langrow"><label for="gaLang">Language</label><select id="gaLang" class="langsel"></select></div>
       <div class="langrow"><label for="gaTheme">Chart Colour</label><select id="gaTheme" class="stysel" style="flex:1"><option value="pro">Scientific (mono)</option><option value="classic">Classic (v5.9 blue)</option><option value="colour">Colourful</option></select></div>
       <p class="sub">KP lagna sub-lord timings for any day and place. See when the rising degree passes through each of the 249 sub-lord divisions.</p>
@@ -72,6 +72,10 @@
         <button type="button" class="tool" id="ftBtn" data-s="Fortuna Timing money exam job visa medicine travel house purchase"><span class="ic" style="--c:#00A878"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="2.2"/><path d="M12 3.4v4.2M12 16.4v4.2M3.4 12h4.2M16.4 12h4.2"/></svg></span><span class="tx">Fortuna Timing<span class="tm">போர்ச்சுனா நேரம்</span></span></button>
         <button type="button" class="tool" id="gamBtn" data-s="Guru Agasthiya Muhurtham marks lagna sublord"><span class="ic" style="--c:#C2410C"><svg viewBox="0 0 24 24"><path d="M12 2.8l2.6 5.6 6 .7-4.5 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6L3.4 9.1l6-.7z"/></svg></span><span class="tx">Guru Agasthiya Muhurtham<span class="tm">குரு அகஸ்திய முகூர்த்தம்</span></span></button>
         <button type="button" class="tool" id="ntBtn" data-s="Natal chart trade stock lottery horse speculation 2 6 11 moon"><span class="ic" style="--c:#0F766E"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-9M15 7h5v5"/></svg></span><span class="tx">Natal Chart Trade<span class="tm">ஜாதக வர்த்தக பலன்</span></span></button>
+        <button type="button" class="tool" id="mnBtn" data-s="Mobile numerology phone number lucky number suggest mobile number மொபைல் எண் கணிதம் எண் ஜோதிடம்"><span class="ic" style="--c:#0EA5A4"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M10.5 5.5h3M11.2 18.6h1.6"/><path d="M9.8 9.5h1.4M12.8 9.5h1.4M9.8 12h1.4M12.8 12h1.4M9.8 14.5h1.4M12.8 14.5h1.4"/></svg></span><span class="tx">Mobile Numerology<span class="tm">மொபைல் எண் கணிதம்</span></span></button>
+        <button type="button" class="tool" id="vhBtn" data-s="Vehicle purchase muhurtham car bike two wheeler scooter truck taxi delivery first drive vahana pooja buy vehicle auspicious day வாகனம் வாங்க முகூர்த்தம் கார் பைக்"><span class="ic" style="--c:#E0701B"><svg viewBox="0 0 24 24"><path d="M3 15l1.6-5.2A2 2 0 0 1 6.5 8.4h11a2 2 0 0 1 1.9 1.4L21 15v3a1 1 0 0 1-1 1h-1.5a1 1 0 0 1-1-1v-1h-11v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7.5" cy="14" r="1"/><circle cx="16.5" cy="14" r="1"/></svg></span><span class="tx">Vehicle Muhurtham<span class="tm">வாகன முகூர்த்தம்</span></span></button>
+        <button type="button" class="tool" id="nmBtn" data-s="Nameology numerology baby names boy girl twins hindu tamil christian bible muslim sikh name change name correction lucky letter newborn star letter பெயர் எண் கணிதம் குழந்தை பெயர்"><span class="ic" style="--c:#8B5CF6"><svg viewBox="0 0 24 24"><path d="M4 19l4.5-12L13 19"/><path d="M5.8 14.5h5.4"/><path d="M15 9h5M15 13h5M15 17h5"/></svg></span><span class="tx">Nameology &amp; Numerology<span class="tm">பெயர் மற்றும் எண் கணிதம்</span></span></button>
+        <button type="button" class="tool" id="agBtn" data-s="Agriculture farming bore well borewell cow land sowing harvest pond muhurtham விவசாயம் முகூர்த்தம்"><span class="ic" style="--c:#2E9B3F"><svg viewBox="0 0 24 24"><path d="M12 21v-8"/><path d="M12 13c0-3.5-2.4-5.8-6-6 0 3.6 2.4 6 6 6zM12 11c0-3.2 2.2-5.2 6-5.5 0 3.5-2.4 5.5-6 5.5z"/><path d="M5 21h14"/></svg></span><span class="tx">Agriculture Muhurtham<span class="tm">விவசாய முகூர்த்தம்</span></span></button>
         <button type="button" class="tool" id="akBtn" data-s="Ask chat question answer assistant guru ask me anything"><span class="ic" style="--c:#7C3AED"><svg viewBox="0 0 24 24"><path d="M4 5h16a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 17h-8l-4.5 4v-4H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 5z"/><path d="M12 8.2l.9 2 2 .9-2 .9-.9 2-.9-2-2-.9 2-.9z"/></svg></span><span class="tx">Ask GuruAgasthiya<span class="tm">குருஅகஸ்தியாவிடம் கேளுங்கள்</span></span></button>
         <button type="button" class="tool" id="hqBtn" data-s="Horary"><span class="ic" style="--c:#5E5CE6"><svg viewBox="0 0 24 24"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 20 16.5h-7l-4.5 4v-4H4A1.5 1.5 0 0 1 2.5 15V7A1.5 1.5 0 0 1 4 5.5z"/><path d="M10 9.4a2 2 0 1 1 2.6 1.9c-.5.2-.6.5-.6 1M12 14v.1"/></svg></span><span class="tx">Horary Answers<span class="tm">ஹோரரி விடைகள்</span></span></button>
         <button type="button" class="tool" id="epBtn" data-s="Electional"><span class="ic" style="--c:#30B94D"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9.5h17M8 2.8v3.4M16 2.8v3.4M8.6 15.2l2.4 2.4 4.4-4.8"/></svg></span><span class="tx">Practical Electional Muhurtham<span class="tm">செயல்முறை முகூர்த்தம்</span></span></button>
@@ -515,6 +519,7 @@
      <div class="group">
       <label class="cell" for="kevQ"><span class="cl">Event · நிகழ்வு</span><select id="kevQ"></select></label>
       <label class="cell" for="kevStrict"><span class="cl">Rule strictness<small>Strict also keeps 8 and 12 away</small></span><select id="kevStrict"><option value="strict" selected>Strict (8 and 12 kept out)</option><option value="std">Standard (book rule only)</option></select></label>
+      <label class="cell" id="kevVedRow" for="kevVed" style="display:none"><span class="cl">Traditional rules<small>nakshatra, tithi, weekday, lagna, planets</small></span><select id="kevVed"><option value="full" selected>Full (day + lagna + planets)</option><option value="day">Day rules only</option><option value="off">Off (KP cusp test only)</option></select></label>
       <label class="cell" for="kevMin"><span class="cl">Shortest window</span><select id="kevMin"><option value="0">Any</option><option value="1">1 minute</option><option value="3" selected>3 minutes</option><option value="6">6 minutes</option><option value="10">10 minutes</option><option value="20">20 minutes</option></select></label>
      </div>
      <div id="kevRule" class="eprec"></div>
@@ -559,6 +564,7 @@
     <div id="bpSaved"></div>
     <div class="group">
      <label class="cell" for="bpName"><span class="cl">Name<small>Optional</small></span><input id="bpName" autocomplete="off" placeholder="Name of the native"></label>
+     <label class="cell" for="bpGender"><span class="cl">Gender · பாலினம்<small>Optional</small></span><select id="bpGender"><option value="">Not stated · குறிப்பிடவில்லை</option><option value="M">Male · ஆண்</option><option value="F">Female · பெண்</option><option value="O">Other · மற்றவை</option></select></label>
      <div class="cell"><span class="cl">Date of Birth<small>பிறந்த தேதி</small></span><div class="msel"><select id="bpDay" aria-label="Day"></select><select id="bpMonth" aria-label="Month"></select><select id="bpYear" aria-label="Year"></select></div></div>
      <div class="cell"><span class="cl">Time of Birth<small>பிறந்த நேரம்</small></span><div class="msel"><select id="bpHour" aria-label="Hour"></select><select id="bpMin" aria-label="Minute"></select><select id="bpSec" aria-label="Second"></select><select id="bpAmpm" aria-label="AM or PM"><option>AM</option><option>PM</option></select></div></div>
     </div>
@@ -837,7 +843,7 @@
     </div>
     <details class="howto"><summary>Compare with your real prices (optional)<span class="tt">உண்மை விலை ஒப்பீடு</span></summary><div class="cell" style="display:block"><label for="mkCsvIn" class="cl">Daily prices: date, open, high, low, close</label><textarea id="mkCsvIn" rows="6" placeholder="2026-10-19,25100,25250,25020,25180&#10;2026-10-20,25180,25300,25100,25120" style="width:100%;font:500 13px var(--sf)"></textarea><small class="muted">When this box has prices, the From and To dates are ignored and the candles are for these days.</small></div></details>
     <div class="msg" id="mkOff" role="status"></div>
-    <div class="btns"><button class="primary" id="mkGo" type="button">Draw Planetary Candles</button><button id="mkLoc" type="button">Use My Location</button></div>
+    <script type="text/plain" id="mkxCtl"></script><div id="mkxHost"></div><div class="btns"><button class="primary" id="mkGo" type="button">Draw Planetary Candles</button><button id="mkLoc" type="button">Use My Location</button></div>
     <div class="msg" id="mkMsg" role="status"></div>
     <div id="mkOut"></div>
    </div>
@@ -946,7 +952,7 @@
     </div>
     <div class="btns"><button class="primary" id="cmGo" type="button">Find Chandra Muhurtham</button></div>
     <div class="msg" id="cmMsg" role="status"></div>
-    <div id="cmOut"></div>
+    <div id="cmOut"></div><div id="cmpHost"></div>
    </div>
 
    <div class="panel sheet hide ab" id="abPanel" role="dialog" aria-modal="true" aria-labelledby="abT">
@@ -989,7 +995,7 @@
 
 <script src="data/cities.js?v=f32857826d"></script>
 <script src="js/01-astronomy-engine.js?v=f41139a879"></script>
-<script src="js/02-app.js?v=e654712337"></script>
+<script src="js/02-app.js?v=582e964308"></script>
 <script src="js/03-stage-layout.js?v=cb47841e63"></script>
 <script src="js/04-alarm-bell-on-every-muhurtham-v3-5.js?v=3832c57e2a"></script>
 <script src="js/05-v4-9-hover-label-for-the-sidebar-tools-s.js?v=3b25160166"></script>
@@ -1005,12 +1011,13 @@
 <button type="button" id="gaDiscOk">OK, I understand · சரி, புரிந்துகொண்டேன்</button></div></div>
 <script src="js/07-script.js?v=4b4f1b6d3d"></script>
 <link rel="stylesheet" href="css/15-style.css?v=84c760c68f">
-<link rel="stylesheet" href="revamp/revamp.css?v=28db7606b2">
+<link rel="stylesheet" href="revamp/revamp.css?v=2ca9977fef">
 <script src="js/08-script.js?v=ec0025f15a"></script>
-<script src="revamp/revamp.js?v=3e4c43d858"></script>
-<script src="revamp/features.js?v=012fe36711"></script>
-<script src="revamp/i18n-ta.js?v=9c02c78944"></script>
-<script src="revamp/i18n.js?v=a9c9804a3e"></script>
+
+<script src="revamp/revamp.js?v=ffd4c16b5c"></script>
+<script src="revamp/features.js?v=c7b9ad7536"></script>
+<script src="revamp/i18n-ta.js?v=d15a858072"></script>
+<script src="revamp/i18n.js?v=00e65fc0fe"></script>
 <script src="revamp/place.js?v=d72e933453"></script>
 <script src="revamp/text.js?v=878fdc874f"></script>
 </body>

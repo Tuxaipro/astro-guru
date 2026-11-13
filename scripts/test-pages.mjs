@@ -23,6 +23,21 @@ const PREPARE = {
 // Pages with no result to wait for after the main button (it sets alarms or draws a map), and the
 // two reading pages, About and What's new (the revamp's own page), which have no main button.
 const NO_OUTPUT = new Set(['live-transit-clock', 'astrocartography', 'cuspal-chart', 'about', 'whats-new', 'now', 'lagna-timings']);
+// 11.2 tools keep their main button outside .btns: each says how to run it and where its result appears.
+const RUN = {
+  'nameology-and-numerology': async (p) => { await p.fill('#nmName', 'Meena'); await p.fill('#nmDob', '1990-06-15'); await p.click('#nmGo'); return '#nmOut'; },
+  'mobile-numerology': async (p) => {
+    await p.fill('#mnName', 'Meena'); await p.fill('#mnDob', '1990-06-15'); await p.fill('#mnNum', '9876543210'); await p.click('#mnGo'); return '#mnOut';
+  },
+  'vehicle-muhurtham': async (p) => {
+    await p.locator('#agPanel .ak-chip', { hasText: /new car/i }).first().click();
+    await p.locator('#agPanel button', { hasText: /^OK$/ }).last().click();
+    return '#agPanel table';
+  },
+};
+// Tools whose panel is not named after their button: 11.2's Vehicle Muhurtham opens Agriculture Muhurtham's panel.
+const PANEL_OF = { vhBtn: 'agPanel' };
+const panelId = (btn) => PANEL_OF[btn] || btn.replace(/Btn$/, 'Panel');
 // Messages that are the browser's, not the app's.
 const IGNORE = /navigator\.vibrate|Banner not shown|apple-mobile-web-app-capable|favicon/i;
 
@@ -70,9 +85,9 @@ for (const [name, size] of SIZES) {
     try { await page.waitForFunction(() => !document.documentElement.classList.contains('rv-boot'), null, { timeout: 30000 }); }
     catch (e) { problems.push('the page stayed behind the start-up splash'); }
     await page.waitForTimeout(300);
-    const state = await page.evaluate(({ route, btn }) => {
+    const state = await page.evaluate(({ route, btn, pid }) => {
       const base = route === 'now' || route === 'lagna-timings';
-      const panel = document.getElementById(btn.replace(/Btn$/, 'Panel'));
+      const panel = document.getElementById(pid);
       const shown = base ? document.getElementById(route === 'now' ? 'nowcard' : 'mainForm') : panel;
       const r = shown ? shown.getBoundingClientRect() : { height: 0 };
       const sc = document.getElementById('scroller');
@@ -82,15 +97,20 @@ for (const [name, size] of SIZES) {
         wide: Math.max(document.documentElement.scrollWidth, sc ? sc.scrollWidth : 0) > innerWidth + 1,
         hasGo: !!(panel && panel.querySelector('.btns > button.primary')),
       };
-    }, { route, btn });
+    }, { route, btn, pid: panelId(btn) });
     if (state.hash !== '#/' + route) problems.push(`address is ${state.hash}`);
     if (state.on !== btn) problems.push(`sidebar highlights ${state.on}`);
     if (!state.visible) problems.push('page content is not visible');
     if (state.wide) problems.push('page is wider than the screen');
 
-    if (!QUICK && state.hasGo && !NO_OUTPUT.has(route)) {
+    if (!QUICK && RUN[route]) {
+      try {
+        const sel = await RUN[route](page);
+        await page.waitForFunction((sel) => { const o = document.querySelector(sel); return o && o.innerText.trim().length > 20; }, sel, { timeout: 30000 });
+      } catch (e) { problems.push('no result after running the tool: ' + String(e.message || e).split('\n')[0]); }
+    } else if (!QUICK && state.hasGo && !NO_OUTPUT.has(route)) {
       if (PREPARE[route]) await PREPARE[route](page);
-      const panelSel = '#' + btn.replace(/Btn$/, 'Panel');
+      const panelSel = '#' + panelId(btn);
       await page.click(`${panelSel} .btns > button.primary`);
       try {
         await page.waitForFunction((sel) => {

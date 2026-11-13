@@ -1,0 +1,4 @@
+(function(){var n=0;function show(m){try{n++;if(n>3)return;var d=document.getElementById('gaDiag');if(!d){d=document.createElement('pre');d.id='gaDiag';d.style.cssText='position:fixed;left:0;right:0;bottom:0;max-height:45%;overflow:auto;margin:0;padding:8px;background:#7f1d1d;color:#fff;font:11px/1.35 monospace;z-index:2147483647;white-space:pre-wrap';d.onclick=function(){d.remove();};(document.body||document.documentElement).appendChild(d);}d.textContent+=m+'\n';}catch(e){}}
+window.addEventListener('error',function(e){show('Error: '+(e.message||'')+' @'+(e.lineno||'')+':'+(e.colno||'')+' '+(e.filename?String(e.filename).slice(-30):''));},true);
+window.addEventListener('unhandledrejection',function(e){show('Promise: '+(e.reason&&e.reason.message||e.reason));});
+setTimeout(function(){try{if(!document.getElementById('home')&&!document.querySelector('.tool'))show('App did not start. UA: '+navigator.userAgent);}catch(e){}},6000);})();
