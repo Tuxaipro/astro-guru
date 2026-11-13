@@ -22,6 +22,8 @@
   --track:#D5D7E3; --zebra:#F7F8FB; --zebra-sh:#F1F2F7; --thead:#F7F8FB; --thead-sh:#EEF0F6;
   --now:#B87700; --now-bg:rgba(227,155,11,.13);
   --bad:#C8323A; --green:#1E8A5A; --greenlo:rgba(30,138,90,.11); --greenhi:rgba(30,138,90,.30);
+  /* text-strength green and amber: verdict words and figures stay at 4.5:1 or more on the page and cards */
+  --green-ink:#16704A; --now-ink:#8A5A00;
   --glass:rgba(244,245,249,.86); --side:#FFFFFF;
   --shadow:none; --stage:var(--bg);
   /* 11.2's new tools draw their cards with var(--card, #f2f2f7): the same surface as every other card here */
@@ -39,7 +41,7 @@
     --accent:#9A9DFF; --accent-fill:#5A5EE0; --accent-ink:#FFFFFF; --tint:rgba(141,145,255,.16);
     --track:#2E3350; --zebra:#1A1F36; --zebra-sh:#20263F; --thead:#1C2139; --thead-sh:#232944;
     --now:#F2B53A; --now-bg:rgba(242,181,58,.15);
-    --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34);
+    --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34); --green-ink:var(--green); --now-ink:var(--now);
     --glass:rgba(13,16,32,.84); --side:#11152A; --stage:var(--bg);
     --rv-hero:#1C2139; --rv-hero-ink:#ECEEFA; --rv-hero-muted:#9A9EBD; --rv-hero-hi:#F2B53A;
     color-scheme:dark;
@@ -53,7 +55,7 @@
   --accent:#9A9DFF; --accent-fill:#5A5EE0; --accent-ink:#FFFFFF; --tint:rgba(141,145,255,.16);
   --track:#2E3350; --zebra:#1A1F36; --zebra-sh:#20263F; --thead:#1C2139; --thead-sh:#232944;
   --now:#F2B53A; --now-bg:rgba(242,181,58,.15);
-  --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34);
+  --bad:#FF6B6B; --green:#4CC98E; --greenlo:rgba(76,201,142,.14); --greenhi:rgba(76,201,142,.34); --green-ink:var(--green); --now-ink:var(--now);
   --glass:rgba(13,16,32,.84); --side:#11152A; --stage:var(--bg);
   --rv-hero:#1C2139; --rv-hero-ink:#ECEEFA; --rv-hero-muted:#9A9EBD; --rv-hero-hi:#F2B53A;
   color-scheme:dark;
@@ -1118,6 +1120,29 @@ body.rv .sheet .tblw{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:t
 /* Market Transit's "add my trading days" switch: the long label wraps, the switch stays on screen */
 body.rv #mkxOpt .cell.chk>.cl{flex:1 1 auto;min-width:0}
 body.rv #mkxOpt .cell.chk>input{flex:none}
+
+/* ---------- 11.2 verdict colours follow the theme ----------
+   The engine colours its verdicts with fixed light-theme hues (.mkbup #1a8a4a / #0a7d3b, .mkbdn #c62828 /
+   #b3261e, Nameology's .nm-up / .nm-dn, the market's driver chips). On the dark theme they fell to a
+   contrast of 2.8 to 3.6. They take the theme's good, bad and neutral colours, which brighten in dark. */
+body.rv .mkbup,body.rv .mkdrv.bu,body.rv .nm-up,body.rv .nm-star{color:var(--green-ink)}
+body.rv .mkbdn,body.rv .mkdrv.be,body.rv .nm-dn{color:var(--bad)}
+body.rv .mkbnu{color:var(--muted)}
+body.rv .mkdrv{border-color:var(--line-strong)}
+body.rv .mkdrv.bu{border-color:var(--greenhi)}
+body.rv .mkdrv.be{border-color:color-mix(in srgb,var(--bad) 40%,transparent)}
+/* Mobile Numerology's number scores: white on bright green or amber read poorly in both themes. They are
+   tinted tags like the revamp's other status pills. */
+body.rv .mn-sc[style*="#16a34a"]{background:var(--greenlo)!important;color:var(--green-ink);box-shadow:inset 0 0 0 1px var(--greenhi)}
+body.rv .mn-sc[style*="#f59e0b"]{background:var(--now-bg)!important;color:var(--now-ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--now) 35%,transparent)}
+/* A chosen chip keeps its Tamil at full strength on the tint */
+body.rv .sheet .mn-form .nm-cats label .tm{color:inherit}
+body.rv .sheet .mn-form .nm-cats label:has(input:checked) .tm{opacity:1}
+/* Inline colours the 11.2 outputs write (scores, percentages, notes): the same hues, theme-aware */
+body.rv #nmOut [style*="color:#dc2626"],body.rv #mnOut [style*="color:#dc2626"],body.rv #agPanel [style*="color:#dc2626"],body.rv #cmpOut [style*="color:#dc2626"],body.rv #mkxRep [style*="color:#dc2626"],body.rv #lnRepAll [style*="color:#dc2626"]{color:var(--bad)!important}
+body.rv #nmOut [style*="color:#16a34a"],body.rv #mnOut [style*="color:#16a34a"],body.rv #agPanel [style*="color:#16a34a"],body.rv #cmpOut [style*="color:#16a34a"],body.rv #mkxRep [style*="color:#16a34a"],body.rv #lnRepAll [style*="color:#16a34a"]{color:var(--green-ink)!important}
+body.rv #nmOut [style*="color:#f59e0b"],body.rv #mnOut [style*="color:#f59e0b"],body.rv #agPanel [style*="color:#f59e0b"],body.rv #cmpOut [style*="color:#f59e0b"],body.rv #mkxRep [style*="color:#f59e0b"],body.rv #lnRepAll [style*="color:#f59e0b"]{color:var(--now-ink)!important}
+body.rv #nmOut [style*="color:#9ca3af"],body.rv #mnOut [style*="color:#9ca3af"],body.rv #agPanel [style*="color:#9ca3af"],body.rv #cmpOut [style*="color:#9ca3af"],body.rv #mkxRep [style*="color:#9ca3af"],body.rv #lnRepAll [style*="color:#9ca3af"]{color:var(--muted)!important}
 
 /* ==========================================================================
    What's new: the revamp's own page (#/whats-new), styled like About.
