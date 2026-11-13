@@ -119,6 +119,11 @@ for (const [name, size] of SIZES) {
         }, panelSel, { timeout: 20000 });
       } catch (e) { problems.push('no result after pressing the main button'); }
     }
+    // The result must fit too: wide report tables scroll inside their own box, never the page.
+    if (!QUICK && !state.wide && await page.evaluate(() => {
+      const sc = document.getElementById('scroller');
+      return Math.max(document.documentElement.scrollWidth, sc ? sc.scrollWidth : 0) > innerWidth + 1;
+    })) problems.push('the result is wider than the screen');
     if (errors.length) problems.push('script errors: ' + [...new Set(errors)].slice(0, 3).join(' | '));
     if (problems.length) failures++;
     console.log(`${problems.length ? 'FAIL' : 'PASS'}  #/${route}${problems.length ? '  ' + problems.join('; ') : ''}`);

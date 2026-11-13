@@ -934,6 +934,26 @@ body.rv #akPanel .ak-lb select{background:var(--bg);color:var(--ink);border:1px 
 body.rv #akPanel .ak-ql,body.rv #akPanel .ak-who,body.rv #akPanel .ak-m .ta{color:var(--accent)}
 body.rv #akPanel .ak-ok{color:var(--green)}
 body.rv #akPanel .ak-warn{border-left-color:var(--now)}
+/* 11.2's Vehicle and Agriculture Muhurtham (one chat-style panel) and the language row and buttons of
+   Mobile Numerology and Nameology are built from Ask's parts (.ak-*). They take Ask's theme: filled chips,
+   surface bubbles, the same fields and labels. */
+body.rv #agPanel .ak-b,body.rv #mnPanel .ak-b,body.rv #nmPanel .ak-b{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+body.rv #agPanel .ak-u,body.rv #mnPanel .ak-u,body.rv #nmPanel .ak-u{background:var(--accent-fill);color:var(--accent-ink)}
+body.rv #agPanel .ak-m,body.rv #mnPanel .ak-m,body.rv #nmPanel .ak-m{font:400 14.5px/1.55 var(--sf)}
+body.rv #agPanel .ak-in input,body.rv #mnPanel .ak-in input,body.rv #nmPanel .ak-in input,body.rv #agPanel .ak-in2,body.rv #mnPanel .ak-in2,body.rv #nmPanel .ak-in2,body.rv #agPanel .ak-row input,body.rv #mnPanel .ak-row input,body.rv #nmPanel .ak-row input{background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);font:400 15px var(--sf)}
+body.rv #agPanel .ak-in input:focus,body.rv #mnPanel .ak-in input:focus,body.rv #nmPanel .ak-in input:focus,body.rv #agPanel .ak-in2:focus,body.rv #mnPanel .ak-in2:focus,body.rv #nmPanel .ak-in2:focus,body.rv #agPanel .ak-row input:focus,body.rv #mnPanel .ak-row input:focus,body.rv #nmPanel .ak-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--tint)}
+body.rv #agPanel .ak-chip,body.rv #mnPanel .ak-chip,body.rv #nmPanel .ak-chip{border:1px solid var(--line-strong);background:var(--fill);color:var(--accent);font:600 13px var(--sf)}
+body.rv #agPanel .ak-chip:hover,body.rv #mnPanel .ak-chip:hover,body.rv #nmPanel .ak-chip:hover{background:var(--tint)}
+body.rv #agPanel .ak-chip.on,body.rv #mnPanel .ak-chip.on,body.rv #nmPanel .ak-chip.on{background:var(--green);color:#fff;border-color:transparent}
+body.rv #agPanel .ak-opt,body.rv #mnPanel .ak-opt,body.rv #nmPanel .ak-opt,body.rv #agPanel .ak-card,body.rv #mnPanel .ak-card,body.rv #nmPanel .ak-card{background:var(--surface);color:var(--ink);border-color:var(--line)}
+body.rv #agPanel .ak-opt:hover,body.rv #mnPanel .ak-opt:hover,body.rv #nmPanel .ak-opt:hover{background:var(--fill2)}
+body.rv #agPanel .ak-tb th,body.rv #mnPanel .ak-tb th,body.rv #nmPanel .ak-tb th,body.rv #agPanel .ak-tb td,body.rv #mnPanel .ak-tb td,body.rv #nmPanel .ak-tb td{border-color:var(--line)}
+body.rv #agPanel .ak-best td,body.rv #mnPanel .ak-best td,body.rv #nmPanel .ak-best td{background:var(--greenlo)}
+body.rv #agPanel .ak-lb,body.rv #mnPanel .ak-lb,body.rv #nmPanel .ak-lb{color:var(--muted);font:500 12.5px var(--sf)}
+body.rv #agPanel .ak-lb select,body.rv #mnPanel .ak-lb select,body.rv #nmPanel .ak-lb select{background:var(--bg);color:var(--ink);border:1px solid var(--line-strong);border-radius:var(--rv-r-sm);height:32px;font:500 13px var(--sf)}
+body.rv #agPanel .ak-ql,body.rv #mnPanel .ak-ql,body.rv #nmPanel .ak-ql,body.rv #agPanel .ak-who,body.rv #mnPanel .ak-who,body.rv #nmPanel .ak-who,body.rv #agPanel .ak-m .ta,body.rv #mnPanel .ak-m .ta,body.rv #nmPanel .ak-m .ta{color:var(--accent)}
+body.rv #agPanel .ak-ok,body.rv #mnPanel .ak-ok,body.rv #nmPanel .ak-ok{color:var(--green)}
+body.rv #agPanel .ak-warn,body.rv #mnPanel .ak-warn,body.rv #nmPanel .ak-warn{border-left-color:var(--now)}
 /* Phone: the chat log is a fixed-height box, so the message box sat below the fold, under the tab bar.
    It now sticks above the tab bar while the page scrolls. */
 /* Phone pages scroll inside a box that already ends above the tab bar, so the message box sticks to that
@@ -1077,6 +1097,27 @@ body.rv .stage[data-view="mobile"] #akPanel .ak-bar::-webkit-scrollbar{display:n
 body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip,body.rv .stage[data-view="mobile"] #akPanel .ak-lb{white-space:nowrap;flex:none}
 body.rv .stage[data-view="mobile"] #akPanel .ak-bar .ak-chip{padding:4px 10px;font-size:12.5px}
 body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 440px)}
+/* 11.2 on phones. The vehicle and farming panel keeps each control row on one line that scrolls sideways,
+   like Ask, so the conversation keeps the room; its conversation box fills the rest of the screen above the
+   tab bar (it has no message box). */
+body.rv .stage[data-view="mobile"] #agPanel .ak-bar,body.rv .stage[data-view="mobile"] #mnPanel .ak-bar,body.rv .stage[data-view="mobile"] #nmPanel .ak-bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:4px 0;padding-bottom:2px;scrollbar-width:none}
+body.rv .stage[data-view="mobile"] #agPanel .ak-bar::-webkit-scrollbar{display:none}
+body.rv .stage[data-view="mobile"] #agPanel .ak-bar .ak-chip,body.rv .stage[data-view="mobile"] #agPanel .ak-lb{white-space:nowrap;flex:none}
+body.rv .stage[data-view="mobile"] #agPanel .ak-bar .ak-chip{padding:4px 10px;font-size:12.5px;min-height:34px}
+body.rv .stage[data-view="mobile"] #agPanel .ak-bar .ak-who{flex:1 1 auto!important;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.rv .stage[data-view="mobile"] #agPanel .ak-log{height:calc(100dvh - 300px);max-height:none;min-height:260px}
+/* Result tables in a chat bubble (Vehicle and Agriculture Muhurtham, Ask): the bubble lets words break
+   anywhere, so on a phone the headers broke letter by letter ("Mi nut es"). The table scrolls sideways
+   inside the bubble instead, with whole words. */
+body.rv .stage[data-view="mobile"] #agPanel .ak-m table.ak-tb,body.rv .stage[data-view="mobile"] #akPanel .ak-m table.ak-tb{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+body.rv .stage[data-view="mobile"] #agPanel .ak-tb th,body.rv .stage[data-view="mobile"] #agPanel .ak-tb td,
+body.rv .stage[data-view="mobile"] #akPanel .ak-tb th,body.rv .stage[data-view="mobile"] #akPanel .ak-tb td{overflow-wrap:normal;word-break:normal;min-width:4.5em}
+/* 11.2 report tables (personal Chandra Muhurtham, lottery studio, market forecast) sit in .tblw, which did
+   not scroll: on a phone they pushed the page sideways or were cut off. They scroll inside the card now. */
+body.rv .sheet .tblw{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* Market Transit's "add my trading days" switch: the long label wraps, the switch stays on screen */
+body.rv #mkxOpt .cell.chk>.cl{flex:1 1 auto;min-width:0}
+body.rv #mkxOpt .cell.chk>input{flex:none}
 
 /* ==========================================================================
    What's new: the revamp's own page (#/whats-new), styled like About.
