@@ -1,6 +1,6 @@
 {
   "name": "guruagasthiya-web",
-  "version": "11.2.0",
+  "version": "12.3.0",
   "private": true,
   "description": "GuruAgasthiya as a website, imported from the Android app's page (APK or HTML release).",
   "type": "module",

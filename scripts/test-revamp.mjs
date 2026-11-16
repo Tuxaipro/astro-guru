@@ -84,6 +84,8 @@ check('routes: the 11.2 tools have fixed addresses and sit in their groups', () 
     eq('vhBtn group', group('vhBtn'), 'today') || eq('agBtn group', group('agBtn'), 'today') ||
     eq('nmBtn group', group('nmBtn'), 'numbers') || eq('mnBtn group', group('mnBtn'), 'numbers');
 });
+check('routes: 12.3\'s Nifty Intraday Astro sits in Money and markets with a fixed address', () =>
+  eq('nfBtn', $('nfBtn').dataset.route, 'nifty-intraday-astro') || eq('nfBtn group', $('nfBtn').closest('.rv-group')?.dataset.g, 'wealth'));
 check('import: the 11.2 names list is a file the engine fetches, not part of the page', () => {
   if (!existsSync(join(ROOT, 'public', 'names.txt'))) return 'public/names.txt missing';
   if (/id="gaNamesData"/.test(readFileSync(PAGE, 'utf8'))) return 'gaNamesData still inline in index.html';
@@ -249,6 +251,13 @@ await check('ask names and numbers: name questions point to the two 11.2 tools',
   return eq('chips', chips.join(' | '), 'Open: Nameology & Numerology | Open: Mobile Numerology') ||
     (/horary|child birth/i.test(bot.textContent) ? 'still read as a horary question' : '');
 }, true);
+await check('ask nifty: intraday questions point to the 12.3 tool', async () => {
+  const added = await sendAsk('nifty intraday today');
+  const bot = added.find((n) => n.classList.contains('ak-b'));
+  if (!bot) return 'no reply';
+  const chip = bot.querySelector('.ak-chip');
+  return chip ? eq('chip', chip.textContent.trim(), 'Open: Nifty Intraday Astro') : 'no chip in the reply';
+}, true);
 await check('ask sub-lord timings: the engine\'s crashing list is replaced by a pointer to Lagna Timings', async () => {
   const added = await sendAsk('lagna timings today');
   const bots = added.filter((n) => n.classList.contains('ak-b'));
@@ -300,6 +309,16 @@ await check('shared panel: #/agriculture-muhurtham switches the open panel to it
   eq('address', w.location.hash, '#/agriculture-muhurtham') || eq('marked', $('agBtn').classList.contains('rv-on'), true) ||
   (/^Agriculture, water, land and animals/.test(agHead()) ? '' : `panel shows ${JSON.stringify(agHead().slice(0, 60))}`), true);
 $('agClose').click(); await settle();
+
+// 12.3 builds Nifty Intraday Astro in code but never wires its button or ✕; the revamp does.
+w.location.hash = '#/nifty-intraday-astro'; await settle();
+await check('12.3 nifty: #/nifty-intraday-astro opens the panel the engine never wired, and ✕ closes it', async () => {
+  const p = $('nfPanel'); if (!p) return 'no #nfPanel';
+  const open = eq('panel shown', p.classList.contains('hide'), false) || eq('marked', $('nfBtn').classList.contains('rv-on'), true);
+  if (open) return open;
+  $('nfClose').click(); await settle();
+  return eq('panel hidden after ✕', p.classList.contains('hide'), true) || eq('address after ✕', /^#\/(now|lagna-timings)$/.test(w.location.hash), true);
+}, true);
 $('akBtn').click(); await sleep(100);
 check('miss log: unmatched questions are kept on the device, with a count and a Clear button', () => {
   const det = $('akPanel').querySelector('details.rv-askmiss');
@@ -326,8 +345,8 @@ check('whats-new: #/whats-new shows the panel, highlights the entry and names th
   if (!p) return 'no #rvNewPanel';
   return eq('panel hidden', p.classList.contains('hide'), false) || eq('address', w.location.hash, '#/whats-new') ||
     eq('sidebar highlight', d.querySelector('.rv-groups .tool.rv-on')?.id, 'rvNewBtn') || eq('title', d.title, "What's new · GuruAgasthiya") ||
-    eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 11.2 | Earlier, in 10.5 | New on the web') ||
-    eq('items', p.querySelectorAll('li').length, 21) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 16, true);
+    eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 12.3 | Earlier, in 11.2 | Earlier, in 10.5 | New on the web') ||
+    eq('items', p.querySelectorAll('li').length, 26) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 16, true);
 });
 check('whats-new: About links to it from the top', () => {
   const a = d.querySelector('#abPanel > .sh-head + .rv-new-link a');
@@ -338,7 +357,7 @@ check('whats-new: in Tamil, the headings and every paragraph are translated', ()
   const p = $('rvNewPanel');
   const paras = [...p.querySelectorAll('p.rv-new-intro, li')];
   const missing = paras.filter((el) => !el.querySelector(':scope > .rv-ta-para')).map((el) => el.textContent.trim().slice(0, 40));
-  return eq('heading', p.querySelector('h2').textContent.trim(), 'புதியவை') || eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'இயந்திரம் 11.2-இல் புதியவை | முன்பு, 10.5-இல் | இணையப் பதிப்பில் புதியவை') ||
+  return eq('heading', p.querySelector('h2').textContent.trim(), 'புதியவை') || eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'இயந்திரம் 12.3-இல் புதியவை | முன்பு, 11.2-இல் | முன்பு, 10.5-இல் | இணையப் பதிப்பில் புதியவை') ||
     eq('sidebar label', $('rvNewBtn').querySelector('.tx').firstChild.textContent.trim(), 'புதியவை') ||
     (missing.length ? `paragraphs without Tamil: ${JSON.stringify(missing)}` : '') ||
     eq('links kept', p.querySelectorAll('.rv-ta-para a[href^="#/"]').length >= 16, true);

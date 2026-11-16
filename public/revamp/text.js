@@ -34,9 +34,19 @@
     b.classList.toggle('hide', el.classList.contains('hide'));
   }
   var FOLD_SEL = '.legend, .gmnote, .sheet .sub, .sheet .note, .sheet .intro, .sheet p.hint';
-  function foldAll(rootEl) { (rootEl || document).querySelectorAll(FOLD_SEL).forEach(fold); }
+  // 11.2 and 12.3 print a Tamil copy of a help paragraph as a paragraph of its own, which the engine hides in
+  // the single-language modes. A hidden paragraph keeps no "Read more" of its own: the button follows the
+  // paragraph it folds, so it shows only while that paragraph does.
+  function syncMore(rootEl) {
+    (rootEl || document).querySelectorAll('.rv-more').forEach(function (b) {
+      var p = b.previousElementSibling;
+      if (p && p.dataset.rvFold) b.classList.toggle('hide', p.classList.contains('hide') || getComputedStyle(p).display === 'none');
+    });
+  }
+  function foldAll(rootEl) { (rootEl || document).querySelectorAll(FOLD_SEL).forEach(fold); syncMore(rootEl); }
   foldAll();
   window.rvOnChange(function () { foldAll(); });
+  document.addEventListener('rv-lang', function () { setTimeout(function () { syncMore(); }, 0); });
 
   /* ---------- Long result lists show a first page, then "Show more" ----------
      A wide date range can print thousands of timing rows, often as one list per day. Rows after the

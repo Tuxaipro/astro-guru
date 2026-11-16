@@ -1,11 +1,11 @@
 # GuruAgasthiya web
 
-The GuruAgasthiya Android app (v11.2) as a plain website.
+The GuruAgasthiya Android app (v12.3) as a plain website.
 
 ## How it was made
 
 The APK is a thin native shell, a WebView loading a single self-contained `assets/index.html` (16 MB in
-11.2). Releases from 11.2 on also come as that page on its own, `GuruAgasthiya-11.2.html`. That page already
+12.3). Releases from 11.2 on also come as that page on its own, `GuruAgasthiya-12.3.html`. That page already
 detects the native `GuruApp` bridge and falls back to browser APIs when it is missing:
 
 | Android bridge (`GuruApp.*`)        | Web fallback already in the app code              |
@@ -30,7 +30,7 @@ worker: the site is not installable and needs a connection, like any website.
 
 `revamp/` holds the new interface. `npm run import` copies it into `public/revamp/` and loads it after the
 original styles and scripts. It only moves and restyles existing elements, so every element ID and
-every calculation in the v11.2 engine stays as it was.
+every calculation in the v12.3 engine stays as it was.
 
 - **Design:** "panchangam ink and turmeric". Indigo ink carries text and actions, and turmeric marks only the
   sign rising now. Text is set in IBM Plex Sans, with Mukta Malar for Tamil. Light and dark themes are both
@@ -70,9 +70,11 @@ every calculation in the v11.2 engine stays as it was.
   - Tables, tags and the chart toolbar follow the same design.
 
 - **What's new** (`#/whats-new`): the revamp's own page, listed beside About in the sidebar and linked from the
-  top of About. It says what engine 11.2 brought (Nameology & Numerology, Mobile Numerology, Vehicle and
+  top of About. It says what engine 12.3 brought (Nifty Intraday Astro, the research studies in
+  Astrocartography, Chandra Bala muhurtham by the transit lagna, Kuladeivam clues in Birth Chart, more horary
+  answers), what 11.2 brought before it (Nameology & Numerology, Mobile Numerology, Vehicle and
   Agriculture Muhurtham, personal Tara Bala in Chandra Muhurtham, the market forecast report, the lottery number
-  studio, traditional rules in Practical Electional), what 10.5 brought before it (Guru Agasthiya Muhurtham,
+  studio, traditional rules in Practical Electional), what 10.5 brought (Guru Agasthiya Muhurtham,
   Ask GuruAgasthiya, Natal Chart Trade, the alarms master switch, the accessibility pass) and what the web
   version adds (setup and the
   location fallback, saved people, share, print and calendar, folded long lists, Tamil, coloured tool tiles),
@@ -131,7 +133,9 @@ The engine translates 109 labels into 44 languages. The revamp follows the same 
   - The 10.5 tools (Guru Agasthiya Muhurtham, Natal Chart Trade, Ask GuruAgasthiya) are covered too: their
     labels, hints, buttons, options, chips and help paragraphs. The four 11.2 tools translate themselves; the
     11.2 additions inside older tools (personal Tara Bala, the forecast report, the lottery number studio,
-    traditional rules) are translated here. Ask GuruAgasthiya's own replies come from
+    traditional rules) are translated here, and so are the 12.3 additions (Nifty Intraday Astro's own labels,
+    table headings, hora natures and rules; the Astrocartography research forms; the Chandra Bala muhurtham
+    form and the Live Transit Clock option). Ask GuruAgasthiya's own replies come from
     the engine in the chosen language.
 - **The other 43 languages:** the main revamp labels are translated: sidebar groups, Now, Next timings,
   Settings, search, and the Copy, Print, Share and calendar buttons. Long help text stays in English, as it
@@ -229,10 +233,10 @@ A script error shows one short notice ("Something went wrong on this page") with
 ## Use
 
 ```bash
-npm run build           # rebuild public/ from ../GuruAgasthiya-11.2.html and revamp/
+npm run build           # rebuild public/ from ../GuruAgasthiya-12.3.html and revamp/
 npm start               # http://localhost:4173
 npm run dev             # build, then start
-npm run import -- ../GuruAgasthiya-11.3.html  # regenerate public/ from a newer release (.html or .apk)
+npm run import -- ../GuruAgasthiya-12.4.html  # regenerate public/ from a newer release (.html or .apk)
 ```
 
 ### Updates and caching

@@ -22,7 +22,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'public');
-const src = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-11.2.html'));
+const src = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-12.3.html'));
 
 const html = /\.html?$/i.test(src) ? readFileSync(src, 'utf8')
   : execFileSync('unzip', ['-p', src, 'assets/index.html'], { maxBuffer: 64 << 20 }).toString('utf8');

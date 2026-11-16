@@ -111,8 +111,8 @@ for (const [name, size] of SIZES) {
     } else if (!QUICK && state.hasGo && !NO_OUTPUT.has(route)) {
       if (PREPARE[route]) await PREPARE[route](page);
       const panelSel = '#' + panelId(btn);
-      await page.click(`${panelSel} .btns > button.primary`);
       try {
+        await page.click(`${panelSel} .btns > button.primary`, { timeout: 5000 });
         await page.waitForFunction((sel) => {
           const p = document.querySelector(sel), out = p && p.querySelector('[id$="Out"]');
           return out && out.innerText.trim().length > 20;

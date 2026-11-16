@@ -75,6 +75,17 @@
   }
   setTimeout(applyView, 300);
 
+  /* ---------- 12.3: Nifty Intraday Astro ----------
+     The engine builds this tool in code and lists it in its close table, but never wires its button or its ✕
+     (the author's original 12.3 page cannot open it either). Wired here the way the engine wires the
+     other tools; its sheet stack, Esc and scrim already know the panel. */
+  (function () {
+    var b = $('nfBtn'), p = $('nfPanel'), x = $('nfClose');
+    if (!b || !p) return;
+    b.addEventListener('click', function () { p.classList.remove('hide'); });
+    if (x) x.addEventListener('click', function () { p.classList.add('hide'); });
+  })();
+
   /* ---------- Tool groups ---------- */
   // A tool's panel is its button id with Panel for Btn, except where the engine shares one panel between
   // tools: 11.2's Vehicle Muhurtham opens Agriculture Muhurtham's panel in its vehicle mode.
@@ -85,7 +96,7 @@
     { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'vhBtn', 'agBtn', 'ftBtn'] },
     { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'cuspBtn', 'acBtn'] },
     { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['akBtn', 'gpBtn', 'hqBtn', 'lostBtn'] },
-    { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'ntBtn', 'mkBtn', 'spBtn', 'ltBtn'] },
+    { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'ntBtn', 'mkBtn', 'nfBtn', 'spBtn', 'ltBtn'] },
     { id: 'numbers', name: 'Names and numbers', ta: 'பெயர், எண்', tools: ['nmBtn', 'mnBtn'] },
     { id: 'sport', name: 'Sport', ta: 'விளையாட்டு', tools: ['ckBtn', 'raceBtn'] },
     { id: 'research', name: 'Research', ta: 'ஆய்வு', tools: ['eqBtn'] },
@@ -113,7 +124,7 @@
     if (about) more.lastChild.appendChild(about);
     // "What's new" is the revamp's own page (its panel is built below, with the routes), listed beside About.
     var newBtn = document.createElement('button');
-    newBtn.type = 'button'; newBtn.id = 'rvNewBtn'; newBtn.className = 'tool'; newBtn.dataset.s = "What's new version 11.2 10.5 web changes release notes";
+    newBtn.type = 'button'; newBtn.id = 'rvNewBtn'; newBtn.className = 'tool'; newBtn.dataset.s = "What's new version 12.3 11.2 10.5 web changes release notes";
     newBtn.innerHTML = '<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/><path d="M18.5 3.5v3M17 5h3M19 16.5v3M17.5 18h3"/></svg></span>' +
       '<span class="tx">What\'s new<span class="tm">புதியவை</span></span>';
     more.lastChild.appendChild(newBtn);
@@ -235,7 +246,7 @@
     mmBtn: 'money-manifestation', mpBtn: 'money-profit-muhurtham', tpBtn: 'trade-profit', ntBtn: 'natal-chart-trade',
     mkBtn: 'market-transit', spBtn: 'speculation-research', ltBtn: 'lottery-rules', ckBtn: 'cricket-wicket',
     raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about', rvNewBtn: 'whats-new',
-    vhBtn: 'vehicle-muhurtham', agBtn: 'agriculture-muhurtham', nmBtn: 'nameology-and-numerology', mnBtn: 'mobile-numerology'
+    vhBtn: 'vehicle-muhurtham', agBtn: 'agriculture-muhurtham', nmBtn: 'nameology-and-numerology', mnBtn: 'mobile-numerology', nfBtn: 'nifty-intraday-astro'
   };
   groupsEl.querySelectorAll('.tool').forEach(function (b) {
     var r = b.id === 'rvNowBtn' ? 'now' : SLUGS[b.id] || slugOf(b.title || '') || slugOf(b.id.replace(/Btn$/, ''));
@@ -261,9 +272,17 @@
   newPanel.innerHTML =
     '<div class="sh-head"><div><h2 id="rvNewT">What\'s new</h2><span class="tt">புதியவை</span></div>' +
     '<button class="xbtn" id="rvNewClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>' +
-    '<p class="rv-new-intro">GuruAgasthiya engine <b>11.2</b> adds four tools, for names and numbers, vehicles and farming, and extends Chandra Muhurtham, Market Transit, Lottery Rules and Practical Electional Muhurtham. ' +
+    '<p class="rv-new-intro">GuruAgasthiya engine <b>12.3</b> adds Nifty Intraday Astro, a research bench inside Astrocartography, Chandra Bala muhurtham by the transit lagna, Kuladeivam clues in Birth Chart and more horary answers. ' +
       'The <b>web version</b> runs that same engine in the browser, with a new interface around it: setup, saved people, sharing, folded lists, Tamil throughout and coloured tool tiles.</p>' +
-    '<h3>New in the engine 11.2</h3>' +
+    '<h3>New in the engine 12.3</h3>' +
+    '<ul class="rv-new-list">' +
+      '<li><a href="#/nifty-intraday-astro">Nifty Intraday Astro</a> cuts the market day (09:15 to 15:30 IST) into planetary hours, the eight daily parts (Rahu Kaal, Yamagandam, Gulika), Abhijit and the exact minutes of the Moon’s aspects, and turns them into permitted and avoided windows, a day lean, a trade plan, a risk calculator and a schematic candlestick chart. It is computed on the device for any date; it is not a price forecast.</li>' +
+      '<li><b>Astrocartography research.</b> <a href="#/astrocartography">Astrocartography</a> gains six studies: the places of your life, with the planet lines near each and a test of the pattern; where you may be in the years ahead, by dasha; a missing person’s likely places, from the birth chart or the question chart; house-lord line crossings; degree waves (132 lines); and a check of any place by its coordinates.</li>' +
+      '<li><b>Chandra Bala muhurtham by the transit lagna.</b> <a href="#/chandra-muhurtham">Chandra Muhurtham</a> finds the minutes when the rising sign, its 2nd, 3rd and 11th lords and the Moon’s star lord agree, up to 180 days ahead at any place, with alarms. The <a href="#/live-transit-clock">Live Transit Clock</a> can show these timings too.</li>' +
+      '<li><b>Kuladeivam clues.</b> <a href="#/birth-chart">Birth Chart</a> reads the 9th house and its lords for clues to the family deity: likely names, the look and the place of the shrine, whether the deity changed, and the best months and days to worship.</li>' +
+      '<li><b>More horary answers.</b> <a href="#/horary-answers">Horary Answers</a> adds seven questions (money in hand, a deal, a new shop, adoption, an employee, a government file, in-laws), name sounds of the person involved, a missing person or lost article with who and which direction, whether its methods agree and when to ask again, and sub-lord, exchange, deity and place-name clues for a hidden or buried article.</li>' +
+    '</ul>' +
+    '<h3>Earlier, in 11.2</h3>' +
     '<ul class="rv-new-list">' +
       '<li><a href="#/nameology-and-numerology">Nameology &amp; Numerology</a> analyses a name and suggests better spellings, chooses names for a newborn baby, checks a name already chosen, and analyses or suggests business names. The names come from a list of Hindu and Sanskrit, Tamil, Christian, Bible, Muslim, Sikh and other Indian names.</li>' +
       '<li><a href="#/mobile-numerology">Mobile Numerology</a> reads your present mobile or vehicle number against your name and date of birth, and suggests new numbers for what you want most: money, career, marriage, health and more.</li>' +
@@ -290,7 +309,7 @@
       '<li><b>Share, print and calendar.</b> Every result has Copy, Print and Share (or Save as text), and timing lists add Jump to now and Add to calendar, an .ics file with an alert at each start.</li>' +
       '<li><b>Long lists fold.</b> A result of more than 90 rows, such as a two-week <a href="#/guru-agasthiya-muhurtham">Guru Agasthiya Muhurtham</a>, shows 60 rows and a Show more bar. Copy, Print and Add to calendar still take every row.</li>' +
       '<li><b>Ask GuruAgasthiya never ends in a dead end.</b> When no rule matches, a card suggests the closest topics with questions it does answer. Common misspellings and phrasings are corrected first, small talk gets a reply, and the questions it could not match are kept on your device so the rules can learn them.</li>' +
-      '<li><b>Tamil throughout.</b> In Tamil, the fields, buttons, dates, lord chains and the long help paragraphs are translated whole, and the 10.5 and 11.2 additions are covered too. Choose the language in Settings.</li>' +
+      '<li><b>Tamil throughout.</b> In Tamil, the fields, buttons, dates, lord chains and the long help paragraphs are translated whole, and the 10.5, 11.2 and 12.3 additions are covered too. Choose the language in Settings.</li>' +
       '<li><b>Coloured tool tiles.</b> Each tool in the sidebar has an icon tile of its own colour, so tools are told apart at a glance, also when the sidebar is narrowed to icons.</li>' +
     '</ul>';
   pagesEl.appendChild(newPanel);
@@ -306,7 +325,7 @@
   if (abHead) {
     var abLink = document.createElement('p');
     abLink.className = 'rv-new-link';
-    abLink.innerHTML = '<a href="#/whats-new"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/></svg>What\'s new in 11.2 and on the web</a>';
+    abLink.innerHTML = '<a href="#/whats-new"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4l1.9 5.1 5.1 1.9-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z"/></svg>What\'s new in 12.3 and on the web</a>';
     abHead.parentNode.insertBefore(abLink, abHead.nextSibling);
   }
 

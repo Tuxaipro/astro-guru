@@ -1043,6 +1043,15 @@ setInterval(lvWatch,1000); setTimeout(lvWatch,1500);
   [3,'safereturn','Will the traveller return home safely?','பயணி பாதுகாப்பாகத் திரும்புவாரா?',[4],[1,4,11],{n:[8,12],note:'Safe return: 4th sub lord signifying 1, 4, 11; 8 and 12 bring danger or delay (classical).'}],
   [6,'compromise','Will the dispute be settled by compromise?','சமரசத்தில் தகராறு தீருமா?',[7],[2,7,11],{n:[6,8,12],note:'Settlement by agreement: 7th sub lord signifying 2, 7, 11; 6, 8, 12 prolong the dispute (classical).'}]
   );
+  Q.push(
+  [1,'moneyhand','Will money come into my hand soon?','பணம் விரைவில் கைக்கு வருமா?',[2,11],[2,6,11],{n:[8,12],note:'Money in hand: 2 and 11 with 6; 8 and 12 hold it back (Prasannam Part 2, money questions).'}],
+  [1,'cheat','Am I being cheated in this deal?','இந்த ஒப்பந்தத்தில் ஏமாற்றம் நடக்குமா?',[7,12],[8,12],{adv:1,n:[2,11],note:'Deceit or loss in a deal: 7 (the other party) with 8 and 12; 2 and 11 protect (Prasannam Part 2).'}],
+  [2,'newshop','Will the new shop or branch do well?','புதிய கடை / கிளை நன்றாக நடக்குமா?',[10,7],[2,10,11],{n:[5,8,12],note:'A new place of business: 10 and 7 with 2, 11 (Prasannam Part 2).'}],
+  [4,'adopt','Will we adopt a child?','குழந்தை தத்தெடுப்போமா?',[5,9],[2,5,11],{n:[1,4,10],note:'Adoption: 5 with 9 and 2, 11 (classical).'}],
+  [5,'servant','Will the new employee or servant be loyal and stay?','புதிய ஊழியர் / வேலையாள் நம்பகமாக இருப்பாரா?',[6],[2,6,11],{n:[8,12],note:'Employees and servants: the 6th house; 2, 11 bring stability (classical).'}],
+  [5,'govtfile','Will my application or file in the government office be cleared?','அரசு அலுவலகத்தில் என் மனு / கோப்பு முடியுமா?',[10,11],[2,6,10,11],{n:[5,8,12],note:'Government office work: 10 and 11 with 6 (Prasannam Part 2, job and authority questions).'}],
+  [6,'inlaws','Will I get on well with my in-laws?','மாமனார் / மாமியாருடன் இணக்கம் இருக்குமா?',[7,4],[2,7,11],{n:[6,8,12],note:'Relations with the spouse\'s family: 7 with 4 and 11 (classical).'}]
+  );
   var QB={}; Q.forEach(function(q){QB[q[1]]={cat:q[0],id:q[1],en:q[2],ta:q[3],k:q[4],g:q[5],o:q[6]||{}};});
 
   /* ---------- sub / sub-sub of a longitude ---------- */
@@ -4025,6 +4034,498 @@ window.GA_LNS=(function(){
 })();
 
 (function(){GA_LNS.init();})();
+/* ---------- Kuladeivam, name and ancestral-place clues (v11.3) ---------- */
+window.GA_KULA=(function(){
+  const MN=[13,14,15,16,6,7,8,9]; // unused placeholder to keep the table compact
+  const NG=(function(){const g=[];const M=[0,3,6,7,9,12,13,14,15,16,21,24,25],N=[4,18,23];for(let i=0;i<27;i++)g[i]=M.indexOf(i)>=0?'M':N.indexOf(i)>=0?'N':'F';return g;})();
+  const GT={M:['male','ஆண்'],F:['female','பெண்'],N:['neuter (fierce)','அலி']};
+  const DEB={Su:6,Mo:7,Ma:3,Me:11,Ju:9,Ve:5,Sa:0}, ORB={Mo:12,Ma:17,Me:14,Ju:11,Ve:10,Sa:15};
+  const TM=['சித்திரை','வைகாசி','ஆனி','ஆடி','ஆவணி','புரட்டாசி','ஐப்பசி','கார்த்திகை','மார்கழி','தை','மாசி','பங்குனி'];
+  const TME=['Apr–May','May–Jun','Jun–Jul','Jul–Aug','Aug–Sep','Sep–Oct','Oct–Nov','Nov–Dec','Dec–Jan','Jan–Feb','Feb–Mar','Mar–Apr'];
+  const DIRS=['East','South','West','North'], DIRT=['கிழக்கு','தெற்கு','மேற்கு','வடக்கு']; // classical sign directions: Aries E, Taurus S, Gemini W, Cancer N, repeating
+  /* clue tables: [English, Tamil] */
+  const C={
+   Su:{n:[['Rajan, Thalaiva, Nathan, Anandam (names)','ராஜா, தலைவா, நாதன், ஆனந்தம் என்ற பெயர்கள்']],
+       f:[['Temple at the centre of the village','கோவில் ஊரின் நடுவே'],['A tree in the temple','கோவிலில் ஒரு மரம்'],['On a hill or raised ground','மலை அல்லது மேடான பகுதி'],['A vahana (vehicle) in the temple, or the deity seated on one','வாகனம் உள்ள கோவில் / வாகனத்தில் அமர்ந்த தெய்வம்']]},
+   Mo:{n:[['Names linked to the eye (Meenakshi, Kannudaiyal types)','கண் சார்ந்த பெயர்கள்']],
+       f:[['Female deity; decorated, moved-from-elsewhere deity','பெண் தெய்வம்; அலங்காரத் தெய்வம்; இடம் மாறிய தெய்வம்'],['A stream or water channel nearby; paddy fields','அருகில் நீரோடை; வயல்'],['A tea shop, hotel or transport office nearby','அருகில் தேநீர்க்கடை, ஓட்டல் அல்லது போக்குவரத்து அலுவலகம்']]},
+   Ma:{n:[['Murugan, Veerabhadrar, Narasimhar (with Mercury), Vettaikkaran / Vetrayan (with Rahu); the name Pandi','முருகர், வீரபத்திரர், நரசிம்மர் (புதன் சேர்க்கை), வேட்டைக்காரன் / வேட்ராயன் (ராகு சேர்க்கை), பாண்டி']],
+       f:[['Male deity, fierce, with bold teeth; accepts animal offerings','ஆண் தெய்வம்; கோரப்பல், வீரம்; பலி கொடுக்கும் வழக்கம்'],['Faces south; red paint; a chariot as vehicle','தெற்கு நோக்கி; சிவப்பு வண்ணம்; தேர் வாகனம்'],['Udukkai (drum) or urumi melam music','உடுக்கை, உறுமி மேளம்'],['A police station nearby','அருகில் காவல் நிலையம்']]},
+   Me:{n:[['Pachai Amman or the Sapta Kannimar (seven maidens)','பச்சை அம்மன் அல்லது சப்தகன்னிமார்']],
+       f:[['Two deities together','இரண்டு தெய்வங்கள்'],['Offering of green cloth, cloth tied to the deity, hand-prints for worship','பச்சை சாற்றுதல், துண்டு கட்டுதல், கைகளை வைத்து வழிபடுதல்'],['A well, a tulsi plant or shrub; farmland, a school or a cycle stand nearby','கிணறு, துளசி மாடம்; அருகில் விளைநிலம், பள்ளிக்கூடம், சைக்கிள் நிலையம்'],['Temple in a hollow; faction quarrels in the management; painted idol (with Venus)','பள்ளத்தில் கோவில்; நிர்வாகத்தில் கோஷ்டி சண்டை'],['With Saturn: a handful of soil (pidi mann) carried and worshipped elsewhere: ask where the soil came from','சனி சேர்க்கை: பிடிமண் எடுத்து வந்து வழிபடுதல்: அந்த மண் எந்த ஊரிலிருந்து வந்தது என்று கேளுங்கள்']]},
+   Ju:{n:[['Guruvammal, Guruvayur, Bala (Bala Murugan, Balambika), Varadharajan, Kamatchi; Muneeswarar (siddha deity)','குருவம்மாள், குருவாயூர், பால முருகன் / பாலாம்பிகை, வரதராஜன், காமாட்சி, முனீஸ்வரர்']],
+       f:[['A wooden deity, or a tree worshipped, or the deity under a tree','மரத்தால் ஆன தெய்வம்; மரத்தடியில் தெய்வம்'],['A gentle, orthodox deity; Brahmins may worship; a child form','ஆசாரமான தெய்வம்; குழந்தை உருவம்'],['Turmeric fields nearby','அருகில் மஞ்சள் விளைநிலம்'],['Faces north','வடக்கு பார்த்த தெய்வம்']]},
+   Ve:{n:[['Angalamman, Meenakshi, Pattasamman / Pattammal, Vellaiyamman, Kannimar, Valli; the word Nachiyar or Natchi','அங்காளியம்மன், மீனாட்சி, பட்டசம்மாள், வெள்ளையம்மன், கன்னிமார், வள்ளி; நாச்சியார் / நாட்சி']],
+       f:[['Beautiful, rich, silk-clad deity; cloth offered','அழகான, ஆடம்பரமான, பட்டு ஆடை சாற்றிய தெய்வம்'],['A horse; faces east','குதிரை; கிழக்கு நோக்கி'],['With Saturn: a protective cover worn on the idol','சனி சேர்க்கை: காப்பு அணிவிப்பு']]},
+   Sa:{n:[['Ayyanar, Muniyappar, Karuppasamy; any deity simply called "Saami"','அய்யனார், முனியப்பர், கருப்பசாமி; "சாமி" என்று அழைக்கப்படும் தெய்வம்']],
+       f:[['Guardian deity, no roof, little upkeep, mud or plain stone image','காவல் தெய்வம்; கூரை இல்லை; பராமரிப்பு குறைவு; மண் அல்லது கல்'],['Faces west; oil anointing; worship at night or on pilgrimage on foot','மேற்கு நோக்கி; எண்ணெய்க் காப்பு; இரவு வழிபாடு; பாதயாத்திரை'],['Two images; a cremation ground nearby (with Ketu)','இரண்டு சாமிகள்; அருகில் சுடுகாடு'],['With Rahu: animal offering','ராகு சேர்க்கை: பலி வழக்கம்']]},
+   Ra:{n:[['Kaliamman, Nagamman / Naga Kannimman','காளியம்மன், நாகம்மன் / நாககன்னி அம்மன்']],
+       f:[['Large or formless image; big head; snake over the head; ant-hill (puttru) worship','பெரிய உருவம்; தலை பெரியது; பாம்பு; புற்று வழிபாடு'],['Possession and dance (saami aadal); anklets; pambai and udukkai drums','சாமி ஆடுதல்; சலங்கை; பம்பை, உடுக்கை'],['Animal offering; liquor, cheroot, whip, trident as offerings','பலி; மது, சுருட்டு, சாட்டை, சூலம் படையல்'],['A bell hall (mani mandapam); a big pond or lake, a railway or bridge nearby','மணி மண்டபம்; அருகில் பெரிய குட்டை / ஏரி, ரயில் அல்லது பாலம்']]},
+   Ke:{n:[['A name with "Aayi"; Hanuman worship; a siddha deity (jeeva samadhi)','"ஆயி" என்ற பெயர்; ஆஞ்சநேயர்; சித்தர்; ஜீவசமாதி']],
+       f:[['Deity only to the neck, or with a head problem; moustached; image drawn and erased again and again; 5 or 7 stones','கழுத்து வரை உருவம்; மீசை; 5 அல்லது 7 கற்கள்'],['Faces north-west; inside a cave or rock, or in the middle of scrub forest; thorn fence; a lane or footpath','வடமேற்கு; குகை / பாறை; முள்வேலி; ஒற்றையடிப் பாதை'],['Monkeys or dogs around; a dog statue; a sumai-thangi stone','குரங்கு, நாய் நடமாட்டம்; சுமைதாங்கிக் கல்'],['Oracle speaking (arulvakku); standing on thorn sandals; a horn or conch; swing; thread-tying; mouth-tied puja','அருள்வாக்கு; முள் செருப்பு; கொம்பு / சங்கு; ஊஞ்சல்; கயிறு'],['Cheroot or beedi offered; a church, lawyer\'s office or thread mill nearby','சுருட்டு, பீடி படையல்; அருகில் தேவாலயம், வழக்கறிஞர் அலுவலகம், நூல் ஆலை']]}
+  };
+  const COMB=[['Su','Sa','Sun with Saturn: a petrol bunk near the temple','சூரியன் + சனி: கோவில் அருகே பெட்ரோல் பங்க்'],
+    ['Ma','Me','Mars with Mercury: the deity may be Narasimhar','செவ்வாய் + புதன்: நரசிம்மர்'],['Ma','Ra','Mars with Rahu: Vettaikkaran or Vetrayan','செவ்வாய் + ராகு: வேட்டைக்காரன் / வேட்ராயன்'],
+    ['Me','Sa','Mercury with Saturn: a handful of soil (pidi mann) is carried and worshipped elsewhere','புதன் + சனி: பிடிமண் வழிபாடு'],['Me','Ve','Mercury with Venus: the idol is painted','புதன் + சுக்கிரன்: சிலைக்கு வண்ணம்'],
+    ['Ve','Sa','Venus with Saturn: a protective cover on the idol','சுக்கிரன் + சனி: காப்பு அணிவிப்பு'],['Sa','Ra','Saturn with Rahu: animal offering','சனி + ராகு: பலி வழக்கம்']];
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function block(x){
+    const P=x.P, A=x.A, sg=l=>Math.floor(l/30)%12, nk=l=>Math.floor(l/(40/3))%27, dsg=c=>sg(P[c]);
+    const S5=(A+4)%12, L5=SIGNS[S5][1], T=[], H=[];
+    const occ=CODES.filter(c=>dsg(c)===S5), lordSign=dsg(L5), lordNak=nk(P[L5]);
+    const male=s=>s%2===0;
+    let g1=male(lordSign)?'M':'F', rev=false;
+    if(L5!=='Ra'&&L5!=='Ke'){ if(dsg('Ra')===lordSign||dsg('Ke')===lordSign){rev=true;g1=g1==='M'?'F':'M';} }
+    const ng=NG[lordNak];
+    let verdict, verdictT;
+    if(g1==='M'){ if(ng==='M'){verdict='A male deity, clearly.';verdictT='ஆண் தெய்வம், தெளிவாக.';} else if(ng==='F'){verdict='A male deity, with an Amman shrine beside (the common village pattern: Ayyanar or Karuppar with an Amman).';verdictT='ஆண் தெய்வம்; உடன் அம்மன் சன்னதியும் உண்டு.';} else {verdict='A male deity, with a fierce Amman beside.';verdictT='ஆண் தெய்வம்; உடன் வீரமான அம்மன்.';} }
+    else { if(ng==='F'){verdict='A female deity, clearly.';verdictT='பெண் தெய்வம், தெளிவாக.';} else if(ng==='M'){verdict='A female deity is primary, with a male guardian deity as well (looser reading).';verdictT='பெண் தெய்வம் முதன்மை; உடன் ஆண் காவல் தெய்வமும் (தளர்வான வாசிப்பு).';} else {verdict='A female deity, fierce (a warrior Amman, Kali or Bhadrakali type, possibly at the village edge).';verdictT='பெண் தெய்வம், வீரமான அம்மன்.';} }
+    const gs=c=>(c==='Ra'||c==='Ke')?null:male(dsg(c))?'M':'F';
+    const gSa=male(dsg('Sa'))?'M':'F', gRa=male(dsg('Ra'))?'M':'F', base=male(lordSign)?'M':'F';
+    let conf, confT;
+    if(g1===gSa&&g1===gRa&&!rev){conf='Strong: the 5th lord, Saturn and Rahu all stand in signs of the same gender.';confT='உறுதி: 5-ம் அதிபதி, சனி, ராகு மூவரும் ஒரே பாலின ராசியில்.';}
+    else if(base===gSa&&base!==gRa){conf='Fairly strong: the 5th lord and Saturn agree.';confT='வலுவானது: 5-ம் அதிபதியும் சனியும் ஒத்துப்போகின்றன.';}
+    else if(base===gRa&&base!==gSa){conf='Medium: the 5th lord and Rahu agree; check both a male and a female shrine.';confT='நடுத்தரம்: ஆண் + அம்மன் இரட்டைச் சன்னதியைப் பரிசோதியுங்கள்.';}
+    else if(base!==gSa&&base!==gRa){conf='Weak: the 5th lord stands alone; keep both possibilities open.';confT='பலவீனம்: இரு சாத்தியங்களையும் திறந்து வையுங்கள்.';}
+    else {conf='Strong: all three agree.';confT='உறுதி: மூவரும் ஒத்துப்போகின்றனர்.';}
+    if(rev){conf='The 5th lord is joined by '+(dsg('Ra')===lordSign?'Rahu':'Ketu')+', so the gender reading is reversed. '+conf;confT='5-ம் அதிபதியுடன் ராகு / கேது சேர்க்கை: பாலின வாசிப்பு தலைகீழ். '+confT;}
+    /* ancestor / family name sounds from the 9th house (name tradition) */
+    try{ if(window.GA_P2){ const S9=(A+8)%12, L9=SIGNS[S9][1], d9=dsg(L9), own=SIGNS[d9][1]===L9||({Su:0,Mo:1,Ma:9,Me:5,Ju:3,Ve:11,Sa:6})[L9]===d9, deb=DEB[L9]===d9;
+      const h9=((d9-A+12)%12)+1, bad=[6,8,12].indexOf(h9)>=0&&!own, okS=(own||!deb)&&!bad&&!deb;
+      const o9=CODES.filter(c=>dsg(c)===S9), sel=[L9]; const st=GA_P2.lordOfNak(P[L9]); if(sel.indexOf(st)<0)sel.push(st); o9.slice(0,2).forEach(c=>{if(sel.indexOf(c)<0)sel.push(c);});
+      H.push('<div class="lf-sec"><h3>👪 Ancestor name sounds (9th house)<span class="ta">முன்னோர் பெயர் ஓசைகள் (9-ஆம் இடம்)</span></h3></div><div class="ntrules">'
+        +(okS?sel.map((p,i)=>'<div class="ntr '+(i?'m':'y')+'"><b>'+NAME[p]+' · '+TA[p]+'</b>: '+GA_P2.nmw[p].w.join('; ')+'</div>').join('')+GA_P2.combos(sel).map(c=>'<div class="ntr y">'+esc(c)+'</div>').join('')+'<div class="ntr m">9th lord '+NAME[L9]+' in '+SIGNS[d9][0]+' is not weak, so these sounds may appear in the father\'s or grandfather\'s name. Treat them as questions to ask, not as answers.<span class="ta">இவை கேட்க வேண்டிய கேள்விகள்; முடிவுகள் அல்ல.</span></div>'
+         :'<div class="ntr m">The 9th lord '+NAME[L9]+' is weak here, so the tradition gives no sound clue. The honest answer is: nothing comes through; do not force a name.<span class="ta">9-ம் அதிபதி பலவீனம்; பெயர் எடுக்க முயல வேண்டாம்.</span></div>')+'</div>'); } }catch(e){}
+    /* change of deity */
+    const lordWeak=(DEB[L5]===lordSign)?'debilitated':(L5!=='Su'&&ORB[L5]!=null&&Math.abs(((P[L5]-P.Su+540)%360)-180)<ORB[L5]?'combust (approximate)':null);
+    const changed=occ.length>0&&lordWeak;
+    /* clues from occupants of the 5th; if none, from the 5th lord */
+    const keys=occ.length?occ.slice():[L5];
+    const dirIdx=S5%4;
+    H.push('<div class="lf-sec"><h3>🛕 Kuladeivam (family deity) clues<span class="ta">குலதெய்வக் குறிப்புகள்</span></h3></div>');
+    H.push('<p class="legend">Method: traditional, from the 5th house, its lord and the planets in it. These are <b>possibilities to check with family elders and in the ancestral village</b>, not certainties; schools of astrology differ. Best read from the eldest child\'s chart. <span class="ta">மரபுப்படி 5-ஆம் இடம், அதன் அதிபதி, அங்குள்ள கிரகங்கள்; இவை சாத்தியங்களே; மூத்த பிள்ளையின் ஜாதகத்தில் மிகத் தெளிவாக இருக்கும்.</span></p>');
+    H.push('<div class="bpkv"><div>5th house: <b>'+SIGNS[S5][0]+' · '+TSIGN[S5]+'</b>; lord <b>'+NAME[L5]+' · '+TA[L5]+'</b> in <b>'+SIGNS[lordSign][0]+' · '+TSIGN[lordSign]+'</b>, star <b>'+NAKS[lordNak]+'</b> ('+GT[ng][0]+')</div><div>Planets in the 5th: <b>'+(occ.length?occ.map(c=>NAME[c]+' · '+TA[c]).join(', '):'none')+'</b></div></div>');
+    H.push('<div class="ntrules"><div class="ntr y"><b>Kuladeivam is most likely: '+verdict+'</b><span class="ta">'+verdictT+'</span></div><div class="ntr m">'+conf+'<span class="ta">'+confT+'</span></div></div>');
+    T.push('','KULADEIVAM CLUES (குலதெய்வம்)','5th house '+SIGNS[S5][0]+'; lord '+NAME[L5]+' in '+SIGNS[lordSign][0]+', star '+NAKS[lordNak],'Reading: '+verdict,conf);
+    /* names */
+    const names=[],feat=[];
+    keys.forEach(c=>{const t=C[c]; if(!t)return; t.n.forEach(n=>names.push([c,n])); t.f.forEach(f=>feat.push([c,f]));});
+    if(L5!==keys[0]&&occ.length){ /* lord's own signature as secondary */ }
+    H.push('<div class="lf-sec"><h3>🏷 Names to ask about<span class="ta">பெயர் குறிப்புகள்</span></h3></div><div class="ntrules">'
+      +names.map(n=>'<div class="ntr y"><b>'+NAME[n[0]]+'</b>: '+esc(n[1][0])+'<span class="ta">'+esc(n[1][1])+'</span></div>').join('')
+      +'<div class="ntr m">Planet clue: the planet that occupies the 5th speaks first; with no planet there, the 5th lord speaks. These are sound and theme clues (for example, a name containing "Guru", "Bala" or "Ayyanar"), not a single sure name.<span class="ta">5-ஆம் இடத்தில் நிற்கும் கிரகம் முதலில் பேசும்; இல்லையெனில் 5-ம் அதிபதி.</span></div></div>');
+    H.push('<div class="lf-sec"><h3>📍 Where and what to look for<span class="ta">இடம் மற்றும் அடையாளங்கள்</span></h3></div><div class="ntrules">'
+      +'<div class="ntr y">Look in the <b>ancestral village</b> where your forefathers lived, not in the city you live in now. Direction hint (classical sign direction of the 5th house, a soft clue): <b>'+DIRS[dirIdx]+' · '+DIRT[dirIdx]+'</b> of the family\'s native region.<span class="ta">இன்று வாழும் நகரத்தில் அல்ல; முன்னோர்கள் வாழ்ந்த ஊரில் தேடுங்கள்.</span></div>'
+      +feat.map(f=>'<div class="ntr"><b>'+NAME[f[0]]+'</b>: '+esc(f[1][0])+'<span class="ta">'+esc(f[1][1])+'</span></div>').join('')
+      +COMB.filter(c=>occ.indexOf(c[0])>=0&&occ.indexOf(c[1])>=0).map(c=>'<div class="ntr y">'+esc(c[2])+'<span class="ta">'+esc(c[3])+'</span></div>').join('')
+      +(occ.indexOf('Mo')>=0&&occ.indexOf('Sa')>=0&&occ.indexOf('Ke')>=0?'<div class="ntr y">Moon, Saturn and Ketu together: a lathe workshop near the temple.<span class="ta">அருகில் லேத் பட்டறை.</span></div>':'')
+      +'<div class="ntr m">First find the name of the ancestral village (ask the eldest relatives, old wedding or tonsure records), then check these signs against the shrines there.<span class="ta">முதலில் ஊரின் பெயரைக் கண்டறியுங்கள்; பிறகு இந்த அடையாளங்களை அங்குள்ள கோவில்களுடன் ஒப்பிடுங்கள்.</span></div></div>');
+    names.forEach(n=>T.push('Name clue ('+NAME[n[0]]+'): '+n[1][0])); feat.forEach(f=>T.push('Sign ('+NAME[f[0]]+'): '+f[1][0]));
+    /* change of deity */
+    H.push('<div class="lf-sec"><h3>🔁 Has the deity changed?<span class="ta">தெய்வம் மாறியதா?</span></h3></div><div class="ntrules">'
+      +(changed?'<div class="ntr m">A planet stands in the 5th and the 5th lord is '+lordWeak+': tradition says the family may have changed from the original deity to another one in an earlier generation. This is history, not a fault. Compare the signs above with today\'s temple; if they do not match, the original may be elsewhere. Ask the eldest relatives and the cousins who stayed in the village.<span class="ta">5-ஆம் இடத்தில் கிரகம் இருந்து 5-ம் அதிபதி நீசம் / அஸ்தமனம்: மூல தெய்வம் மாறியிருக்கலாம்; இது குற்றமல்ல, வரலாறு.</span></div>'
+        :'<div class="ntr y">No sign of a change of deity (this needs both a planet in the 5th and a debilitated or combust 5th lord).<span class="ta">தெய்வம் மாறியதற்கான அடையாளம் இல்லை.</span></div>')+'</div>');
+    T.push(changed?'Change of deity possible: 5th lord '+lordWeak:'No sign of a change of deity');
+    /* pooja months */
+    const mths=[[L5,'5th lord','முதன்மைப் பூஜை, முக்கிய நேர்த்திக்கடன்','main pooja and key vows'],['Sa','Saturn','ஆண்டு வழிபாடு, பாதயாத்திரை','annual worship, walking pilgrimage'],['Ra','Rahu','படையல், பலி தொடர்பான நேர்த்திக்கடன்','offerings and sacrifice vows']];
+    H.push('<div class="lf-sec"><h3>📅 Best months and days to worship<span class="ta">வழிபாட்டுக்கு உகந்த மாதங்கள்</span></h3></div><div class="ntrules">'
+      +mths.map(m=>{const s=dsg(m[0]);return '<div class="ntr y"><b>'+TM[s]+'</b> ('+TME[s]+') · '+m[1]+' in '+TSIGN[s]+': '+m[3]+'<span class="ta">'+m[2]+'</span></div>';}).join('')
+      +'<div class="ntr m">Day: the new-moon day (Amavasya) of that month, or the temple\'s own festival day. If the village custom differs from this, follow the village custom. Go together with your relatives; first ask whether any old vow remains unfulfilled.<span class="ta">நாள்: அந்த மாதத்து அமாவாசை அல்லது ஊர்த் திருவிழா; ஊர் வழக்கமே மேலோங்கும்; பங்காளிகளுடன் சேர்ந்து செல்லுங்கள்; பழைய நேர்த்திக்கடன் பாக்கி உள்ளதா என்று கேளுங்கள்.</span></div></div>');
+    mths.forEach(m=>T.push('Worship month ('+m[1]+'): '+TM[dsg(m[0])]));
+    H.push('<p class="legend">This section follows a traditional method only and makes no claim of accuracy. Please confirm with family elders and an experienced astrologer, and visit the ancestral village. You need feel no guilt if the deity cannot be found. <span class="ta">இது மரபு முறை மட்டுமே; துல்லியம் குறித்த கூற்று இல்லை; பெரியவர்களிடமும் அனுபவமுள்ள ஜோதிடரிடமும் உறுதிசெய்யுங்கள்; கண்டறிய முடியாவிட்டாலும் குற்ற உணர்ச்சி வேண்டாம்.</span></p>');
+    return {html:H.join(''),text:T};
+  }
+  return {block:block,NG:NG};
+})();
+
+/* ---------- v11.3: name-sound clues, missing person and lost article, who / which direction, method agreement and re-ask ---------- */
+window.GA_P2=(function(){
+  const NMW={ /* planet word bundles from the name tradition: words, themes */
+    Su:{w:['Eswaran, Eswari, Siva, Lingam, Sankar','Raja, Arasu, Durai','Ravi, Aadhi, Prakash, Giri','Mohan, Rathinam, Anandam'],th:'authority, light, a gem, gold-copper'},
+    Mo:{w:['Chandran, Mathi, Sasi, Nisha / Nisa (night)','Sudha, Lalitha, Nayagi, Muthu','Karunya'],th:'water, pearl, the mind'},
+    Ma:{w:['Murugan, Vel, Pandi, Senthil','Mahathi','Rathinam (red stone)'],th:'property, kitchen, copper, weapons, army'},
+    Me:{w:['Perumal, Narayanan, Krishnan, Kannan, Ram, Venkatesan','Revathi, Babu, Prabhu','Saraswathi (with Jupiter)'],th:'papers, accounts, writing, trade, empty land'},
+    Ju:{w:['Gnanam, Dhanam, Kanakam','Nithin, Kumari','Baby (with the 5th house)'],th:'gold, money, books, a teacher'},
+    Ve:{w:['Mallika, Pushpam, Latha, Sugandhi, Jasmine','Lakshmi','Priya, Kavya'],th:'flowers, perfume, jewellery, sweets, a vehicle or computer'},
+    Sa:{w:['Muni, Saami, Das / Dasan, Aiyya','endings: -varan, -karan, -ari'],th:'iron, oil, black things, old things'},
+    Ra:{w:['names ending in -sh (Mahesh, Ramesh)','Riyaz (with Mars)'],th:'machines, smoke, a railway track, foreign things'},
+    Ke:{w:['Mani, Kesavan, Vinayagar','Shanthi, Shantha (female chart)','Ganesh'],th:'hair, a bell, beads, a small hidden thing'}
+  };
+  const NK_LORD=['Ke','Ve','Su','Mo','Ma','Ra','Ju','Sa','Me'];
+  const lordOfNak=lon=>NK_LORD[Math.floor(((lon%360+360)%360)/(40/3))%27%9];
+  const ORD=n=>n+((n%100>=11&&n%100<=13)?'th':n%10===1?'st':n%10===2?'nd':n%10===3?'rd':'th');
+  const DIRV=['east','south','west','north'], DIRTA=['கிழக்கு','தெற்கு','மேற்கு','வடக்கு'];
+  const dirOf=sg=>sg%4; /* Aries E, Taurus S, Gemini W, Cancer N, repeating */
+  const MODE=['movable (far, or still moving)','fixed (near, staying put)','dual (middle distance, may move again)'];
+  const ELE=['fire: a hot, industrial or hilly place, kitchens, workshops','earth: farmland, a village, a plain, a building site','air: a market, a station, a high floor, an open busy place','water: near a river, a tank, the sea, a wet or low place'];
+  const SIGNPLACE=['an electric / "min" sound place','','a "maan" sound place','Trichy-type / a river town','Canada / a palace-like place','Kerala / Switzerland / a thatched house','','Gulf country','','India','a flying (air) place','the sea or a port'];
+  const WHO={Su:['an officer, a senior or a government person','அதிகாரி / அரசுத் தொடர்பு'],Mo:['a woman, the mother or a public person','பெண் / தாய்'],Ma:['a brother, police or a soldier','சகோதரர் / காவல்துறை'],Me:['a broker, a clerk or a young person','தரகர் / எழுத்தர்'],Ju:['an elder, a bank officer, a lawyer or a teacher','பெரியவர் / வங்கி அதிகாரி / வழக்கறிஞர்'],Ve:['a trader, a young woman or a spouse','வியாபாரி / இளம்பெண் / மனைவி'],Sa:['an old person or an old acquaintance','வயதானவர் / பழைய அறிமுகம்'],Ra:['a stranger, a foreigner or an outsider','அந்நியர் / வெளிநாட்டவர்'],Ke:['a spiritual person, a relative who keeps to himself','ஆன்மிக நபர் / ஒதுங்கிய உறவினர்']};
+  const SL=['Ma','Ve','Me','Mo','Su','Me','Ve','Ma','Ju','Sa','Sa','Ju'], EXS={Su:0,Mo:1,Ma:9,Me:5,Ju:3,Ve:11,Sa:6}, DBS={Su:6,Mo:7,Ma:3,Me:11,Ju:9,Ve:5,Sa:0};
+  const used={}, mod=x=>((x%360)+360)%360;
+  function strong(ch,p,L){
+    const o=ch.pl[p]; if(!o)return 0; const h=((o.sg-L+12)%12)+1; let s=0;
+    if(SL[o.sg]===p||EXS[p]===o.sg)s+=2; else if(DBS[p]===o.sg)s-=2;
+    if(p!=='Su'&&p!=='Ra'&&p!=='Ke'&&ch.pl.Su){const d=Math.abs(mod(o.lon-ch.pl.Su.lon+180)-180),c={Mo:12,Ma:17,Me:14,Ju:11,Ve:10,Sa:15}[p]; if(c&&d<c)s-=1;}
+    if([6,8,12].indexOf(h)>=0&&SL[o.sg]!==p)s-=1; else if([1,4,5,7,9,10,11].indexOf(h)>=0)s+=1;
+    return s;
+  }
+  function combos(sel){
+    const o=[], has=c=>sel.indexOf(c)>=0, X=(a,b)=>has(a)&&has(b);
+    if(X('Su','Ra')||X('Su','Ke'))o.push('Sun with a node: the name may end in "-sh" (Mahesh, Sarvesh, Yogesh).');
+    if(X('Su','Sa'))o.push('Sun with Saturn: the "-dasan" ending (Sivadasan).');
+    if(X('Su','Ve'))o.push('Sun with Venus: Poovarasan (male), Poovarasi / Roshini / Mallika (female).');
+    if(X('Su','Mo'))o.push('Sun with Moon: Bhanumathi, Sivakami, Poornima, Sivasakthi (female); Bhanu Manohar (male).');
+    if(X('Su','Ma'))o.push('Sun with Mars: Senniyappan, Balamurugan.');
+    if(X('Ma','Ra'))o.push('Mars with Rahu: Riyaz / Riya, or a Gulf-city sound (Riyadh).');
+    if(X('Me','Ve'))o.push('Mercury with Venus: Padmapriya, Kavya.');
+    if(X('Me','Sa'))o.push('Mercury with Saturn: Kaliyaperumal, Rahana.');
+    if(X('Ju','Ke'))o.push('Jupiter with Ketu: Gnanasundaram, Gnanasekar.');
+    if(X('Mo','Sa'))o.push('Moon with Saturn: Chandramouli.');
+    if(X('Ma','Mo'))o.push('Mars with Moon: Sakthi Bharathi.');
+    return o;
+  }
+  function nameBlock(ch,L,kh,ky,gate,what){
+    const o=ch.pl[ky]; if(!o)return '';
+    const star=lordOfNak(o.lon), occ=['Su','Mo','Ma','Me','Ju','Ve','Sa','Ra','Ke'].filter(p=>ch.pl[p]&&ch.pl[p].sg===((L+kh-1)%12)&&p!==ky);
+    const sel=[ky]; if(sel.indexOf(star)<0)sel.push(star); occ.slice(0,2).forEach(p=>{if(sel.indexOf(p)<0)sel.push(p);});
+    let h='<div class="lf-sec"><h3>🔤 Name and sound clues<span class="ta">பெயர் / ஓசைக் குறிப்புகள்</span></h3></div>';
+    if(gate<0){h+='<p class="legend"><b>Low confidence:</b> the significator is weak in this chart, so treat the sounds below as faint possibilities only. <span class="ta">குறிக்கும் கிரகம் பலவீனம்; கீழ்க்காணும் ஓசைகளை மெல்லிய சாத்தியங்களாக மட்டுமே எடுங்கள்.</span></p>';}
+    h+='<div class="ntrules">';
+    sel.forEach((p,i)=>{h+='<div class="ntr '+(i===0?'y':'m')+'"><b>'+NAME[p]+' · '+TA[p]+'</b>'+(i===0?' (significator)':p===star?' (its star lord)':' (in the house)')+': '+NMW[p].w.join('; ')+'<br><i>Things:</i> '+NMW[p].th+'</div>';});
+    combos(sel).forEach(c=>{h+='<div class="ntr y">'+c+'</div>';});
+    h+='<div class="ntr m">'+what+' Ask for <b>one fragment at a time</b> ("does the name begin with ...?"); stop at the first "no". These are sound possibilities from a naming tradition, strongest when the planet is strong; a single sound fits hundreds of names and places.<span class="ta">ஒவ்வொரு துண்டாகக் கேளுங்கள்; முதல் "இல்லை" என்றால் நிறுத்துங்கள்.</span></div></div>';
+    return h;
+  }
+  function missingBlock(ch,L,kh,ky,pts){
+    const o=ch.pl[ky], sg=o.sg, h0=((sg-L+12)%12)+1, mo=ch.pl.Mo, d=dirOf(sg), dm=dirOf(mo.sg);
+    const nature=[0,3,6,9].indexOf(sg)>=0?0:[1,4,7,10].indexOf(sg)>=0?1:2;
+    const dist=[1,4,7,10].indexOf(h0)>=0?'near (angular house)':[2,5,8,11].indexOf(h0)>=0?'a middle distance (succeedent house)':'far (cadent house)';
+    let h='<div class="lf-sec"><h3>🧭 Direction, distance and place<span class="ta">திசை, தூரம், இடம்</span></h3></div><div class="ntrules">';
+    h+='<div class="ntr y">Direction of the person: <b>'+DIRV[d]+' · '+DIRTA[d]+'</b> (from the significator in '+SIGNS[sg][0]+'); the Moon in '+SIGNS[mo.sg][0]+' adds <b>'+DIRV[dm]+'</b>'+(d===dm?', which agrees.':'. If the two differ, start with the significator.')+'</div>';
+    h+='<div class="ntr">Distance: '+dist+'; the sign is '+MODE[nature]+'.<span class="ta">தூரம்: '+(h0%3===1?'அருகில்':h0%3===2?'நடுத்தரம்':'தொலைவில்')+'</span></div>';
+    h+='<div class="ntr">Kind of place: '+ELE[sg%4===0?0:sg%4===1?1:sg%4===2?2:3].replace(/^/,'')+'.</div>';
+    if(SIGNPLACE[sg])h+='<div class="ntr m">Sound or region tradition for '+SIGNS[sg][0]+': '+SIGNPLACE[sg]+'.</div>';
+    if(ch.pl.Ra&&ch.pl.Ra.sg===sg||ch.pl.Ke&&ch.pl.Ke.sg===sg)h+='<div class="ntr m">A node with the significator: a place near a railway track, a bridge or a station.<span class="ta">ரயில் பாதை / பாலம் / நிலையம் அருகில்.</span></div>';
+    h+='<div class="ntr '+(pts>=2?'y':pts>=0?'m':'n')+'">The chart '+(pts>=2?'supports a safe return or contact.':pts>=0?'gives a doubtful, delayed return or contact.':'shows obstruction; do not wait only on the chart.')+'</div>';
+    h+='<div class="ntr n"><b>Please act in the real world first.</b> If someone is missing, inform the police now and give a recent photograph. In India you can call 112; for a missing child, 1098 (Childline); for women in distress, 181. This reading only narrows a search. It is not proof of where a person is and must never be used to accuse anyone.<span class="ta">காணாமல் போனவர் இருந்தால் உடனே காவல்துறைக்குத் தெரிவியுங்கள் (112; குழந்தை 1098; பெண்கள் 181). இது தேடலைச் சுருக்க மட்டுமே; யாரையும் குற்றம் சாட்டப் பயன்படுத்தாதீர்கள்.</span></div></div>';
+    return h;
+  }
+  function lostBlock(ch,L,ky,pts,theft){
+    const o=ch.pl[ky], sg=o.sg, h0=((sg-L+12)%12)+1, d=dirOf(sg), bad=[6,8,12].indexOf(h0)>=0;
+    let h='<div class="lf-sec"><h3>🔎 Lost article: how findable, which way<span class="ta">தொலைந்த பொருள்</span></h3></div><div class="ntrules">';
+    h+='<div class="ntr y">Look towards the <b>'+DIRV[d]+' · '+DIRTA[d]+'</b> of the place where it was last used. Likely kind of article: <b>'+NMW[ky].th+'</b>.</div>';
+    h+='<div class="ntr '+(pts>=2&&!bad?'y':pts>=0?'m':'n')+'">'+(pts>=2&&!bad?'Findable: the significator is well placed and linked to the asker.':pts>=0?'Possible but slow: check all places again, in daylight, with another person.':'Difficult: the article may have passed on or been spoiled; do not spend long on it.')+'</div>';
+    h+='<div class="ntr m">'+(theft?'<b>Theft:</b> please also report the loss to the police. The guidance on the possible thief is given below, with a disclaimer.<span class="ta">திருட்டு: காவல்துறையிலும் புகார் செய்யுங்கள். சாத்தியமான திருடன் பற்றிய ஜோதிட வழிகாட்டல் கீழே, அறிவிப்புடன்.</span>':'Also retrace your steps from the last time you saw it, and ask who else was nearby; do not suspect a person without proof.')+'</div></div>';
+    return h;
+  }
+  /* ---------- v11.7: sub-lord, exchange, deity and place-name logic for hidden / buried articles ---------- */
+  const YR9={Ke:7,Ve:20,Su:6,Mo:10,Ma:7,Ra:18,Ju:16,Sa:19,Me:17};
+  function subLord(lon){ lon=mod(lon); const n=Math.floor(lon/(40/3)), st=NK_LORD[n%9], pos=(lon-n*(40/3))*9, s0=NK_LORD.indexOf(st); let a=0; for(let j=0;j<9;j++){ const p=NK_LORD[(s0+j)%9]; a+=YR9[p]; if(pos<a)return p; } return st; }
+  const DEITY={Su:['Sivan / Eswaran / Surya','சிவன் / சூரியன்'],Mo:['Amman / Parvathi / Meenakshi / Mariamman','அம்மன் / மீனாட்சி / மாரியம்மன்'],Ma:['Murugan / Subramaniyan / Velan','முருகன்'],Me:['Perumal / Vishnu / Krishnan / Ranganathar','பெருமாள் / கிருஷ்ணன்'],Ju:['Dakshinamurthy / Guru / Sai','குரு / தட்சிணாமூர்த்தி'],Ve:['Lakshmi / Andal / Mahalakshmi','லட்சுமி / ஆண்டாள்'],Sa:['Sani / Ayyanar / Karuppu / Ayyappan','சனீஸ்வரர் / ஐயனார் / கருப்பு'],Ra:['Durga / Kali / Nagamman','துர்க்கை / காளி / நாகம்மன்'],Ke:['Ganapathi / Vinayagar / Pillayar','விநாயகர் / பிள்ளையார்']};
+  const SUFX={Su:'Koil street, Raja street, a government or temple-owned plot',Mo:'Kulam, Eri, a tank or a water-side place',Ma:'Medu, Malai, Kottai: a raised or rocky place',Me:'a market, Pettai, a school or a shopping street',Ju:'a Nagar, a bank, a school or a respected old house',Ve:'Nagar, Colony, Gardens, Puram: a residential layout',Sa:'an old place, a field, Palayam, a workers\' quarter or a well',Ra:'a station, a bridge, a drain, a foreign-style or irregular place',Ke:'a hill, a forest edge, an old or ruined shrine, Kottai'};
+  const SIGNNAME={11:'Meena / Meenakshi',5:'Kanya / Kanniga',6:'Thulasi',10:'Kumbha',4:'Simha',8:'Dhanu / Dhanalakshmi'};
+  const FEM={Mo:1,Ve:1}, MALEP={Su:1,Ma:1,Ju:1,Sa:1};
+  function exchanges(ch,focus){
+    const out=[], P=['Su','Mo','Ma','Me','Ju','Ve','Sa'];
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){ const a=P[i],b=P[j]; if(!ch.pl[a]||!ch.pl[b])continue; if(SL[ch.pl[a].sg]===b&&SL[ch.pl[b].sg]===a&&(focus.indexOf(a)>=0||focus.indexOf(b)>=0))out.push([a,b]); }
+    return out;
+  }
+  function hideBlock(ch,L){
+    const l7=SL[(L+6)%12], l4=SL[(L+3)%12], l2=SL[(L+1)%12], o4=ch.pl[l4], o7=ch.pl[l7]; if(!o4||!o7)return '';
+    const h4=((o4.sg-L+12)%12)+1, st4=lordOfNak(o4.lon), sb4=subLord(o4.lon), st7=lordOfNak(o7.lon), sb7=subLord(o7.lon);
+    const occ7=['Su','Mo','Ma','Me','Ju','Ve','Sa','Ra','Ke'].filter(p=>ch.pl[p]&&ch.pl[p].sg===((L+6)%12)&&p!==l7);
+    const where={1:'at or near the asker\'s own place',4:'in a house or home, perhaps under the floor or in the ground',7:'at the other person\'s place',9:'at or near a temple, a religious place or an elder\'s house',10:'at a workplace or shop',12:'far away, in a secluded or institutional place',3:'close by, near a sibling or neighbour',5:'near a school, a playground or children\'s place',6:'near a place of work, service, illness or dispute',8:'in a hidden, isolated or dangerous place',11:'at a friend\'s place',2:'in a family place or a safe'}[h4]||'nearby';
+    let h='<div class="lf-sec"><h3>⛪ Hiding place, deity and place-name sounds<span class="ta">மறைவிடம், தெய்வம், இடப்பெயர் ஓசை</span></h3></div><div class="ntrules">';
+    h+='<div class="ntr y">The 4th house is the ground and the hidden or kept place. Its lord <b>'+NAME[l4]+'</b> stands in the <b>'+ORD(h4)+' house</b> ('+SIGNS[o4.sg][0]+'): the article may be hidden <b>'+where+'</b>. The 4th house also rules floors, plots and what is buried; so "kept in the ground or under a building" is possible.<span class="ta">4ஆம் வீடு நிலம், மறைவிடம்; அதன் அதிபதி '+h4+'ஆம் வீட்டில்.</span></div>';
+    h+='<div class="ntr y">Star lord of the 4th lord: <b>'+NAME[st4]+'</b> → deity / place word: <b>'+DEITY[st4][0]+'</b> <span class="ta">'+DEITY[st4][1]+'</span>. Sub lord: <b>'+NAME[sb4]+'</b> → kind of place: '+SUFX[sb4]+'.</div>';
+    h+='<div class="ntr y">Possible place-name pattern: <b>'+DEITY[st4][0].split(' / ')[0]+' + '+SUFX[sb4].split(',')[0].split(':')[0].replace(/^a /,'')+'</b> (for example, a place called after this deity). Ask: "is there a temple of this deity nearby?"</div>';
+    const ex=exchanges(ch,[l7].concat(occ7));
+    ex.forEach(e=>{ const g=(a=>FEM[a]?'female':MALEP[a]?'male':'neutral, a young person');  h+='<div class="ntr y"><b>Exchange of signs (parivartana) between '+NAME[e[0]]+' and '+NAME[e[1]]+'</b>: two people are joined in this matter ('+g(e[0])+' and '+g(e[1])+'); one planet\'s traits show in the other\'s name and role. This is a strong link, so give both sets of name sounds.<span class="ta">'+TA[e[0]]+' – '+TA[e[1]]+' பரிவர்த்தனை: இருவர் சேர்ந்த செயல்.</span></div>'; });
+    const sg7=ch.pl[sb7]?ch.pl[sb7].sg:-1;
+    h+='<div class="ntr m">The thief planet <b>'+NAME[l7]+'</b> is in the star of <b>'+NAME[st7]+'</b> and the sub of <b>'+NAME[sb7]+'</b>'+(sg7>=0?' (in '+SIGNS[sg7][0]+')':'')+'. The star lord shows the doer\'s link ('+NMW[st7].th+'); the sub lord\'s sign gives a further name sound'+(SIGNNAME[sg7]?': <b>'+SIGNNAME[sg7]+'</b>':'')+', often the name of a partner or helper.</div>';
+    ['Ju','Ve'].forEach(k=>{ const ok=ch.pl[k]; if(!ok)return; const lk=[st7].concat(ex.map(e=>e[0]===l7?e[1]:e[0]));
+      const share=Object.keys(ch.pl).filter(p=>p!==k&&ch.pl[p]&&ch.pl[p].sg===ok.sg&&(p===st7||p===l7||lk.indexOf(p)>=0)); if(share.length)h+='<div class="ntr m">'+NAME[k]+' ('+(k==='Ju'?'gold, money':'jewellery')+') shares a sign with '+share.map(p=>NAME[p]).join(', ')+', which is linked to the 7th lord: part of the article may have passed to a second person (a partner or friend) of the thief.<span class="ta">பொருளின் ஒரு பகுதி இரண்டாம் நபருக்குச் சென்றிருக்கலாம்.</span></div>'; });
+    h+='<div class="ntr m">These are tradition-based sound and symbol clues. Ask one fragment at a time and let the police verify everything.</div></div>';
+    return h;
+  }
+  function thiefBlock(ch,L){
+    const l7=SL[(L+6)%12], o=ch.pl[l7], sg=o.sg, d=dirOf(sg), h7=((sg-L+12)%12)+1, g=strong(ch,l7,L);
+    const fem=(l7==='Mo'||l7==='Ve')?'a woman':(l7==='Ke'||l7==='Ra')?'a person of uncertain kind (a stranger)':'a man';
+    const age=l7==='Sa'?'elderly or much older':l7==='Me'?'young, or a youth':l7==='Mo'?'any age; often a household member or someone close':l7==='Su'?'a senior, or someone in authority at home or work':l7==='Ju'?'middle-aged or elder, respected':l7==='Ma'?'a young, energetic person':'young adult';
+    const near=[1,4,7,10].indexOf(h7)>=0?'someone close (a household member, neighbour or a regular visitor)':[2,5,8,11].indexOf(h7)>=0?'someone known, but not very close':'a stranger or an outsider';
+    let h='<div class="lf-sec"><h3>🕵 Possible thief: type, direction and name sounds<span class="ta">சாத்தியமான திருடன்: வகை, திசை, பெயர் ஓசை</span></h3></div><div class="ntrules">';
+    h+='<div class="ntr y">The 7th lord <b>'+NAME[l7]+' · '+TA[l7]+'</b> stands for the thief. It is in '+SIGNS[sg][0]+' (the '+ORD(h7)+' house): <b>'+fem+'</b>, '+age+'; likely <b>'+near+'</b>. Their home or hiding place lies towards the <b>'+DIRV[d]+' · '+DIRTA[d]+'</b>.<span class="ta">'+WHO[l7][1]+' · '+DIRTA[d]+'</span></div></div>';
+    h+=nameBlock(ch,L,7,l7,g,'The possible name of the person or of the place connected with the theft.');
+    try{h+=hideBlock(ch,L);}catch(e){console.error('hide',e);}
+    h+='<div class="ntr n" style="margin-top:8px"><b>Disclaimer:</b> This is astrological guidance for believers, taken from traditional name and planet rules. A planet, a direction or a sound is <b>not evidence</b> and can fit many innocent people. Do not accuse, confront, threaten or harm anyone on the basis of this reading. Report the theft to the police and let them investigate. The author and the app accept no responsibility for any use made of this reading.<span class="ta">அறிவிப்பு: இது நம்பிக்கையாளர்களுக்கான ஜோதிட வழிகாட்டல் மட்டுமே; கிரகம், திசை, ஓசை ஆகியவை சான்று அல்ல; பல நிரபராதிகளுக்கும் பொருந்தலாம். இதை வைத்து யாரையும் குற்றம் சாட்டவோ, மிரட்டவோ, தாக்கவோ வேண்டாம்; காவல்துறையிடம் புகார் செய்து அவர்கள் விசாரிக்கட்டும். இதன் பயன்பாட்டுக்கு ஆசிரியரும் செயலியும் பொறுப்பல்ல.</span></div>';
+    return h;
+  }
+  function whoBlock(ch,L,kh){
+    const e11=SL[(L+10)%12], ll=SL[L], ky=SL[(L+kh-1)%12], plan=[['Helper (11th lord)',e11],['The matter (karyesha)',ky],['Through whom (the planet joining you and the matter)',null]];
+    /* mediator: a planet in a friendly Tajika aspect with both, else the Moon */
+    let med=null; ['Mo','Me','Ju','Ve','Su','Ma','Sa'].forEach(p=>{if(med||p===ll||p===ky||!ch.pl[p])return; const a=((ch.pl[p].sg-ch.pl[ll].sg+12)%12)+1, b=((ch.pl[p].sg-ch.pl[ky].sg+12)%12)+1, f=[1,3,5,9,11]; if(f.indexOf(a)>=0&&f.indexOf(b)>=0)med=p;});
+    plan[2][1]=med||'Mo';
+    let h='<div class="lf-sec"><h3>👥 Who, which direction, through whom<span class="ta">யார்? எந்தத் திசை? யார் மூலம்?</span></h3></div><div class="ntrules">';
+    plan.forEach(r=>{const p=r[1], sg=ch.pl[p]?ch.pl[p].sg:0, d=dirOf(sg); h+='<div class="ntr"><b>'+r[0]+':</b> '+NAME[p]+' · '+TA[p]+' means '+WHO[p][0]+'; in '+SIGNS[sg][0]+', direction <b>'+DIRV[d]+'</b>.<span class="ta">'+WHO[p][1]+' · '+DIRTA[d]+'</span></div>';});
+    return h+'</div>';
+  }
+  function agree(res,last,id){
+    const adv=!!(res.q&&res.q.o&&res.q.o.adv), kpY=(res.ev==='YES'||res.ev==='LIKELY'), kpN=(res.ev==='NO');
+    const clY=adv?last.pts<0:last.pts>=2, clN=adv?last.pts>=2:last.pts<0;
+    const tjY=(last.tj==='same'||last.tj==='friendly'||last.itt==='ittha'), tjN=(last.tj==='none'||last.itt==='ishrafa');
+    const adj=a=>adv?(a?'indicated':'not indicated'):(a?'yes':'no');
+    const v=[['KP cusps',kpY?'y':kpN?'n':'m',kpY?adj(true):kpN?adj(false):'doubtful'],['Classical points',clY?'y':clN?'n':'m',clY?adj(true):clN?adj(false):'doubtful'],['Tajika link',tjY&&!tjN?'y':tjN&&!tjY?'n':'m',(tjY&&!tjN)?'link present':(tjN&&!tjY)?'no link or separated':'mixed']];
+    const hasY=v.some(x=>x[1]==='y'), hasN=v.some(x=>x[1]==='n'), conflict=hasY&&hasN;
+    used[id]=used[id]||[]; const cur=window.__hq&&window.__hq.ch&&window.__hq.ch.num; if(cur&&used[id].indexOf(cur)<0)used[id].push(cur);
+    let h='<div class="lf-sec"><h3>⚖ Do the methods agree?<span class="ta">முறைகள் ஒத்துப்போகின்றனவா?</span></h3></div><div class="ntrules">'+v.map(x=>'<div class="ntr '+x[1]+'"><b>'+x[0]+':</b> '+x[2]+'</div>').join('');
+    if(!conflict){const ny=v.filter(x=>x[1]==='y').length, nn=v.filter(x=>x[1]==='n').length, n=Math.max(ny,nn); h+='<div class="ntr '+(hasY?'y':hasN?'n':'m')+'"><b>'+(n>=2?'Two or more methods agree and none contradicts: the answer is firmer.':n===1?'Only one method gives a clear answer and the others are unclear: treat it as a lean, not a firm answer.':'No method is clear; the answer stays uncertain.')+'</b></div></div>';return h;}
+    const tries=used[id].length, sug=function(){for(let k=0;k<60;k++){const n=1+Math.floor(Math.random()*249); if(used[id].indexOf(n)<0)return n;} return 1;}();
+    h+='<div class="ntr m"><b>The methods contradict each other</b> (for example, one says yes and another says no). The question may not be ripe, or the first number may have been clouded. Give a <b>new number from 1 to 249</b> that you have not used before ('+(used[id].length?('used so far: '+used[id].join(', ')):'none yet')+') and do the prasannam again. Sit quietly, think only of the question, then choose the number.<span class="ta">முறைகள் ஒன்றுக்கொன்று முரண்படுகின்றன; 1–249-ல் புதிய எண்ணைத் தந்து பிரசன்னத்தை மீண்டும் செய்யுங்கள்.</span>'
+      +'<div class="group" style="margin-top:8px"><label class="cell" for="p2n"><span class="cl">New number (1–249)</span><input id="p2n" type="number" min="1" max="249" value="'+sug+'"></label></div><div class="btns"><button class="primary p2go" type="button">Ask again with this number</button></div><div class="msg" id="p2m" role="status"></div>'
+      +(tries>=3?'<p class="legend">You have asked '+tries+' times. If the methods still conflict, trust the answer that most methods share and wait a few days before asking this same question again.</p>':'')+'</div></div>';
+    return h;
+  }
+  function extra(qd,ch,ms,lat,lon,tzs,kind){
+    const last=window.GA_PRASNA&&GA_PRASNA.last; if(!last)return '';
+    const res=(window.__hq&&window.__hq.res)||null; let h='';
+    const L=last.L, kh=last.kh, ky=last.ky, id=qd.id||'';
+    try{ if(res)h+=agree(res,last,id); }catch(e){console.error(e);}
+    try{ h+=whoBlock(ch,L,kh); }catch(e){console.error(e);}
+    const gate=strong(ch,ky,L), ls=/lost|found|stolen|possess|jewel|theft|abscond|missing|kidnap|whereabouts|return|safereturn/.test(id);
+    if(ls){
+      try{
+        const missing=/missing|kidnap|whereabouts|abscond|return|safereturn/.test(id), theft=/theft|stolen/.test(id);
+        if(missing){h+=missingBlock(ch,L,kh,ky,last.pts);h+=nameBlock(ch,L,kh,ky,gate,'The name of the person, or the name of the place he or she has gone to.');}
+        else{h+=lostBlock(ch,L,ky,last.pts,theft); if(!theft)h+=nameBlock(ch,L,kh,ky,gate,'The kind of article and the name of the place or person connected with it.'); else h+=thiefBlock(ch,L);}
+      }catch(e){console.error(e);}
+    }
+    return '<div class="p2x">'+h+'</div>';
+  }
+  let tries=0;
+  function init(){
+    if(!window.GA_PRASNA){ if(tries++<40)setTimeout(init,300); return; }
+    if(GA_PRASNA.__p2)return; GA_PRASNA.__p2=1;
+    const orig=GA_PRASNA.render; GA_PRASNA.render=function(qd,ch,ms,lat,lon,tzs,kind){
+      const base=orig.apply(this,arguments); let x=''; try{x=extra(qd,ch,ms,lat,lon,tzs,kind);}catch(e){console.error(e);} return base+x;};
+    document.addEventListener('click',function(e){
+      const b=e.target&&e.target.closest&&e.target.closest('.p2go'); if(!b)return;
+      const n=parseInt(document.getElementById('p2n').value,10), m=document.getElementById('p2m');
+      if(!(n>=1&&n<=249)){m.textContent='Enter a number from 1 to 249.';return;}
+      const id=(window.__hq&&window.__hq.qd&&window.__hq.qd.id)||'', u=used[id]||[]; if(u.indexOf(n)>=0){m.textContent='You already used '+n+'. Choose a new number.';return;}
+      const md=document.getElementById('hqMode'), nu=document.getElementById('hqNum'); md.value='num'; md.dispatchEvent(new Event('change')); nu.value=n; document.getElementById('hqGo').click();
+    });
+  }
+  return {init:init,used:used,nmw:NMW,combos:combos,lordOfNak:lordOfNak,hide:hideBlock,thief:thiefBlock,sub:subLord};
+})();
+
+/* ---------- Nifty Intraday Astro (v11.3) ---------- */
+window.GA_NIFTY=(function(){
+  const IST=19800000, CH=['Sa','Ju','Ma','Su','Ve','Me','Mo'], DAYL=['Su','Mo','Ma','Me','Ju','Ve','Sa'];
+  const PN={Su:'Sun',Mo:'Moon',Ma:'Mars',Me:'Mercury',Ju:'Jupiter',Ve:'Venus',Sa:'Saturn'};
+  const PT={Su:'சூரியன்',Mo:'சந்திரன்',Ma:'செவ்வாய்',Me:'புதன்',Ju:'குரு',Ve:'சுக்கிரன்',Sa:'சனி'};
+  const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], DT=['ஞாயிறு','திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி'];
+  const RAHU=[8,2,7,5,6,4,3], YAMA=[5,4,3,2,1,7,6], GUL=[7,6,5,4,3,2,1];
+  /* hora nature: bias (up +, down -), volatility multiplier, and the words the book gives */
+  const HN={Su:{b:.3,v:1.2,e:'Authority, policy flavour: strong directional moves',t:'அதிகாரம்: வலுவான திசை நகர்வு'},
+    Mo:{b:.2,v:1.1,e:'Mind and emotion: quick sentiment swings, short scalps',t:'மனநிலை: விரைவான மாற்றம், சிறு வர்த்தகம்'},
+    Ma:{b:-.45,v:1.5,e:'Energy and aggression: sharp, violent moves, breakouts and breakdowns',t:'ஆற்றல்: கூர்மையான நகர்வு'},
+    Me:{b:0,v:1.3,e:'Trade and communication: fast two-way moves, whipsaws',t:'வர்த்தகம்: இருபுற அலைச்சல்'},
+    Ju:{b:.9,v:.9,e:'Expansion and wealth: favoured for buying, steady upward drift',t:'விரிவு, செல்வம்: மெதுவான ஏற்றம்'},
+    Ve:{b:.5,v:.7,e:'Comfort and money: calm, range-bound, unhurried',t:'சுகம்: அமைதி, பக்கவாட்டு'},
+    Sa:{b:-.8,v:.6,e:'Delay and restriction: slow and sticky, poor for breakouts',t:'தாமதம்: மெதுவான, ஒட்டும் நகர்வு'}};
+  const ASP=[[0,'Conjunction','சேர்க்கை','m'],[60,'Sextile','60°','s'],[90,'Square','90°','h'],[120,'Trine','120°','s'],[180,'Opposition','180°','h']];
+  const BEN={Ju:1,Ve:1,Mo:.4}, MAL={Ma:1,Sa:1,Su:.4};
+  const $=id=>document.getElementById(id);
+  const mod360=x=>((x%360)+360)%360;
+  const two=n=>(n<10?'0':'')+n;
+  function hms(ms,sec){const d=new Date(ms+IST);return two(d.getUTCHours())+':'+two(d.getUTCMinutes())+(sec===false?'':':'+two(d.getUTCSeconds()));}
+  function istMs(y,m,d,h,mi,s){return Date.UTC(y,m-1,d,h,mi,s||0)-IST;}
+  function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function sunTimes(y,m,d,lat,lon){
+    const o=new Astronomy.Observer(lat,lon,0), s=new Date(istMs(y,m,d,0,0,0));
+    const r=Astronomy.SearchRiseSet(Astronomy.Body.Sun,o,+1,Astronomy.MakeTime(new Date(s.getTime()-6*3600000+0)),2);
+    const q=Astronomy.SearchRiseSet(Astronomy.Body.Sun,o,-1,r,2);
+    return {rise:r.date.getTime(),set:q.date.getTime()};
+  }
+  function horas(rise,set,wd){
+    const L=(set-rise)/12, s0=CH.indexOf(DAYL[wd]), o=[];
+    for(let i=0;i<12;i++)o.push({n:i+1,lord:CH[(s0+i)%7],a:rise+i*L,b:rise+(i+1)*L});
+    return o;
+  }
+  function block(ms){const d=new Date(ms+IST),m=d.getUTCHours()*60+d.getUTCMinutes();
+    if(m<555)return 'pre';if(m<600)return 'open';if(m<720)return 'mid';if(m<840)return 'lunch';if(m<=930)return 'close';return 'post';}
+  const BV={open:1.6,mid:1,lunch:.6,close:1.25,pre:1,post:1}, BNAME={open:['The open','தொடக்கம்'],mid:['Mid-morning','காலை நடு'],lunch:['Lunch lull','மதிய அமைதி'],close:['The close','நிறைவு']};
+  function moonEvents(t0,t1){
+    const ev=[], pl=['Su','Me','Ve','Ma','Ju','Sa'], step=60000; let prev=null;
+    for(let t=t0-step;t<=t1+step;t+=step){
+      const mo=sidLon('Mo',t), f={};
+      pl.forEach(p=>{f[p]=mod360(mo-sidLon(p,t));});
+      if(prev){
+        pl.forEach(p=>{ASP.forEach(a=>{
+          const A=a[0], d0=mod360(prev.f[p]-A+180)-180, d1=mod360(f[p]-A+180)-180;
+          if(Math.abs(d0)<20&&Math.abs(d1)<20&&((d0<=0&&d1>0)||(d0>=0&&d1<0))&&Math.abs(d1-d0)<5){
+            const x=t-step+step*(Math.abs(d0)/(Math.abs(d0)+Math.abs(d1)));
+            if(x>=t0&&x<=t1)ev.push({t:x,p:p,a:a});
+          }});});
+        const s0=Math.floor(prev.mo/30), s1=Math.floor(mo/30);
+        if(s0!==s1){const x=t-step/2; if(x>=t0&&x<=t1)ev.push({t:x,kind:'sign',sign:s1%12});}
+        const n0=Math.floor(prev.mo/(40/3)), n1=Math.floor(mo/(40/3));
+        if(n0!==n1&&s0===s1){const x=t-step/2; if(x>=t0&&x<=t1)ev.push({t:x,kind:'nak',nak:n1%27});}
+      }
+      prev={mo:mo,f:f};
+    }
+    return ev.sort((a,b)=>a.t-b.t);
+  }
+  const TS=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  const TSN=['மேஷம்','ரிஷபம்','மிதுனம்','கடகம்','சிம்மம்','கன்னி','துலாம்','விருச்சிகம்','தனுசு','மகரம்','கும்பம்','மீனம்'];
+  const NK=['Ashwini','Bharani','Krittika','Rohini','Mrigashira','Ardra','Punarvasu','Pushya','Ashlesha','Magha','Purva Phalguni','Uttara Phalguni','Hasta','Chitra','Swati','Vishakha','Anuradha','Jyeshtha','Mula','Purva Ashadha','Uttara Ashadha','Shravana','Dhanishta','Shatabhisha','Purva Bhadrapada','Uttara Bhadrapada','Revati'];
+  function analyse(y,m,d,lat,lon,opt){
+    const wd=new Date(Date.UTC(y,m-1,d)).getUTCDay(), sun=sunTimes(y,m,d,lat,lon), day=sun.set-sun.rise;
+    const op=istMs(y,m,d,9,15,0), cl=istMs(y,m,d,15,30,0), hs=horas(sun.rise,sun.set,wd), part=day/8;
+    const win=n=>({a:sun.rise+(n-1)*part,b:sun.rise+n*part});
+    const rahu=win(RAHU[wd]), yama=win(YAMA[wd]), gul=win(GUL[wd]);
+    const noon=sun.rise+day/2, abh={a:noon-day/30,b:noon+day/30};
+    const evs=moonEvents(op,cl);
+    /* per-candle pressure */
+    const cs=[], rnd=rng(y*10000+m*100+d), N=25;
+    const aspW=evs.filter(e=>e.a);
+    for(let i=0;i<N;i++){
+      const a=op+i*900000, b=a+900000, mid=(a+b)/2, h=hs.find(x=>mid>=x.a&&mid<x.b)||hs[hs.length-1], hn=HN[h.lord], bk=block(mid);
+      let bias=hn.b, vol=hn.v*BV[bk], tags=[];
+      aspW.forEach(e=>{if(Math.abs(e.t-mid)<=1350000){
+        const f=1-Math.abs(e.t-mid)/1350000, kind=e.a[3], w=(BEN[e.p]||0)-(MAL[e.p]||0);
+        if(kind==='s'){bias+=(w>=0?.6:-.25)*f;}
+        else if(kind==='h'){bias+=(w>0?.1:-.7)*f;vol+=.35*f;}
+        else {vol+=.25*f; bias+=w*.25*f;}
+        tags.push('Moon '+e.a[1].toLowerCase()+' '+PN[e.p]);}});
+      const inW=(w)=>mid>=w.a&&mid<w.b;
+      if(inW(rahu)){vol+=.3;bias*=.3;tags.push('Rahu Kaal');}
+      if(inW(yama)){bias*=.6;tags.push('Yamagandam');}
+      if(inW(gul)){tags.push('Gulika');}
+      cs.push({a:a,b:b,hora:h.lord,bk:bk,bias:bias,vol:vol,tags:tags,w:rnd(),w2:rnd()});
+    }
+    /* synthesise candles, unit = 1 (percent of previous close * 0.1 per vol unit) */
+    let px=0; const UNIT=.12;
+    cs.forEach(c=>{const body=c.bias*c.vol*UNIT*.9, ext=c.vol*UNIT*(.35+c.w*.5);
+      c.o=px;c.c=px+body; c.h=Math.max(c.o,c.c)+ext*(.4+c.w2); c.l=Math.min(c.o,c.c)-ext*(.4+(1-c.w2)); px=c.c;});
+    const net=px, hi=Math.max.apply(0,cs.map(c=>c.h)), lo=Math.min.apply(0,cs.map(c=>c.l));
+    /* permitted windows (book method): aspect windows, +-15 min, clear of Rahu Kaal, inside the two entry blocks */
+    const wins=[];
+    aspW.forEach(e=>{const a=e.t-900000,b=e.t+900000, bk=block(e.t), kind=e.a[3];
+      const reasons=[]; let ok=true;
+      if(bk==='open'&&e.t<istMs(y,m,d,9,30,0)){ok=false;reasons.push('first 15 minutes');}
+      if(!(b<=rahu.a||a>=rahu.b)){ok=false;reasons.push('overlaps Rahu Kaal');}
+      if(bk==='lunch')reasons.push('lunch lull: small size');
+      const w=(BEN[e.p]||0)-(MAL[e.p]||0);
+      const dir=kind==='s'?(w>=0?'long bias':'caution, weak support'):kind==='h'?(w>0?'two-way, wait for price':'short bias'):'either way, wait for price trigger';
+      wins.push({t:e.t,a:a,b:b,e:e,ok:ok,dir:dir,reasons:reasons,bk:bk});});
+    return {wd:wd,sun:sun,day:day,hs:hs,rahu:rahu,yama:yama,gul:gul,abh:abh,noon:noon,evs:evs,cs:cs,net:net,hi:hi,lo:lo,wins:wins,op:op,cl:cl,part:part};
+  }
+  function lean(r){
+    const n=r.net;
+    if(n>.35)return ['Bullish lean','ஏற்றச் சாய்வு','y'];
+    if(n<-.35)return ['Bearish lean','இறக்கச் சாய்வு','n'];
+    return ['Range-bound / no clear lean','பக்கவாட்டு / தெளிவான சாய்வு இல்லை','m'];
+  }
+  function svg(r,prev){
+    const W=680,H=330,L=44,R=10,T=14,B=64,cs=r.cs,n=cs.length, pw=(W-L-R)/n;
+    const hi=Math.max(r.hi,.3), lo=Math.min(r.lo,-.3), pad=(hi-lo)*.08, y0=hi+pad, y1=lo-pad;
+    const Y=v=>T+(y0-v)/(y0-y1)*(H-T-B), X=t=>L+(t-r.op)/(r.cl-r.op)*(W-L-R);
+    const pv=prev&&prev>0?prev:null, lab=v=>pv?Math.round(pv*(1+v/100)).toLocaleString('en-IN'):(v>=0?'+':'')+v.toFixed(2)+'%';
+    let o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="Schematic Nifty candlestick chart from astro pressure" style="max-width:720px;background:var(--fill);border-radius:12px">';
+    const col={Su:'#e0a100',Mo:'#8e8e93',Ma:'#c62828',Me:'#2e9b3f',Ju:'#e8c200',Ve:'#d6409f',Sa:'#3c3c8e'};
+    r.hs.forEach(h=>{const a=Math.max(h.a,r.op), b=Math.min(h.b,r.cl); if(b<=a)return;
+      o+='<rect x="'+X(a).toFixed(1)+'" y="'+(H-B+6)+'" width="'+(X(b)-X(a)).toFixed(1)+'" height="14" fill="'+col[h.lord]+'" opacity=".75"/><text x="'+((X(a)+X(b))/2).toFixed(1)+'" y="'+(H-B+17)+'" font-size="9" text-anchor="middle" fill="#fff">'+h.lord+'</text>';});
+    [[r.rahu,'#c62828','Rahu Kaal'],[r.yama,'#b36b00','Yama'],[r.gul,'#6b4fbb','Gulika'],[r.abh,'#1e8e3e','Abhijit']].forEach(z=>{
+      const a=Math.max(z[0].a,r.op), b=Math.min(z[0].b,r.cl); if(b<=a)return;
+      o+='<rect x="'+X(a).toFixed(1)+'" y="'+T+'" width="'+(X(b)-X(a)).toFixed(1)+'" height="'+(H-T-B)+'" fill="'+z[1]+'" opacity=".10"/><text x="'+(X(a)+3).toFixed(1)+'" y="'+(T+10)+'" font-size="9" fill="'+z[1]+'">'+z[2]+'</text>';});
+    for(let k=0;k<=4;k++){const v=y1+(y0-y1)*k/4;o+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="#888" stroke-opacity=".25"/><text x="'+(L-4)+'" y="'+(Y(v)+3).toFixed(1)+'" font-size="9" text-anchor="end" fill="currentColor">'+lab(v)+'</text>';}
+    for(let k=0;k<=6;k++){const t=r.op+(r.cl-r.op)*k/6;o+='<text x="'+X(t).toFixed(1)+'" y="'+(H-B+38)+'" font-size="9" text-anchor="middle" fill="currentColor">'+hms(t,false)+'</text>';}
+    cs.forEach((c,i)=>{const x=L+pw*(i+.5), up=c.c>=c.o, cl=up?'#1e8e3e':'#c62828';
+      o+='<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+Y(c.h).toFixed(1)+'" y2="'+Y(c.l).toFixed(1)+'" stroke="'+cl+'"/><rect x="'+(x-pw*.32).toFixed(1)+'" y="'+Y(Math.max(c.o,c.c)).toFixed(1)+'" width="'+(pw*.64).toFixed(1)+'" height="'+Math.max(1.5,Math.abs(Y(c.o)-Y(c.c))).toFixed(1)+'" fill="'+cl+'"/>';});
+    r.wins.filter(w=>w.ok).forEach(w=>{const x=X(w.t);o+='<path d="M'+x.toFixed(1)+' '+(H-B)+' l-4 8 h8z" fill="#7C3AED"/>';});
+    o+='<text x="'+L+'" y="'+(H-6)+'" font-size="9" fill="currentColor">Purple marks = Moon aspect windows that are permitted. Bottom strip = horas. Shaded = Rahu Kaal, Yamagandam, Gulika, Abhijit.</text></svg>';
+    return o;
+  }
+  function report(r,o){
+    const dt=DN[r.wd], L=lean(r), H=[]; const hh=x=>'<b>'+hms(x)+'</b>';
+    H.push('<div class="lf-sec"><h3>📅 The day frame<span class="ta">நாளின் சட்டம்</span></h3></div><div class="ntcards">'
+      +'<div class="ntcard"><div class="ntct">'+dt+' · '+DT[r.wd]+'</div><div class="ntcv">Sunrise '+hh(r.sun.rise)+' · Sunset '+hh(r.sun.set)+'<br>Hora length '+(r.day/12/60000).toFixed(1)+' min · Eighth-part '+(r.part/60000).toFixed(1)+' min</div></div>'
+      +'<div class="ntcard"><div class="ntct">🌙 Moon today</div><div class="ntcv">'+(function(){const mo=sidLon('Mo',r.op);return TS[Math.floor(mo/30)%12]+' ('+TSN[Math.floor(mo/30)%12]+') · '+NK[Math.floor(mo/(40/3))%27];})()+' at the open</div></div>'
+      +'<div class="ntcard"><div class="ntct">🧭 Astro lean</div><div class="ntcv"><span class="ntr '+L[2]+'" style="display:inline-block">'+L[0]+' · <span class="ta">'+L[1]+'</span></span><br>Net pressure '+(r.net>=0?'+':'')+r.net.toFixed(2)+'% (schematic)</div></div></div>');
+    H.push('<div class="lf-sec"><h3>🕯 Candlestick view (15-minute)<span class="ta">மெழுகுவர்த்தி வரைபடம்</span></h3></div>'+svg(r,o.prev)
+      +'<p class="legend">These candles are a <b>schematic projection</b> of astro pressure: hora nature, session block, Moon aspect windows and avoid-windows. They are not a price forecast; the real market will differ. '
+      +'<span class="ta">இவை ஹோரை, அமர்வு நேரம், சந்திரப் பார்வை ஆகியவற்றின் அழுத்தத்தைக் காட்டும் வரைபடம் மட்டுமே; விலை முன்கணிப்பு அல்ல.</span></p>');
+    H.push('<div class="lf-sec"><h3>⛔ Windows to avoid<span class="ta">தவிர்க்க வேண்டிய நேரம்</span></h3></div><div class="ntrules">'
+      +'<div class="ntr n">First 15 minutes 09:15:00–09:30:00: mark the opening range, no trade.<span class="ta">முதல் 15 நிமிடம்: வர்த்தகம் வேண்டாம்</span></div>'
+      +'<div class="ntr n">Rahu Kaal '+hh(r.rahu.a)+' – '+hh(r.rahu.b)+': no fresh entry.<span class="ta">ராகு காலம்: புதிய நுழைவு வேண்டாம்</span></div>'
+      +'<div class="ntr m">Yamagandam '+hh(r.yama.a)+' – '+hh(r.yama.b)+' · Gulika '+hh(r.gul.a)+' – '+hh(r.gul.b)+' (tradition: avoid beginnings / things begun repeat)</div>'
+      +'<div class="ntr m">Lunch lull 12:00:00–14:00:00: thin volume, false breakouts; sit out or trade small.<span class="ta">மதிய நேரம்: குறைந்த வர்த்தகம்</span></div>'
+      +'<div class="ntr n">After 15:15:00: square off. No new trade.<span class="ta">3:15 மணிக்குப் பின் புதிய வர்த்தகம் வேண்டாம்</span></div></div>');
+    H.push('<div class="lf-sec"><h3>✅ Good window — Abhijit<span class="ta">அபிஜித் முகூர்த்தம்</span></h3></div><div class="ntrules"><div class="ntr y">Abhijit '+hh(r.abh.a)+' – '+hh(r.abh.b)+' (local noon '+hh(r.noon)+'). '+(r.wd===3?'Many traditions do not observe Abhijit on Wednesday. ':'')+(r.abh.a<r.rahu.b&&r.abh.b>r.rahu.a?'It overlaps Rahu Kaal today: fix your own tie-break rule in advance.':'')+'</div></div>');
+    H.push('<div class="lf-sec"><h3>🌙 Moon aspect windows<span class="ta">சந்திரப் பார்வை நேரங்கள்</span></h3></div>');
+    const aw=r.wins; if(!aw.length)H.push('<p class="legend">No exact Moon aspect to the Sun, Mercury, Venus, Mars, Jupiter or Saturn falls inside 09:15–15:30 today. The book says to use only the hora blocks, or not trade on such a day.</p>');
+    else{H.push('<div class="ntscroll"><table class="nttb"><tr><th>Exact</th><th>Aspect</th><th>Window ±15 min</th><th>Reading</th><th>Status</th></tr>'+aw.map(w=>'<tr><td>'+hh(w.t)+'</td><td>Moon '+w.e.a[1].toLowerCase()+' '+PN[w.e.p]+' <span class="ta">'+PT[w.e.p]+'</span></td><td>'+hms(w.a,false)+'–'+hms(w.b,false)+'</td><td>'+w.dir+'</td><td class="'+(w.ok?'ntP':'ntA')+'">'+(w.ok?'Permitted':'Skip: '+w.reasons.join(', '))+(w.ok&&w.reasons.length?' ('+w.reasons.join(', ')+')':'')+'</td></tr>').join('')+'</table></div>');}
+    const ing=r.evs.filter(e=>e.kind);
+    if(ing.length)H.push('<p class="legend">'+ing.map(e=>'Moon enters '+(e.kind==='sign'?TS[e.sign]+' ('+TSN[e.sign]+')':'star '+NK[e.nak])+' at '+hh(e.t)).join(' · ')+'. A change of Moon sign or star is a sentiment turning point to watch.</p>');
+    H.push('<div class="lf-sec"><h3>🪐 Horas in the session<span class="ta">ஹோரை</span></h3></div><div class="ntscroll"><table class="nttb"><tr><th>#</th><th>Lord</th><th>From</th><th>To</th><th>Nature (tradition)</th></tr>'
+      +r.hs.filter(h=>h.b>r.op&&h.a<r.cl).map(h=>'<tr><td>'+h.n+'</td><td>'+PN[h.lord]+' <span class="ta">'+PT[h.lord]+'</span></td><td>'+hms(Math.max(h.a,r.op))+'</td><td>'+hms(Math.min(h.b,r.cl))+'</td><td>'+HN[h.lord].e+'</td></tr>').join('')+'</table></div>');
+    /* trade plan */
+    const ok=aw.filter(w=>w.ok), best=ok.filter(w=>w.bk==='mid'||w.bk==='close'||w.bk==='open');
+    H.push('<div class="lf-sec"><h3>📋 Today\'s trade plan<span class="ta">இன்றைய வர்த்தகத் திட்டம்</span></h3></div><div class="ntrules">'
+      +'<div class="ntr '+L[2]+'">Day lean: '+L[0]+'. Strongest buying support is in horas of Jupiter and Venus; selling pressure in Saturn and Mars horas.<span class="ta">'+L[1]+'</span></div>'
+      +(best.length?best.slice(0,4).map(w=>'<div class="ntr y">Window '+hms(w.a,false)+'–'+hms(w.b,false)+' (Moon '+w.e.a[1].toLowerCase()+' '+PN[w.e.p]+'): '+w.dir+'. Enter only when your own price trigger fires inside the window (for example, a break of the 09:15–09:30 opening range, with the stop beyond the range). Exit at the window end if the trade has not worked (time stop).</div>').join(''):'<div class="ntr m">No clean permitted aspect window today. The method says: no trade, or trade only the main entry blocks 10:00–12:00 and 14:00–15:15 on your own price trigger, in half size.</div>')
+      +'<div class="ntr m">Event days (RBI policy, Budget, expiry, major overnight global news, a gap bigger than your usual stop): reduce size or skip. Check the NSE calendar.</div></div>');
+    /* risk */
+    H.push('<div class="lf-sec"><h3>🛡 Risk calculator<span class="ta">இடர் கணிப்பான்</span></h3></div><div class="group">'
+      +'<label class="cell" for="nfCap"><span class="cl">Capital (₹)</span><input id="nfCap" type="number" value="200000"></label>'
+      +'<label class="cell" for="nfRisk"><span class="cl">Risk per trade (%)</span><input id="nfRisk" type="number" step="0.1" value="1"></label>'
+      +'<label class="cell" for="nfStop"><span class="cl">Stop distance (points)</span><input id="nfStop" type="number" value="30"></label>'
+      +'<label class="cell" for="nfLot"><span class="cl">Lot size<small>Verify with NSE; it changes</small></span><input id="nfLot" type="number" value="75"></label></div>'
+      +'<div class="msg" id="nfRiskOut" role="status"></div>');
+    H.push('<div class="lf-sec"><h3>📝 Rules that keep you alive<span class="ta">பாதுகாப்பு விதிகள்</span></h3></div><div class="ntrules">'
+      +'<div class="ntr">Write this sheet before 09:15 and never add a window during the session.</div>'
+      +'<div class="ntr">Lots = risk rupees ÷ (stop points × lot size), rounded down. If it is below one lot, there is no trade.</div>'
+      +'<div class="ntr">Place the stop with the entry. Never widen it. Move to breakeven only after a 1R gain.</div>'
+      +'<div class="ntr">Hard square-off 15:15. Two losing trades in a row: stop for the day.</div>'
+      +'<div class="ntr">Score the method honestly over 20 sessions on paper, and log a control (same price trigger without the astro filter), before using money.</div></div>');
+    H.push('<p class="legend"><b>Honest note.</b> Astrological timing has no proven predictive power over markets. This tool gives a structure and a fixed schedule, from the timing rules you supplied; the candles are a schematic picture, not a forecast. Not investment advice; the app is not a SEBI-registered adviser. Intraday trading carries a high risk of loss. Verify every time against a current panchang or ephemeris. <span class="ta">ஜோதிடம் சந்தையை முன்கணிக்கும் என்பதற்கு நிரூபணம் இல்லை; இது முதலீட்டு ஆலோசனை அல்ல. இழப்பு அபாயம் அதிகம்.</span></p>');
+    return H.join('');
+  }
+  function plain(r){return 'Nifty astro sheet '+DN[r.wd]+' | '+lean(r)[0]+' | Rahu Kaal '+hms(r.rahu.a)+'-'+hms(r.rahu.b)+' | Abhijit '+hms(r.abh.a)+'-'+hms(r.abh.b)+' | Windows: '+r.wins.filter(w=>w.ok).map(w=>hms(w.a,false)+'-'+hms(w.b,false)+' '+w.dir).join('; ');}
+  function init(){
+    if($('nfPanel'))return;
+    const hq=$('hqBtn'), hp=$('hqPanel'); if(!hq||!hp)return;
+    const b=document.createElement('button'); b.type='button'; b.className='tool'; b.id='nfBtn'; b.setAttribute('data-s','Nifty intraday astro trading candlestick hora rahu kaal bank nifty stock market');
+    b.innerHTML='<span class="ic" style="--c:#0F766E"><svg viewBox="0 0 24 24"><path d="M6 4v16M6 8h0M4 8h4v7H4zM14 3v18M12 7h4v9h-4zM20 6v12"/></svg></span><span class="tx">Nifty Intraday Astro<span class="tm">நிஃப்டி நாள்வர்த்தக ஜோதிடம்</span></span>';
+    hq.parentNode.insertBefore(b,hq);
+    const p=document.createElement('div'); p.className='panel sheet hide wide'; p.id='nfPanel'; p.setAttribute('role','dialog'); p.setAttribute('aria-modal','true'); p.setAttribute('aria-labelledby','nfT');
+    const t=new Date(Date.now()+IST), iso=t.getUTCFullYear()+'-'+two(t.getUTCMonth()+1)+'-'+two(t.getUTCDate());
+    p.innerHTML='<div class="sh-head"><div><h2 id="nfT">Nifty Intraday Astro</h2><span class="tt">நிஃப்டி நாள்வர்த்தக ஜோதிடம்</span></div><button class="xbtn" id="nfClose" type="button" aria-label="Close"><svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg></button></div>'
+     +'<details class="howto"><summary>How It Works<span class="tt">எப்படி செயல்படுகிறது</span></summary><p class="legend">The market day (09:15–15:30 IST) is cut into planetary hours (horas), the eight daily parts (Rahu Kaal, Yamagandam, Gulika), Abhijit, and the exact minutes when the Moon makes a major aspect to the Sun, Mercury, Venus, Mars, Jupiter or Saturn. These are combined into permitted and avoided windows, a day lean, a trade plan, a risk calculator and a schematic candlestick chart. Everything is computed on your device for any date, offline.</p><p class="legend ta" style="font-family:var(--ta)">சந்தை நாளை ஹோரை, ராகு காலம், யமகண்டம், குளிகை, அபிஜித் மற்றும் சந்திரனின் துல்லியப் பார்வை நேரங்களாகப் பிரித்து, அனுமதிக்கப்பட்ட மற்றும் தவிர்க்க வேண்டிய நேரங்கள், வர்த்தகத் திட்டம், இடர் கணிப்பான், மெழுகுவர்த்தி வரைபடம் தருகிறது.</p></details>'
+     +'<div class="group"><label class="cell" for="nfDate"><span class="cl">Trading date</span><input type="date" id="nfDate" value="'+iso+'"></label>'
+     +'<label class="cell" for="nfLat"><span class="cl">Latitude<small>For sunrise and sunset (default Mumbai)</small></span><input id="nfLat" value="19.076"></label>'
+     +'<label class="cell" for="nfLon"><span class="cl">Longitude</span><input id="nfLon" value="72.8777"></label>'
+     +'<label class="cell" for="nfPrev"><span class="cl">Previous close (optional)<small>Labels the chart in index points</small></span><input id="nfPrev" type="number" placeholder="e.g. 25000"></label></div>'
+     +'<div class="btns"><button class="primary" id="nfGo" type="button">Analyse the Day</button><button id="nfCopy" type="button">Copy summary</button></div><div class="msg" id="nfMsg" role="status"></div><div id="nfOut"></div>';
+    hp.parentNode.insertBefore(p,hp);
+    let last=null;
+    function risk(){const c=+$('nfCap').value,rp=+$('nfRisk').value,s=+$('nfStop').value,l=+$('nfLot').value,o=$('nfRiskOut'); if(!o)return; const rs=c*rp/100, lots=Math.floor(rs/(s*l)); o.textContent=(s>0&&l>0)?('Risk rupees ₹'+Math.round(rs)+' → '+lots+' lot(s)'+(lots<1?'. Below one lot: the trade does not exist for you. இந்த வர்த்தகம் உங்களுக்கு இல்லை.':'. Maximum loss if stopped ≈ ₹'+Math.round(lots*s*l)+'.')):'Enter stop and lot size.';}
+    $('nfGo').addEventListener('click',()=>{
+      try{const dv=$('nfDate').value.split('-').map(Number), lat=parseFloat($('nfLat').value), lon=parseFloat($('nfLon').value);
+        if(dv.length<3||isNaN(lat)||isNaN(lon)){$('nfMsg').textContent='Enter a date and valid coordinates.';return;}
+        const r=analyse(dv[0],dv[1],dv[2],lat,lon,{}); last=r; r.prev=+$('nfPrev').value||0;
+        const wd=r.wd; $('nfMsg').textContent=(wd===0||wd===6)?'The exchange is normally closed on weekends; the sheet below is for practice only. சனி/ஞாயிறு சந்தை விடுமுறை.':'';
+        $('nfOut').innerHTML=report(r,{prev:r.prev});
+        ['nfCap','nfRisk','nfStop','nfLot'].forEach(i=>$(i).addEventListener('input',risk)); risk();
+      }catch(e){$('nfMsg').textContent='Could not compute: '+e.message;}
+    });
+    $('nfCopy').addEventListener('click',()=>{if(!last){$('nfMsg').textContent='Analyse a day first.';return;} const s=plain(last); try{navigator.clipboard.writeText(s);$('nfMsg').textContent='Copied.';}catch(e){$('nfMsg').textContent=s;}});
+  }
+  return {init:init,analyse:analyse};
+})();
+
+(function(){GA_P2.init();GA_NIFTY.init();})();
 /* ---------- place picker, local clock, live chart (v3.4) ---------- */
 const UTCS=[-12,-11,-10,-9.5,-9,-8,-7,-6,-5,-4,-3.5,-3,-2,-1,0,1,2,3,3.5,4,4.5,5,5.5,5.75,6,6.5,7,8,8.75,9,9.5,10,10.5,11,12,12.75,13,13.75,14];
 const utcLbl=o=>{const a=Math.abs(o),h=Math.floor(a),m=Math.round((a-h)*60);return 'UTC'+(o<0?'−':'+')+p2(h)+':'+p2(m);};
@@ -4459,6 +4960,7 @@ function bpCalc(){
       T.push('PREDICTIONS FROM THE BIRTH CHART, DASHA AND TRANSIT (பலன்கள்)'); T.push(tt.textContent.replace(/[ \t]+\n/g,'\n').replace(/\n\s*\n+/g,'\n')); T.push(''); } }catch(e){ try{console.error(e);}catch(x){} }
     T.push('','Prepared with GuruAgasthiya by Captain S. Ghaneshakumar Manthradhi');
     h+='<div class="btns bpact"><button type="button" class="bpcopy">Copy all data · நகலெடு</button><button type="button" class="bpprint">Print / save as PDF · அச்சிடு</button><button type="button" class="bpsave">Save / share file · சேமி / பகிர்</button></div>';
+    try{ const kb=GA_KULA.block({P:P,R:R,A:A,asc:asc}); h+=kb.html; Array.prototype.push.apply(T,kb.text); }catch(e){ if(window.console)console.error('Kula',e); }
     out.innerHTML=h; try{ if(window.GA_PRED_UI)GA_PRED_UI.init(); }catch(e){}
     BP={name:nm,text:T.join('\n'),pngs:null};
     const me=BP; me.ready=Promise.all(Array.prototype.map.call(out.querySelectorAll('svg.ch'),bpSvgPng)).then(a=>{me.pngs=a;return a;}).catch(()=>null);
@@ -6573,8 +7075,8 @@ const CL_SG=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','
 const CL_EL=['#e4572e','#8aa63f','#e0a800','#2a8fd0'];            // fire, earth, air, water
 const CL_PC={Su:'#ffb02e',Mo:'#e8eef7',Ma:'#ff6b57',Me:'#5fd18a',Ju:'#ffd45e',Ve:'#ff9ed2',Sa:'#9fb4d6',Ra:'#b99cff',Ke:'#c9a47c'};
 const CL_TH={night:['#0b1d3a','#1d3b6e'],dawn:['#4a1f5e','#e0683c'],forest:['#0d3b2e','#3a7d4f'],rose:['#4d1330','#c0426d'],royal:['#201a4d','#6a4bd6'],teal:['#0a3f4a','#1fa0a8']};
-const CL_TOOLS=[{id:'ep',en:'Practical Electional',ta:'செயல்முறை முகூர்த்தம்'},{id:'sp',en:'Speculation Research',ta:'ஊக ஆராய்ச்சி முகூர்த்தம்'},{id:'tp',en:'Trade Profit',ta:'வர்த்தக லாப முகூர்த்தம்'},{id:'mp',en:'Money Profit',ta:'பண லாப முகூர்த்தம்'},{id:'m3',en:'3 · 11',ta:'3 · 11 முகூர்த்தம்'},{id:'ft',en:'Fortuna Timing',ta:'போர்ச்சுனா நேரம்'},{id:'gam',en:'Guru Agasthiya',ta:'குரு அகஸ்திய முகூர்த்தம்'}];
-const CL={face:'analog',theme:'night',dim:.45,photo:'',auto:true,hz:24,cap:40,planOn:false,sel:{ep:false,sp:false,tp:false,mp:false,m3:false,ft:false,gam:false},
+const CL_TOOLS=[{id:'ep',en:'Practical Electional',ta:'செயல்முறை முகூர்த்தம்'},{id:'sp',en:'Speculation Research',ta:'ஊக ஆராய்ச்சி முகூர்த்தம்'},{id:'tp',en:'Trade Profit',ta:'வர்த்தக லாப முகூர்த்தம்'},{id:'mp',en:'Money Profit',ta:'பண லாப முகூர்த்தம்'},{id:'m3',en:'3 · 11',ta:'3 · 11 முகூர்த்தம்'},{id:'ft',en:'Fortuna Timing',ta:'போர்ச்சுனா நேரம்'},{id:'gam',en:'Guru Agasthiya',ta:'குரு அகஸ்திய முகூர்த்தம்'},{id:'cbb',en:'Chandra Bala',ta:'சந்திர பல முகூர்த்தம்'}];
+const CL={face:'analog',theme:'night',dim:.45,photo:'',auto:true,hz:24,cap:40,planOn:false,sel:{ep:false,sp:false,tp:false,mp:false,m3:false,ft:false,gam:false,cbb:false},
   loc:{lat:13.0827,lon:80.2707,tz:'5.5',name:''},raf:0,lastC:0,lastP:0,A:null,tzf:null,busy:false,list:[],plan:[]};
 let CL_LIST=[];
 function clSave(){ try{ localStorage.setItem('ga_cl',JSON.stringify({face:CL.face,theme:CL.theme,dim:CL.dim,auto:CL.auto,hz:CL.hz,cap:CL.cap,planOn:CL.planOn,sel:CL.sel,loc:CL.loc})); }catch(e){} }
@@ -6815,6 +7317,7 @@ async function clGather(tool,now,end){
   const L=CL.loc, kind=clKind(), tzs=String(L.tz), tzf=CL.tzf, off=tzf(now), f=clDate(now,off), t=clDate(end,tzf(end));
   const base={}; const p=tool;
   if(tool==='gam'){ if(!window.GA_GAM)return {rows:[],err:'Guru Agasthiya Muhurtham is not ready'}; return window.GA_GAM.gather(L,kind,now,end); }
+  if(tool==='cbb'){ if(!window.GA_CBB)return {rows:[],err:'Chandra Bala Muhurtham is not ready'}; return window.GA_CBB.gather(L,kind,now,end); }
   if(tool==='ft'){ if(!window.GA_FT)return {rows:[],err:'Fortuna Timing is not ready'}; return window.GA_FT.gather(L,kind,now,end); }
   if(tool==='ep'){
     if($('epMeth')&&$('epMeth').value==='k'&&window.GA_KEV)return window.GA_KEV.gather(L,kind,now,end);
@@ -7434,6 +7937,7 @@ lwUI();
     // 8 remedies
     const bad={}; afK.concat(afL,afR).forEach(a=>{bad[a.a]=1;});
     h+='<div class="lf-sec"><h3>8 · Remedies for the afflicting planets<span class="ta">பரிகாரங்கள்</span></h3></div>'+(Object.keys(bad).length?'<ul class="mkpl">'+Object.keys(bad).map(p=>'<li><b>'+NAME[p]+'</b>: '+REM[p]+'</li>').join('')+'</ul>':'<p class="legend">No functional malefic is closely afflicting the key planets. As a general measure, strengthen the weak benefics and keep up daily charity.</p>')+'<p class="legend">Do the remedy each morning after bath and before breakfast (Choudhry, ch. 8). Functional malefics for a '+SIGNS[L][0]+' ascendant: '+AFF[L].map(c=>NAME[c]).join(', ')+'.</p>';
+    window.GA_PRASNA.last={pts:pts,adv:adv,kh:kh,ky:ky,ll:ll,L:L,tj:(ll===ky?'same':kind3),itt:(ap?(ap.ok?'ittha':'ishrafa'):null)};
     return h+'</details>';
   }};
 })();
@@ -13665,4 +14169,576 @@ function GA_REDRAW(){
 })();
 window.GA_PL=()=>PL_NAME;
 
+/* ---------- v11.4: Astrocartography research: life places, dasha-wise prediction, missing person ---------- */
+window.GA_ACR=(function(){
+  const $=id=>document.getElementById(id);
+  const ORDER=['Ke','Ve','Su','Mo','Ma','Ra','Ju','Sa','Me'], YRS={Ke:7,Ve:20,Su:6,Mo:10,Ma:7,Ra:18,Ju:16,Sa:19,Me:17}, YEAR=365.25*86400000;
+  const ANG=['ASC','MC','DSC','IC'], AW={ASC:1,DSC:.8,MC:.45,IC:.35};
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const D2R=Math.PI/180;
+  const fd=ms=>{const d=new Date(ms);return d.getUTCFullYear()+'-'+('0'+(d.getUTCMonth()+1)).slice(-2)+'-'+('0'+d.getUTCDate()).slice(-2);};
+  let LC={}, N=null, MAP=null;
+  function lines(ms){ if(!LC[ms])LC[ms]=acgLines(ms); return LC[ms]; }
+  /* distance in km from a point to a planet line */
+  function dist(L,c,a,lat,lon){
+    const q=L[c];
+    if(a==='MC'||a==='IC'){ const dl=Math.abs(acNorm(lon-(a==='MC'?q.mc:q.ic)))*D2R; return Math.asin(Math.min(1,Math.cos(lat*D2R)*Math.abs(Math.sin(dl))))*6371; }
+    const x=-Math.tan(lat*D2R)*Math.tan(q.dec*D2R); if(Math.abs(x)>=1)return Infinity;
+    const H=Math.acos(x)/D2R, gst=acNorm(q.ra-q.mc), ln=acNorm(q.ra+(a==='ASC'?-H:H)-gst);
+    return Math.abs(acNorm(lon-ln))*111.19*Math.cos(lat*D2R);
+  }
+  function natal(){
+    const ds=bpDateStr(), ts=bpTimeStr(), lat=parseFloat($('bpLat').value), lon=parseFloat($('bpLon').value), tzs=$('bpTz').value.trim(), kind=$('bpAyan').value;
+    if(!ds||isNaN(lat)||isNaN(lon)||!tzs)throw new Error('Fill the date, time and place of birth in the Birth chart form first (Change Birth Details).');
+    const [y,m,d]=ds.split('-').map(Number), tp=ts.split(':').map(Number), r=localToUtc(y,m,d,tp[0]||0,tp[1]||0,tzs), ms=r.ms+(tp[2]||0)*1000;
+    return build(ms,lat,lon,kind,$('bpName').value.trim()||'Native');
+  }
+  function build(ms,lat,lon,kind,name){
+    const old=CFG; CFG={lat:lat,lon:lon,kind:kind}; let o;
+    try{ const asc=sidAsc(ms,lat,lon,kind), A=Math.floor(asc/30)%12, P={}, hoc={}, rules={};
+      CODES.forEach(c=>{P[c]=sidLon(c,ms); hoc[c]=((Math.floor(P[c]/30)%12-A+12)%12)+1; rules[c]=[];});
+      for(let h=1;h<=12;h++){ const l=SIGNS[(A+h-1)%12][1]; rules[l].push(h); }
+      const lord=h=>SIGNS[(A+h-1)%12][1];
+      o={ms:ms,lat:lat,lon:lon,kind:kind,name:name,A:A,asc:asc,P:P,hoc:hoc,rules:rules,lord:lord,mo:P.Mo,L:lines(ms)};
+    } finally{CFG=old;}
+    return o;
+  }
+  function tone(N,c){
+    let s=0; N.rules[c].forEach(h=>{ s+=[1,5,9].indexOf(h)>=0?1:[2,4,7,10,11].indexOf(h)>=0?.5:[6,8,12].indexOf(h)>=0?-1:0; });
+    s+=(c==='Ju'||c==='Ve')?.3:(c==='Sa'||c==='Ma'||c==='Ra'||c==='Ke')?-.3:0;
+    return s>.4?['supportive','y']:s<-.4?['testing','n']:['mixed','m'];
+  }
+  function dashas(N,fromMs,toMs){
+    const nk=Math.floor(N.mo/(40/3)), frac=(N.mo%(40/3))/(40/3), li=nk%9, first=ORDER[li];
+    let t=N.ms-frac*YRS[first]*YEAR, k=li; const out=[];
+    while(t<toMs){ const md=ORDER[k%9], len=YRS[md]*YEAR; let a=t;
+      for(let j=0;j<9;j++){ const ad=ORDER[(k+j)%9], al=len*YRS[ad]/120; if(a+al>fromMs&&a<toMs)out.push({md:md,ad:ad,s:Math.max(a,fromMs),e:Math.min(a+al,toMs)}); a+=al; }
+      t+=len; k++; }
+    return out;
+  }
+  function moveScore(N,md,ad){
+    let s=0; const one=(c,w)=>{ N.rules[c].forEach(h=>{s+=w*({12:2,9:1.2,4:1,3:.6,8:.6}[h]||0);}); s+=w*({12:1.5,9:1,4:.8,3:.5,8:.4}[N.hoc[c]]||0); if(c==='Ra'||c==='Ke')s+=w*1.2; };
+    one(ad,1); one(md,.6); return s;
+  }
+  const mvLabel=s=>s>=3?['High','y']:s>=1.8?['Medium','m']:['Low','n'];
+  /* ---------- places ---------- */
+  function find(q){
+    q=(q||'').toLowerCase().trim(); if(!q)return [];
+    const parts=q.split(',').map(x=>x.trim()).filter(Boolean), nm=parts[0], rest=parts.slice(1), out=[];
+    for(let i=0;i<WC.length;i++){ const w=WC[i], n=w.n.toLowerCase(); if(n.indexOf(nm)<0)continue;
+      if(rest.length&&!rest.every(r=>(w.st||'').toLowerCase().indexOf(r)>=0||w.cc.toLowerCase().indexOf(r)>=0))continue;
+      out.push([n===nm?0:n.indexOf(nm)===0?1:2,i]); }
+    out.sort((a,b)=>a[0]-b[0]||a[1]-b[1]); return out.slice(0,12).map(x=>x[1]);
+  }
+  const wl=i=>acgCityName(i);
+  /* ---------- A. life places ---------- */
+  const DEF=[['Lutz, Florida','2026-04-22','good'],['Dumaguete','2024-03-15','unk'],['Kuwait','2005-10-15','bad'],['Boston, Massachusetts','','bad']];
+  function rowHtml(r,i){ return '<div class="acrrow" data-i="'+i+'"><input class="acrq" placeholder="Place, state, country" value="'+esc(r[0])+'"><select class="acrs"></select><input class="acrd" type="date" value="'+r[1]+'" aria-label="Date of arrival"><select class="acrg"><option value="good"'+(r[2]==='good'?' selected':'')+'>Life was good</option><option value="bad"'+(r[2]==='bad'?' selected':'')+'>Life was not good</option><option value="unk"'+(r[2]==='unk'?' selected':'')+'>Not rated</option></select><button type="button" class="acrx" aria-label="Remove">×</button></div>'; }
+  function fillSel(row,keepIdx){
+    const q=row.querySelector('.acrq').value, sel=row.querySelector('.acrs'), f=find(q); sel.innerHTML=f.length?f.map(i=>'<option value="'+i+'">'+esc(wl(i))+'</option>').join(''):'<option value="-1">(no match)</option>';
+    if(keepIdx!=null&&f.indexOf(keepIdx)>=0)sel.value=keepIdx;
+  }
+  function readRows(){
+    return [].slice.call(document.querySelectorAll('#acrRows .acrrow')).map(r=>{ const i=parseInt(r.querySelector('.acrs').value,10); if(!(i>=0))return null; const w=WC[i], d=r.querySelector('.acrd').value; return {i:i,w:w,date:d,ms:d?Date.parse(d+'T06:00:00Z'):null,g:r.querySelector('.acrg').value,q:r.querySelector('.acrq').value}; }).filter(Boolean);
+  }
+  function nearList(N,w,orb){
+    const o=[]; CODES.forEach(c=>ANG.forEach(a=>{ const d=dist(N.L,c,a,w.lat,w.lon); if(d<=orb)o.push({c:c,a:a,d:d}); })); return o.sort((x,y)=>x.d-y.d);
+  }
+  function lineTxt(N,x){ const t=tone(N,x.c); return '<span class="'+(t[1]==='y'?'ntP':t[1]==='n'?'ntA':'ntM')+'">'+NAME[x.c]+' '+x.a+' '+Math.round(x.d)+' km ('+t[0]+')</span>'; }
+  function placesReport(N,pl,orb){
+    let h='<div class="lf-sec"><h3>🧬 Your life places and the planet lines near them<span class="ta">வாழ்ந்த இடங்களும் அருகிலுள்ள கிரகக் கோடுகளும்</span></h3></div>';
+    const seenG={}, seenB={};
+    h+='<div class="ntscroll"><table class="nttb"><tr><th>Place</th><th>Date</th><th>Life</th><th>Dasha / bhukti then</th><th>Planet lines within '+orb+' km</th><th>Transit Jupiter · Saturn (house from lagna / Moon)</th><th>Relocated lagna</th></tr>';
+    pl.forEach(p=>{
+      const nl=nearList(N,p.w,orb); nl.forEach(x=>{ const k=x.c+' '+x.a; if(p.g==='good')seenG[k]=(seenG[k]||[]).concat(wl(p.i).split(',')[0]); if(p.g==='bad')seenB[k]=(seenB[k]||[]).concat(wl(p.i).split(',')[0]); });
+      let dash='—', tr='—', rl='—';
+      if(p.ms){ const dd=dashas(N,p.ms,p.ms+86400000)[0]; if(dd)dash='<b>'+NAME[dd.md]+' – '+NAME[dd.ad]+'</b> (move chance '+mvLabel(moveScore(N,dd.md,dd.ad))[0]+')';
+        const hm=c=>{const s=Math.floor(sidLon(c,p.ms)/30)%12; return ((s-N.A+12)%12)+1+' / '+((s-Math.floor(N.mo/30)%12+12)%12+1);};
+        const old=CFG; CFG={lat:p.w.lat,lon:p.w.lon,kind:N.kind}; try{ tr='Ju '+hm('Ju')+' · Sa '+hm('Sa'); const a=sidAsc(p.ms,p.w.lat,p.w.lon,N.kind); rl=SIGNS[Math.floor(a/30)%12][0]+' (lord '+NAME[SIGNS[Math.floor(a/30)%12][1]]+')'; }finally{CFG=old;} }
+      h+='<tr><td><b>'+esc(wl(p.i))+'</b></td><td>'+(p.date||'?')+'</td><td class="'+(p.g==='good'?'ntP':p.g==='bad'?'ntA':'')+'">'+(p.g==='good'?'good':p.g==='bad'?'not good':'not rated')+'</td><td>'+dash+'</td><td>'+(nl.length?nl.slice(0,6).map(x=>lineTxt(N,x)).join('<br>'):'none close')+'</td><td>'+tr+'</td><td>'+rl+'</td></tr>';
+    });
+    h+='</table></div>';
+    const both=k=>seenG[k]&&seenB[k];
+    h+='<div class="lf-sec"><h3>🔍 Pattern found<span class="ta">கண்டறிந்த வடிவம்</span></h3></div><div class="ntrules">';
+    const gk=Object.keys(seenG).filter(k=>!seenB[k]), bk=Object.keys(seenB).filter(k=>!seenG[k]);
+    h+='<div class="ntr y"><b>Lines near the good places only:</b> '+(gk.length?gk.map(k=>k+' ('+seenG[k].join(', ')+')').join('; '):'none')+'</div>';
+    h+='<div class="ntr n"><b>Lines near the not-good places only:</b> '+(bk.length?bk.map(k=>k+' ('+seenB[k].join(', ')+')').join('; '):'none')+'</div>';
+    const bb=Object.keys(seenB).filter(k=>seenB[k].length>1);
+    if(bb.length)h+='<div class="ntr n"><b>Lines shared by more than one not-good place:</b> '+bb.join(', ')+'. This is the strongest hint of what to avoid.</div>';
+    const bothK=Object.keys(seenG).filter(both); if(bothK.length)h+='<div class="ntr m">Lines near both good and not-good places (not decisive): '+bothK.join(', ')+'.</div>';
+    h+='<div class="ntr m">With only a few places, this is an observation and not a proof. Add more places you have lived in or visited to make the pattern sturdier.<span class="ta">குறைந்த இடங்களே இருப்பதால் இது ஒரு கவனிப்பு மட்டுமே; மேலும் இடங்களைச் சேர்த்தால் வலுப்படும்.</span></div></div>';
+    return {html:h,good:Object.keys(seenG),bad:Object.keys(seenB)};
+  }
+  /* back-test: how high did the move chance stand at each known move, compared with all other periods of adult life? */
+  function backtest(N,pl){
+    const from=N.ms+15*YEAR, to=Math.min(Date.now()+25*YEAR,N.ms+80*YEAR), all=dashas(N,from,to), sc=all.map(d=>moveScore(N,d.md,d.ad)).sort((a,b)=>a-b);
+    const mv=pl.filter(p=>p.ms&&p.ms>from);
+    let h='<div class="lf-sec"><h3>🧪 Back-test of the dasha method on your own moves<span class="ta">உங்கள் இடமாற்றங்களில் தசா முறை சோதனை</span></h3></div><div class="ntrules">';
+    if(!mv.length)h+='<div class="ntr m">Add arrival dates to test.</div>';
+    mv.forEach(p=>{ const d=dashas(N,p.ms,p.ms+86400000)[0]; if(!d)return; const s=moveScore(N,d.md,d.ad), pc=Math.round(100*sc.filter(x=>x<=s).length/sc.length), l=mvLabel(s);
+      h+='<div class="ntr '+l[1]+'">'+esc(wl(p.i))+' ('+p.date+'): '+NAME[d.md]+'–'+NAME[d.ad]+' · move score '+s.toFixed(1)+' ('+l[0]+'), higher than '+pc+'% of all periods between age 15 and now+25 years.</div>'; });
+    h+='<div class="ntr m">If your real moves keep falling in high-score periods, the method fits your chart. If they do not, treat the predictions below as weaker. With so few moves, this is an indication, not statistics.</div></div>';
+    return h;
+  }
+  /* ---------- prediction by dasha ---------- */
+  function cityScore(N,sets,R,pers,lat,lon){
+    let s=0, why=null, best=0;
+    sets.forEach(x=>{ ANG.forEach(a=>{ const d=dist(N.L,x.c,a,lat,lon); if(d<R){ const k=x.c+' '+a, pm=pers?(pers.good.indexOf(k)>=0?1.4:pers.bad.indexOf(k)>=0?.5:1):1; const v=x.w*AW[a]*pm*(1-d/R); s+=v; if(v>best){best=v;why=NAME[x.c]+' '+a+' '+Math.round(d)+' km';} } }); });
+    return {s:s,why:why};
+  }
+  function predict(N,pers,yrs,R){
+    const now=Date.now(), per=dashas(N,now,now+yrs*YEAR), out=[];
+    per.forEach(d=>{ const sets=[{c:d.ad,w:2.5},{c:d.md,w:1.5}];
+      if(pers){ pers.good.forEach(k=>{const c=k.split(' ')[0];}); }
+      const mv=moveScore(N,d.md,d.ad); const rows=[];
+      for(let i=0;i<WC.length;i++){ const w=WC[i]; if(Math.abs(w.lat)>68)continue; const r=cityScore(N,sets,R,pers,w.lat,w.lon); if(r.s>0.15){ let b=0; if(pers){ ['good','bad'].forEach(t=>{}); } rows.push({i:i,s:r.s,why:r.why}); } }
+      rows.sort((a,b)=>b.s-a.s); out.push({d:d,mv:mv,rows:rows.slice(0,400)});
+    });
+    return out;
+  }
+  function pickDiverse(rows,n){ /* spread the list over different countries / states */
+    const seen={}, out=[]; for(const r of rows){ const w=WC[r.i], k=w.cc+'|'+w.st; if(seen[k]>=1)continue; seen[k]=1; out.push(r); if(out.length>=n)break; } return out;
+  }
+  function predReport(N,pr,persBad){
+    let h='<div class="lf-sec"><h3>📅 Where you may be, period by period<span class="ta">எந்தக் காலத்தில் எந்த இடம்</span></h3></div>';
+    h+='<p class="legend">For every bhukti the lines of the dasha lord and bhukti lord are searched against all cities and towns in the offline list. The move chance comes from the houses these two planets rule and occupy (12th, 9th, 4th, 3rd, 8th, and the nodes). Places are ranked by how close they lie to those lines. Villages and towns are included where the list has them.</p>';
+    h+='<div class="ntscroll"><table class="nttb"><tr><th>Period</th><th>Dasha–Bhukti</th><th>Move chance</th><th>Likely places (state, country · line)</th></tr>';
+    const cty={};
+    pr.forEach((p,k)=>{ const top=pickDiverse(p.rows,4), l=mvLabel(p.mv);
+      top.forEach(r=>{const w=WC[r.i]; cty[w.cc]=(cty[w.cc]||0)+r.s*(p.d.e-p.d.s)/YEAR*(l[0]==='Low'?.4:1);});
+      h+='<tr><td>'+fd(p.d.s)+' → '+fd(p.d.e)+'</td><td><b>'+NAME[p.d.md]+' – '+NAME[p.d.ad]+'</b></td><td class="'+(l[1]==='y'?'ntP':l[1]==='n'?'ntA':'ntM')+'">'+l[0]+' ('+p.mv.toFixed(1)+')</td><td>'+top.map(r=>'<a href="#" class="acrgo" data-i="'+r.i+'">'+esc(wl(r.i))+'</a> · '+esc(r.why)).join('<br>')+'</td></tr>'; });
+    h+='</table></div>';
+    const cs=Object.keys(cty).sort((a,b)=>cty[b]-cty[a]).slice(0,8);
+    h+='<div class="ntrules"><div class="ntr y"><b>Countries that come up most (weighted by time and move chance):</b> '+cs.join(', ')+'</div>'+(persBad.length?'<div class="ntr n">Lines that gave you trouble before ('+persBad.join(', ')+') are marked in the list where they appear; consider them carefully.</div>':'')+'<div class="ntr m">This is astrological guidance only, built from tradition. It cannot decide where life will take you; visas, work and family decide that too. <span class="ta">இது ஜோதிட வழிகாட்டல் மட்டுமே.</span></div></div>';
+    return h;
+  }
+  /* ---------- C. missing person ---------- */
+  function bearing(la1,lo1,la2,lo2){ const y=Math.sin((lo2-lo1)*D2R)*Math.cos(la2*D2R), x=Math.cos(la1*D2R)*Math.sin(la2*D2R)-Math.sin(la1*D2R)*Math.cos(la2*D2R)*Math.cos((lo2-lo1)*D2R); const b=(Math.atan2(y,x)/D2R+360)%360; return ['N','NE','E','SE','S','SW','W','NW'][Math.round(b/45)%8]+' ('+Math.round(b)+'°)'; }
+  function missing(){
+    const msg=$('acmMsg'); msg.textContent='';
+    const last=parseInt($('acmLastSel').value,10); if(!(last>=0)){msg.textContent='Choose the place where the person was last known.';return;}
+    const dt=$('acmDate').value; if(!dt){msg.textContent='Enter the date the person went missing.';return;}
+    const missMs=Date.parse(dt+'T12:00:00Z'), basis=$('acmBasis').value; let P;
+    try{
+      if(basis==='birth'){ const ds=$('acmBd').value, ts=$('acmBt').value||'12:00', bi=parseInt($('acmBSel').value,10), tz=$('acmTz').value.trim()||'5.5';
+        if(!ds||!(bi>=0)){msg.textContent='Enter the missing person\'s date of birth and birth place, or choose the question-time chart.';return;}
+        const w=WC[bi], [y,m,d]=ds.split('-').map(Number), tp=ts.split(':').map(Number), r=localToUtc(y,m,d,tp[0]||0,tp[1]||0,w.tz||tz); P=build(r.ms,w.lat,w.lon,$('bpAyan').value||'kp','Missing person'); }
+      else { const wl2=WC[last]; P=build(Date.now(),wl2.lat,wl2.lon,$('bpAyan').value||'kp','Question chart'); }
+    }catch(e){msg.textContent='Could not read the chart: '+e.message;return;}
+    const lw=WC[last], R=Math.max(100,parseInt($('acmR').value,10)||600), maxD=parseInt($('acmMax').value,10)||3000;
+    let sets, dtxt='';
+    if(basis==='birth'){ const dd=dashas(P,missMs,missMs+86400000)[0]; sets=[{c:dd.ad,w:3},{c:dd.md,w:2},{c:P.lord(12),w:1.5},{c:P.lord(4),w:1},{c:'Mo',w:1}]; dtxt='Dasha when he or she went missing: <b>'+NAME[dd.md]+' – '+NAME[dd.ad]+'</b>; 4th lord (home) '+NAME[P.lord(4)]+', 12th lord (far places) '+NAME[P.lord(12)]+'.'; }
+    else { sets=[{c:P.lord(1),w:2},{c:P.lord(4),w:2},{c:P.lord(12),w:1.5},{c:P.lord(7),w:1},{c:'Mo',w:2}]; dtxt='Question chart: ascendant '+SIGNS[P.A][0]+'; lords used: 1st '+NAME[P.lord(1)]+', 4th '+NAME[P.lord(4)]+', 7th '+NAME[P.lord(7)]+', 12th '+NAME[P.lord(12)]+', and the Moon.'; }
+    const rows=[]; for(let i=0;i<WC.length;i++){ const w=WC[i]; if(Math.abs(w.lat)>68)continue; const km=acgKm(lw.lat,lw.lon,w.lat,w.lon); if(km>maxD)continue; const r=cityScore(P,sets,R,null,w.lat,w.lon); if(r.s>0.2)rows.push({i:i,s:r.s,why:r.why,km:km}); }
+    rows.sort((a,b)=>b.s-a.s); const top=pickDiverse(rows,15);
+    let h='<div class="lf-sec"><h3>🧭 Places where the lines point<span class="ta">கோடுகள் காட்டும் இடங்கள்</span></h3></div><p class="legend">'+dtxt+' Last known place: <b>'+esc(wl(last))+'</b>. Candidate places within '+maxD+' km, ranked by closeness to those planets\' lines (within '+R+' km).</p>';
+    h+='<div class="ntscroll"><table class="nttb"><tr><th>#</th><th>Place (state, country)</th><th>Distance and direction from last place</th><th>Line</th><th>Score</th></tr>'+top.map((r,k)=>'<tr><td>'+(k+1)+'</td><td><a href="#" class="acrgo" data-i="'+r.i+'"><b>'+esc(wl(r.i))+'</b></a></td><td>'+Math.round(r.km)+' km, '+bearing(lw.lat,lw.lon,WC[r.i].lat,WC[r.i].lon)+'</td><td>'+esc(r.why)+'</td><td>'+r.s.toFixed(2)+'</td></tr>').join('')+'</table></div>';
+    h+='<div class="ntrules"><div class="ntr n"><b>Please act in the real world first.</b> Inform the police at once and give a recent photograph; in India, call 112 (missing child: 1098; women in distress: 181). Check the person\'s phone, bank and travel records through the police. This reading only suggests where to look first. It is astrological guidance for believers, not evidence, and must never be used to accuse anyone. The author and the app accept no responsibility for its use.<span class="ta">முதலில் காவல்துறைக்குத் தெரிவியுங்கள் (112; குழந்தை 1098; பெண்கள் 181). இது ஜோதிட வழிகாட்டல் மட்டுமே; சான்று அல்ல.</span></div></div>';
+    $('acmOut').innerHTML=h; MAP={mode:'miss',pts:top.map((r,k)=>({i:r.i,k:k+1})),life:[{i:last,g:'last'}],lines:sets.map(x=>x.c).filter((c,k,a)=>a.indexOf(c)===k).slice(0,4),N:P};
+    openMap('acmMap');
+  }
+  /* ---------- map ---------- */
+  let V=null;
+  function openMap(id){ const cv=$(id); cv.parentNode.classList.remove('hide'); V=null; draw(id); }
+  function draw(id){
+    if(!MAP)return; const cv=$(id); if(!cv)return; const W=cv.clientWidth||600, H=Math.round(W*0.55); cv.style.height=H+'px'; const dpr=window.devicePixelRatio||1; cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    const x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); const T=acgTheme();
+    if(!V){ const pts=(MAP.pts||[]).concat(MAP.life||[]).map(p=>WC[p.i]); let la0=-60,la1=75,lo0=-180,lo1=180; if(pts.length){la0=Math.min.apply(0,pts.map(p=>p.lat))-8;la1=Math.max.apply(0,pts.map(p=>p.lat))+8;lo0=Math.min.apply(0,pts.map(p=>p.lon))-12;lo1=Math.max.apply(0,pts.map(p=>p.lon))+12;} if(MAP.mode!=='miss'&&pts.length>12){la0=-60;la1=75;lo0=-180;lo1=180;} const s=Math.min(W/Math.max(20,lo1-lo0),H/Math.max(15,la1-la0)); V={s:s,cx:(lo0+lo1)/2,cy:(la0+la1)/2}; }
+    const XY=(lo,la)=>[W/2+(lo-V.cx)*V.s,H/2-(la-V.cy)*V.s];
+    x.fillStyle=T.sea; x.fillRect(0,0,W,H);
+    if(!ACG_LAND||!ACG_LAND.length){try{ACG_LAND=acgDecode(window.GA_LAND);}catch(e){ACG_LAND=[];}}
+    x.beginPath(); ACG_LAND.forEach(r=>{ r.forEach((p,i)=>{const q=XY(p[0],p[1]); if(i)x.lineTo(q[0],q[1]); else x.moveTo(q[0],q[1]);}); x.closePath(); }); x.fillStyle=T.land; x.fill('evenodd'); x.strokeStyle=T.edge; x.lineWidth=.6; x.stroke();
+    const N0=MAP.N; (MAP.lines||[]).forEach(c=>{ ANG.forEach(a=>{ x.strokeStyle=ACG_COL[c]; x.lineWidth=MAP.xs?1.3:2; x.setLineDash(a==='ASC'||a==='MC'?[]:[6,4]); N0.L[c][a].forEach(run=>{ x.beginPath(); run.forEach((p,i)=>{const q=XY(p[0],p[1]); if(i)x.lineTo(q[0],q[1]); else x.moveTo(q[0],q[1]);}); x.stroke(); }); x.setLineDash([]);
+      const run=N0.L[c][a][0]; if(run&&run.length){ const p=run[Math.floor(run.length/2)], q=XY(p[0],p[1]); x.fillStyle=ACG_COL[c]; x.font='600 10px sans-serif'; x.fillText((MAP.lab&&MAP.lab[c]?c+'('+MAP.lab[c]+') ':c+' ')+a,q[0]+3,q[1]); } }); });
+    (MAP.dl||[]).forEach(d=>{ x.strokeStyle=d.col; x.globalAlpha=.4; x.lineWidth=.8; d.runs.forEach(run=>{ x.beginPath(); run.forEach((p,i)=>{const q=XY(p[0],p[1]); if(i)x.lineTo(q[0],q[1]); else x.moveTo(q[0],q[1]);}); x.stroke(); }); x.globalAlpha=1; });
+    (MAP.xs||[]).forEach(p=>{ const q=XY(p.lon,p.lat); x.fillStyle=p.cls==='y'?'#1e8e3e':p.cls==='n'?'#c62828':'#d9a400'; x.strokeStyle='#fff'; x.lineWidth=1.2; x.beginPath(); x.arc(q[0],q[1],4,0,6.3); x.fill(); x.stroke(); });
+    (MAP.life||[]).forEach(p=>{ const w=WC[p.i], q=XY(w.lon,w.lat); x.fillStyle=p.g==='good'?'#1e8e3e':p.g==='bad'?'#c62828':p.g==='last'?'#000':'#8e8e93'; x.strokeStyle='#fff'; x.lineWidth=2; x.beginPath(); x.arc(q[0],q[1],7,0,6.3); x.fill(); x.stroke(); x.fillStyle=T.ink; x.font='600 11px sans-serif'; x.fillText(w.n,q[0]+9,q[1]+4); });
+    (MAP.pts||[]).forEach(p=>{ const w=WC[p.i], q=XY(w.lon,w.lat); x.fillStyle='#7C3AED'; x.strokeStyle='#fff'; x.lineWidth=1.5; x.beginPath(); x.arc(q[0],q[1],8,0,6.3); x.fill(); x.stroke(); x.fillStyle='#fff'; x.font='700 9px sans-serif'; x.textAlign='center'; x.fillText(String(p.k),q[0],q[1]+3); x.textAlign='left'; x.fillStyle=T.ink; x.font='600 11px sans-serif'; if(MAP.pts.length<=16)x.fillText(w.n,q[0]+10,q[1]+4); });
+    if(MAP.pts.length&&!MAP.pts.some(p=>p.k)){}
+  }
+  function bindMap(id){
+    const cv=$(id); let drag=null; cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);});
+    cv.addEventListener('pointermove',e=>{ if(!drag||!V)return; V.cx-=(e.clientX-drag.x)/V.s; V.cy+=(e.clientY-drag.y)/V.s; drag={x:e.clientX,y:e.clientY}; draw(id); });
+    cv.addEventListener('pointerup',()=>{drag=null;});
+    cv.addEventListener('wheel',e=>{ e.preventDefault(); if(!V)return; V.s*=e.deltaY<0?1.25:0.8; draw(id); },{passive:false});
+  }
+
+  /* ---------- D. house-lord line crossings ---------- */
+  const HN={1:['self, health, body','உடல், ஆரோக்கியம்'],2:['money, family','பணம், குடும்பம்'],3:['effort, siblings','முயற்சி, சகோதரர்'],4:['home, comfort, property','வீடு, சுகம்'],5:['children, luck, intelligence','பிள்ளைகள், பூர்வ புண்ணியம்'],6:['debt, disease, enemies, service','கடன், நோய், பகை, சேவை'],7:['marriage, partnership','திருமணம், கூட்டு'],8:['obstacles, sudden loss, danger','தடை, திடீர் இழப்பு'],9:['luck, father, dharma','பாக்கியம், தந்தை'],10:['career, status','தொழில், பதவி'],11:['gains, income','லாபம், வருமானம்'],12:['loss, expense, far lands','விரயம், தொலைதூரம்']};
+  const PAIR={
+   '1-2':[2,'self-made wealth; money comes with effort','சுயமுயற்சியால் செல்வம்'],'1-4':[2,'comfort, home and peace','வீடு, நிம்மதி'],'1-5':[3,'success, fortune, good children','வெற்றி, அதிர்ஷ்டம், நல்ல பிள்ளைகள்'],'1-9':[3,'luck and blessings, dharma','அதிர்ஷ்டம், ஆசிகள்'],'1-10':[3,'career success and status','தொழில் வெற்றி, பதவி'],'1-11':[3,'gains and fulfilment of wishes','லாபம், ஆசை நிறைவேறல்'],
+   '2-5':[3,'money + luck, family happiness, good children','பணம் + அதிர்ஷ்டம், குடும்ப மகிழ்ச்சி'],'2-9':[2,'wealth through luck and elders','பாக்கிய வழி செல்வம்'],'2-10':[3,'money through business or job','தொழில் / வேலை மூலம் பணம்'],'2-11':[3,'income and savings','வருமானம், சேமிப்பு'],
+   '4-5':[2,'happy home and children','இல்லத்தில் மகிழ்ச்சி'],'4-9':[2,'property and fortune','சொத்து, பாக்கியம்'],'4-10':[2,'stable career and home','நிலையான தொழில், வீடு'],'4-11':[2,'gains from property, vehicles','சொத்து வழி லாபம்'],
+   '5-9':[3,'great luck, good deeds bear fruit','பெரும் அதிர்ஷ்டம், புண்ணிய பலன்'],'5-10':[2,'fame through talent','திறமையால் புகழ்'],'5-11':[3,'gains, speculation can favour','லாபம், ஊக வணிக ஆதரவு'],'9-10':[3,'rise in career, recognition','தொழில் உயர்வு, அங்கீகாரம்'],'9-11':[2,'fortunate gains','பாக்கிய லாபம்'],'10-11':[3,'profit in work and business','தொழிலில் லாபம்'],'3-11':[1,'gains by effort and courage','முயற்சியால் லாபம்'],'3-10':[1,'career by effort, media, travel','முயற்சி வழி தொழில்'],'7-10':[1,'business partnership','கூட்டுத் தொழில்'],'7-11':[2,'gains through partners','கூட்டாளி வழி லாபம்'],'1-7':[1,'partnership, marriage prospects','கூட்டு, திருமணம்'],'2-7':[1,'family through marriage','திருமண வழி குடும்பம்'],
+   '1-8':[-3,'obstacles, health risk, struggle','தடை, ஆரோக்கிய பாதிப்பு'],'1-12':[-2,'losses, expenses, exile from home','விரயம், வீட்டை விட்டுப் பிரிவு'],'1-6':[-1,'illness, debts, rivals','நோய், கடன், பகை'],
+   '2-8':[-3,'money loss and family discord','பண இழப்பு, குடும்ப கலகம்'],'2-12':[-3,'losing family and money','குடும்பம் மற்றும் பண இழப்பு'],'2-6':[-2,'debt and money disputes','கடன், பண தகராறு'],
+   '5-8':[-3,'unhappiness in family and children; bad for speculation','குடும்ப துன்பம்; ஊக வணிகம் கூடாது'],'5-12':[-2,'loss of fortune and children\'s distance','அதிர்ஷ்ட இழப்பு'],'5-6':[-2,'troubles with children, romance, health','பிள்ளைகள், காதல் சிக்கல்'],
+   '6-8':[-3,'illness, litigation, sudden troubles','நோய், வழக்கு, திடீர் சிக்கல்'],'6-12':[-3,'hospital, litigation, heavy expense','மருத்துவமனை, வழக்கு, செலவு'],'8-12':[-3,'loss, isolation, danger','இழப்பு, தனிமை, ஆபத்து'],
+   '4-8':[-2,'sorrow at home, property trouble','வீட்டில் துயரம்'],'4-12':[-2,'leaving home, property loss','வீடு பிரிவு'],'4-6':[-1,'domestic disputes','வீட்டில் தகராறு'],'8-9':[-2,'bad luck, trouble with elders','துரதிர்ஷ்டம்'],'8-10':[-2,'career setbacks, scandal','தொழிலில் பின்னடைவு'],'7-8':[-2,'marital trouble, partner losses','திருமண சிக்கல்'],'7-12':[-1,'separation, foreign spouse','பிரிவு, வெளிநாட்டு துணை'],'11-12':[-2,'income eaten by expense','வருமானம் செலவாகும்'],'8-11':[-1,'delayed or irregular gains','தாமத லாபம்'],'3-8':[-1,'risky ventures','ஆபத்தான முயற்சி'],'3-12':[-1,'effort lost in expense','முயற்சி விரயம்'],'9-12':[0,'foreign travel and settlement','வெளிநாட்டு வாசம்'],'6-10':[1,'service, job with duties','சேவை, வேலை']};
+  const XL=['Su','Mo','Ma','Me','Ju','Ve','Sa'];
+  let XS=null;
+  function pairKey(a,b){return a<b?a+'-'+b:b+'-'+a;}
+  function crossings(N){
+    const out=[]; for(let i=0;i<XL.length;i++)for(let j=i+1;j<XL.length;j++){ const p=XL[i],q=XL[j];
+      ANG.forEach(a=>ANG.forEach(b=>{ if((a==='MC'||a==='IC')&&(b==='MC'||b==='IC'))return; acgCross(N.L[p][a],N.L[q][b]).forEach(pt=>{ if(Math.abs(pt[1])>62)return; out.push({lon:pt[0],lat:pt[1],p:p,a:a,q:q,b:b}); }); })); }
+    out.forEach(x=>{ const hp=N.rules[x.p], hq=N.rules[x.q]; let S=0,best=null,worst=null; hp.forEach(u=>hq.forEach(v=>{ if(u===v)return; const e=PAIR[pairKey(u,v)]; if(!e)return; S+=e[0]; const o={k:pairKey(u,v),e:e}; if(e[0]>0&&(!best||e[0]>best.e[0]))best=o; if(e[0]<0&&(!worst||e[0]<worst.e[0]))worst=o; }));
+      x.S=S; x.best=best; x.worst=worst; x.dus=hp.concat(hq).some(h=>h===8||h===12);
+      x.cls=(S>=2&&!(x.dus&&worst&&worst.e[0]<=-3))?'y':(S<=-2||(x.dus&&S<=0))?'n':'m'; });
+    return out;
+  }
+  function periodsFor(N,pair,yrs,per){
+    const both=per.filter(d=>pair.indexOf(d.md)>=0&&pair.indexOf(d.ad)>=0), ad=per.filter(d=>pair.indexOf(d.ad)>=0&&pair.indexOf(d.md)<0), md=per.filter(d=>pair.indexOf(d.md)>=0&&pair.indexOf(d.ad)<0);
+    const f=d=>NAME[d.md]+'–'+NAME[d.ad]+' '+fd(d.s).slice(0,7)+' → '+fd(d.e).slice(0,7);
+    const r=both.slice(0,2).map(d=>'<b>'+f(d)+'</b>').concat(ad.slice(0,2).map(f)); if(r.length<3)r.push.apply(r,md.slice(0,3-r.length).map(f)); return r.slice(0,3);
+  }
+  function house(N,c){return N.rules[c].join('·');}
+  function crossReport(N,xs,reg,R,yrs,mode){
+    const per=dashas(N,Date.now(),Date.now()+yrs*YEAR), seen={}, fav=[], unf=[], mix=[];
+    xs.slice().sort((a,b)=>Math.abs(b.S)-Math.abs(a.S)).forEach(x=>{ let near=null; acgNear(x.lon,x.lat,R,(i,d)=>{ if(!near||d<near.d)near={i:i,d:d}; }); if(!near)return; x.near=near; const w=WC[near.i];
+      if(reg&&((w.cc+' '+w.st+' '+w.n).toLowerCase().indexOf(reg)<0))return; const k=near.i+x.cls; if(seen[k])return; seen[k]=1; (x.cls==='y'?fav:x.cls==='n'?unf:mix).push(x); });
+    const row=x=>{ const w=WC[x.near.i], m=x.cls==='n'?(x.worst||x.best):(x.best||x.worst), per2=periodsFor(N,[x.p,x.q],yrs,per);
+      return '<tr><td><a href="#" class="acrgo" data-i="'+x.near.i+'"><b>'+esc(wl(x.near.i))+'</b></a><br><small>'+Math.round(x.near.d)+' km from the crossing</small></td><td>'+NAME[x.p]+' ('+house(N,x.p)+') '+x.a+'<br>× '+NAME[x.q]+' ('+house(N,x.q)+') '+x.b+'</td><td>'+(m?m.k.replace('-',' & ')+': '+m.e[1]+'<span class="ta">'+m.e[2]+'</span>':'—')+'</td><td>'+x.S+'</td><td>'+(per2.length?per2.join('<br>'):'no matching period in the next '+yrs+' years')+'</td></tr>'; };
+    const tb=(a,t,c)=>'<div class="lf-sec"><h3>'+t+'</h3></div><div class="ntscroll"><table class="nttb"><tr><th>Place</th><th>Lines meeting</th><th>What it can give</th><th>Score</th><th>Periods (dasha–bhukti)</th></tr>'+(a.length?a.slice(0,c).map(row).join(''):'<tr><td colspan="5">none found with these settings</td></tr>')+'</table></div>';
+    let h='<div class="lf-sec"><h3>🪐 Lines of the house lords<span class="ta">பாவாதிபதிகளின் கோடுகள்</span></h3></div><p class="legend">'+XL.map(c=>'<b style="color:'+ACG_COL[c]+'">'+NAME[c]+'</b> rules house '+house(N,c)).join(' · ')+'. Each planet has four lines: Ascendant (rising, curved, "horizontal"), Descendant (setting, curved), and MC and IC (vertical). The lagna lord line is your "ascendant line". Rahu and Ketu rule no house, so they are left out here.</p>';
+    h+=tb(fav,'✅ Favourable places · சாதகமான இடங்கள்',30)+tb(unf,'⚠️ Unfavourable places · சாதகமற்ற இடங்கள்',30);
+    h+='<details class="howto"><summary>Mixed places (both good and bad)</summary>'+tb(mix,'Mixed',15)+'</details>';
+    h+='<div class="ntrules"><div class="ntr m"><b>How the rule works:</b> where two lords\' lines cross, the two sets of houses join. 1–5, 2–5, 2–10, 2–11, 9–10, 10–11 and similar give the results written in the list. Crossings that bring in the 6th, 8th or 12th lords (1–8, 2–8, 5–8, 2–12, 6–8, 6–12, 8–12) are marked unfavourable. A crossing that has no 8th or 12th lord is favourable. A planet that rules two houses brings both. The place is the nearest town in the offline list within '+R+' km of the crossing.</div><div class="ntr m"><b>Periods:</b> bold = both the dasha and the bhukti lord belong to the two crossing planets (strongest); otherwise the bhukti lord alone or the dasha lord alone. '+(mode==='q'?'For the question chart the dasha is counted from the Moon at the time of the question.':'Counted from your birth dasha.')+'</div><div class="ntr n">This is astrological guidance for believers, from tradition, and not a certainty. A good line does not replace visa, work and family realities; a bad line is a caution and not a ban. <span class="ta">இது ஜோதிட வழிகாட்டல் மட்டுமே.</span></div></div>';
+    return h;
+  }
+  function crossGo(){
+    const m=$('acxMsg'); m.textContent='';
+    try{ let N0, mode=$('acxBasis').value;
+      if(mode==='q'){ const i=parseInt($('acxSel').value,10); if(!(i>=0)){m.textContent='Choose the place where the question is asked.';return;} const w=WC[i]; N0=build(Date.now(),w.lat,w.lon,$('bpAyan').value||'kp','Question chart'); }
+      else N0=natal();
+      const yrs=parseInt($('acxYrs').value,10), R=parseInt($('acxR').value,10), reg=$('acxReg').value.trim().toLowerCase();
+      const xs=crossings(N0); XS=xs; $('acxOut').innerHTML=crossReport(N0,xs,reg,R,yrs,mode);
+      const top=xs.filter(x=>x.near).slice(0,0); const show=xs.filter(x=>x.cls!=='m'); 
+      MAP={mode:'cross',pts:[],life:[],lines:XL.slice(),lab:{},xs:show,N:N0}; XL.forEach(c=>MAP.lab[c]=house(N0,c));
+      $('acxMapW').classList.remove('hide'); V=null; draw('acxMap'); $('acxLeg').textContent='Green dots: favourable meeting points; red: unfavourable. Lines are labelled planet(houses ruled) and line type. Drag to pan, wheel or pinch to zoom; tap a place name in the list to centre it.';
+    }catch(e){m.textContent=e.message;}
+  }
+
+
+  /* ---------- E. degree waves: every planet, the ascendant and Fortuna at the same degree in all 12 signs ---------- */
+  Object.assign(PAIR,{'1-3':PAIR['1-3']||[1,'courage and effort bring growth','முயற்சியால் முன்னேற்றம்'],'2-3':PAIR['2-3']||[1,'money by effort and skill','முயற்சியால் பணம்'],'3-5':PAIR['3-5']||[1,'creative effort, children and study','படைப்பாற்றல், கல்வி'],'3-9':PAIR['3-9']||[1,'effort supported by luck','முயற்சிக்கு அதிர்ஷ்ட ஆதரவு']});
+  const LATS=[]; for(let l=-62;l<=62.001;l+=0.5)LATS.push(l);
+  const sgd=v=>{const d=v%30; return Math.floor(d)+'°'+('0'+Math.floor((d%1)*60)).slice(-2)+'′ '+SIGNS[Math.floor(v/30)%12][0];};
+  function degPoints(N){
+    const jd=N.ms/86400000+2440587.5, ay=ayanamsa(jd,N.kind), T=(jd-2451545)/36525, ep=(23.43929-0.0130042*T)*D2R, gst=acNorm(N.L.Su.ra-N.L.Su.mc);
+    const day=N.hoc.Su>=7, fort=mod(N.asc+(day?N.P.Mo-N.P.Su:N.P.Su-N.P.Mo),360);
+    const base=CODES.map(c=>({id:c,name:NAME[c],houses:N.rules[c],pl:c,s0:N.P[c]}));
+    base.push({id:'As',name:'Ascendant',houses:[1],pl:N.lord(1),s0:N.asc});
+    base.push({id:'Fo',name:'Fortuna',houses:[5,9],pl:SIGNS[Math.floor(fort/30)%12][1],s0:fort});
+    const pts=[];
+    base.forEach(b=>{ const dg=b.s0%30; for(let k=0;k<12;k++){ const s=dg+30*k, l=(s+ay)*D2R, ra=mod(Math.atan2(Math.sin(l)*Math.cos(ep),Math.cos(l))/D2R,360), dec=Math.asin(Math.sin(ep)*Math.sin(l))/D2R;
+      pts.push({id:b.id,name:b.name,houses:b.houses,pl:b.pl,k:k,s:s,ra:ra,dec:Math.abs(dec)<1e-6?1e-6:dec,mc:acNorm(ra-gst),gst:gst,col:b.id==='As'?'#111':b.id==='Fo'?'#d4a017':ACG_COL[b.id]}); } });
+    return {pts:pts,base:base,gst:gst,fort:fort,day:day};
+  }
+  function curve(p,asc){ const o=new Float32Array(LATS.length), td=Math.tan(p.dec*D2R); for(let i=0;i<LATS.length;i++){ const x=-Math.tan(LATS[i]*D2R)*td; if(Math.abs(x)>=1){o[i]=NaN;continue;} const H=Math.acos(x)/D2R; o[i]=acNorm(p.ra+(asc?-H:H)-p.gst); } return o; }
+  function vAt(L,p,asc){ const h=mod(asc?p.ra-p.gst-L:L+p.gst-p.ra,360); if(h>180)return null; const lat=Math.atan(-Math.cos(h*D2R)/Math.tan(p.dec*D2R))/D2R; return Math.abs(lat)<=62?lat:null; }
+  function crossPts(pts,ok){
+    const out=[], n=pts.length, C=new Array(n);
+    const get=(i,t)=>{ const c=C[i]||(C[i]={}); return c[t]||(c[t]=curve(pts[i],t==='ASC')); };
+    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){ const p=pts[i],q=pts[j]; if(!ok(p,q))continue;
+      [['MC',p.mc],['IC',acNorm(p.mc+180)]].forEach(m=>['ASC','DSC'].forEach(t=>{ const la=vAt(m[1],q,t==='ASC'); if(la!==null)out.push({lon:m[1],lat:la,i:i,a:m[0],j:j,b:t}); }));
+      [['MC',q.mc],['IC',acNorm(q.mc+180)]].forEach(m=>['ASC','DSC'].forEach(t=>{ const la=vAt(m[1],p,t==='ASC'); if(la!==null)out.push({lon:m[1],lat:la,i:i,a:t,j:j,b:m[0]}); }));
+      ['ASC','DSC'].forEach(t1=>['ASC','DSC'].forEach(t2=>{ const A=get(i,t1),B=get(j,t2); let pd=NaN;
+        for(let k=0;k<LATS.length;k++){ const x=A[k],y=B[k]; if(x!==x||y!==y){pd=NaN;continue;} const d=acNorm(x-y); if(Math.abs(d)>90){pd=NaN;continue;}
+          if(pd===pd&&pd!==d&&((pd<=0&&d>=0)||(pd>=0&&d<=0))){ const f=pd/(pd-d); out.push({lon:acNorm(A[k-1]+acNorm(x-A[k-1])*f),lat:LATS[k-1]+0.5*f,i:i,a:t1,j:j,b:t2}); } pd=d; } }));
+    }
+    return out;
+  }
+  function classify(pts,xs){
+    xs.forEach(x=>{ const hp=pts[x.i].houses, hq=pts[x.j].houses; let S=0,best=null,worst=null; hp.forEach(u=>hq.forEach(v=>{ if(u===v)return; const e=PAIR[pairKey(u,v)]; if(!e)return; S+=e[0]; const o={k:pairKey(u,v),e:e}; if(e[0]>0&&(!best||e[0]>best.e[0]))best=o; if(e[0]<0&&(!worst||e[0]<worst.e[0]))worst=o; }));
+      x.S=S; x.best=best; x.worst=worst; x.dus=hp.concat(hq).some(h=>h===6||h===8||h===12);
+      x.cls=(S>=2&&!(x.dus&&worst&&worst.e[0]<=-3))?'y':(S<=-2||(x.dus&&S<=0))?'n':'m'; });
+  }
+  function polys(pts){
+    return pts.map(p=>{ const runs=[[[p.mc,-62],[p.mc,62]],[[acNorm(p.mc+180),-62],[acNorm(p.mc+180),62]]];
+      ['ASC','DSC'].forEach(t=>{ const c=curve(p,t==='ASC'); let r=[],pl=NaN; for(let k=0;k<LATS.length;k++){ const v=c[k]; if(v!==v||(pl===pl&&Math.abs(v-pl)>180)){ if(r.length>1)runs.push(r); r=[]; } if(v===v)r.push([v,LATS[k]]); pl=v; } if(r.length>1)runs.push(r); });
+      return {col:p.col,runs:runs}; });
+  }
+  const lbl=p=>(p.id==='As'||p.id==='Fo')?p.name:NAME[p.id]+' ('+p.houses.join('·')+')';
+  function chartFor(mode,qi){ if(mode==='q'){ const w=WC[qi]; return build(Date.now(),w.lat,w.lon,$('bpAyan').value||'kp','Question chart'); } return natal(); }
+  function degRows(N,D,list,R,yrs,cap){
+    const per=dashas(N,Date.now(),Date.now()+yrs*YEAR), seen={}, out=[];
+    const pc={}; list.forEach(x=>{ if(seen[x.near.i]||out.length>=cap)return; const k=[D.pts[x.i].id,D.pts[x.j].id].sort().join(''); if((pc[k]||0)>=4)return; pc[k]=(pc[k]||0)+1; seen[x.near.i]=1; out.push(x); });
+    return out.map(x=>{ const p=D.pts[x.i], q=D.pts[x.j], m=x.cls==='n'?(x.worst||x.best):(x.best||x.worst), pr=periodsFor(N,[p.pl,q.pl],yrs,per);
+      return '<tr><td><a href="#" class="acrgo" data-i="'+x.near.i+'"><b>'+esc(wl(x.near.i))+'</b></a><br><small>'+x.near.d.toFixed(x.near.d<10?1:0)+' km from the meeting point</small></td><td>'+lbl(p)+' '+sgd(p.s)+' '+x.a+'<br>× '+lbl(q)+' '+sgd(q.s)+' '+x.b+'</td><td>'+(m?m.k.replace('-',' & ')+': '+m.e[1]+'<span class="ta">'+m.e[2]+'</span>':'—')+'</td><td>'+x.S+'</td><td>'+(pr.length?pr.join('<br>'):'none in the next '+yrs+' years')+'</td></tr>'; }).join('');
+  }
+  function nearestPick(arr,R,reg,tries,keep){
+    const c=[]; let t=0; for(const x of arr){ if(c.length>=keep||t++>=tries)break; let near=null; acgNear(x.lon,x.lat,R,(i,d)=>{ if(!near||d<near.d)near={i:i,d:d}; }); if(!near)continue; const w=WC[near.i]; if(reg&&((w.cc+' '+w.st+' '+w.n).toLowerCase().indexOf(reg)<0))continue; x.near=near; c.push(x); } return c;
+  }
+  function degGo(){
+    const m=$('acdMsg'); m.textContent='';
+    try{ const mode=$('acdBasis').value, qi=parseInt($('acdSel').value,10); if(mode==='q'&&!(qi>=0)){m.textContent='Choose the place where the question is asked.';return;}
+      const N0=chartFor(mode,qi), yrs=parseInt($('acdYrs').value,10), R=parseInt($('acdR').value,10), reg=$('acdReg').value.trim().toLowerCase(), D=degPoints(N0), pts=D.pts;
+      m.textContent='Working…';
+      setTimeout(()=>{ try{
+        const xs=crossPts(pts,(p,q)=>p.id!==q.id&&p.houses.length&&q.houses.length); classify(pts,xs);
+        const fv=xs.filter(x=>x.cls==='y').sort((a,b)=>b.S-a.S||Math.abs(a.lat)-Math.abs(b.lat)), un=xs.filter(x=>x.cls==='n').sort((a,b)=>a.S-b.S||Math.abs(a.lat)-Math.abs(b.lat));
+        const f2=nearestPick(fv,R,reg,40000,500).sort((a,b)=>b.S-a.S||a.near.d-b.near.d), u2=nearestPick(un,R,reg,40000,500).sort((a,b)=>a.S-b.S||a.near.d-b.near.d);
+        const th='<tr><th>Place (nearest town)</th><th>Degree lines meeting</th><th>What it can give</th><th>Score</th><th>Periods (dasha–bhukti)</th></tr>';
+        let h='<div class="lf-sec"><h3>📐 The 132 degree lines<span class="ta">132 டிகிரி கோடுகள்</span></h3></div><p class="legend">Each of the 11 points below is taken at its degree inside its sign, and a line is drawn for that same degree in all 12 signs: 11 × 12 = 132 degree lines. Each has an Ascendant, Descendant, MC and IC curve. '+(D.day?'Birth by day':'Birth by night')+': Fortuna = '+(D.day?'Ascendant + Moon − Sun':'Ascendant + Sun − Moon')+'.</p><div class="ntscroll"><table class="nttb"><tr><th>Point</th><th>Rules houses</th><th>Position</th><th>Degree in sign</th></tr>'+D.base.map(b=>'<tr><td><b>'+b.name+'</b></td><td>'+(b.houses.length?b.houses.join('·'):'none (node)')+'</td><td>'+sgd(b.s0)+'</td><td>'+(b.s0%30).toFixed(2)+'°</td></tr>').join('')+'</table></div><p class="legend">'+xs.length+' meeting points were found between lines of house lords; '+fv.length+' favourable, '+un.length+' unfavourable.</p>';
+        h+='<div class="lf-sec"><h3>✅ Favourable places within '+R+' km of a town · சாதகமான இடங்கள்</h3></div><div class="ntscroll"><table class="nttb">'+th+(f2.length?degRows(N0,D,f2,R,yrs,30):'<tr><td colspan="5">No town within '+R+' km of a favourable meeting point. Try a larger distance.</td></tr>')+'</table></div>';
+        h+='<div class="lf-sec"><h3>⚠️ Unfavourable places · சாதகமற்ற இடங்கள்</h3></div><div class="ntscroll"><table class="nttb">'+th+(u2.length?degRows(N0,D,u2,R,yrs,30):'<tr><td colspan="5">None within '+R+' km.</td></tr>')+'</table></div>';
+        h+='<div class="ntrules"><div class="ntr m"><b>Rule:</b> lines of the 1st, 2nd, 3rd, 5th, 9th and 10th lords (and the Ascendant and Fortuna waves) meeting give the results written in the list; any meeting with the 6th, 8th or 12th lord line is unfavourable. The distance shown is from the exact meeting point to the nearest town in the offline list, so choose 10–50 km for a close match and 200–500 km for a wider region. Nodes rule no house and are drawn but not scored. Periods: bold = both dasha and bhukti lords belong to the two lines.</div><div class="ntr n">Astrological guidance only; a meeting point is a tendency and not a certainty. <span class="ta">ஜோதிட வழிகாட்டல் மட்டுமே.</span></div></div>';
+        $('acdOut').innerHTML=h;
+        const show=f2.slice(0,40).concat(u2.slice(0,40)).map(x=>({lon:x.lon,lat:x.lat,cls:x.cls}));
+        MAP={mode:'deg',cv:'acdMap',pts:[],life:[],lines:[],xs:show,N:N0,dl:$('acdLines').value==='all'?polys(pts):[]};
+        $('acdMapW').classList.remove('hide'); V=null; draw('acdMap'); $('acdLeg').textContent='Thin coloured curves: the 132 degree lines (black = Ascendant, gold = Fortuna). Green dots: favourable meetings; red: unfavourable.'; m.textContent='';
+      }catch(e){m.textContent=e.message;} },30);
+    }catch(e){m.textContent=e.message;}
+  }
+  function miss411(){
+    const m=$('acdMsg2'); m.textContent='';
+    const last=parseInt($('acmLastSel').value,10); if(!(last>=0)){m.textContent='Choose the last known place in section 3 above.';return;}
+    const dt=$('acmDate').value; if(!dt){m.textContent='Enter the date the person went missing in section 3 above.';return;}
+    const missMs=Date.parse(dt+'T12:00:00Z'), basis=$('acmBasis').value; let P;
+    try{ if(basis==='birth'){ const ds=$('acmBd').value, ts=$('acmBt').value||'12:00', bi=parseInt($('acmBSel').value,10); if(!ds||!(bi>=0)){m.textContent='Enter the missing person\'s birth date and place in section 3, or choose the question chart.';return;} const w=WC[bi], a=ds.split('-').map(Number), tp=ts.split(':').map(Number), r=localToUtc(a[0],a[1],a[2],tp[0]||0,tp[1]||0,w.tz||$('acmTz').value.trim()||'5.5'); P=build(r.ms,w.lat,w.lon,$('bpAyan').value||'kp','Missing person'); }
+      else { const w=WC[last]; P=build(Date.now(),w.lat,w.lon,$('bpAyan').value||'kp','Question chart'); } }catch(e){m.textContent=e.message;return;}
+    const lw=WC[last], R=parseInt($('acd4R').value,10), maxD=parseInt($('acmMax').value,10)||3000, l4=P.lord(4), l11=P.lord(11), D=degPoints(P);
+    const pts=D.pts.filter(p=>p.id===l4||p.id===l11);
+    const xs=crossPts(pts,(p,q)=>(p.id===l4&&q.id===l11)||(p.id===l11&&q.id===l4)||(l4===l11&&p.id===l4&&q.id===l4)).filter(x=>acgKm(lw.lat,lw.lon,x.lat,x.lon)<=maxD+R);
+    const c=nearestPick(xs.sort((a,b)=>acgKm(lw.lat,lw.lon,a.lat,a.lon)-acgKm(lw.lat,lw.lon,b.lat,b.lon)),R,'',20000,400), seen={}, top=[];
+    c.forEach(x=>{ if(seen[x.near.i]||top.length>=25)return; seen[x.near.i]=1; x.km=acgKm(lw.lat,lw.lon,WC[x.near.i].lat,WC[x.near.i].lon); top.push(x); }); top.sort((a,b)=>a.km-b.km);
+    let dt2=''; const per=dashas(P,basis==='birth'?missMs:Date.now(),(basis==='birth'?missMs:Date.now())+5*YEAR);
+    if(basis==='birth'){ const d0=per[0]; dt2='Dasha when the person went missing: <b>'+NAME[d0.md]+' – '+NAME[d0.ad]+'</b>'+((d0.md===l4||d0.md===l11||d0.ad===l4||d0.ad===l11)?' (this period belongs to the 4th or 11th lord, which fits a stay at a friendly or comfortable place)':'')+'. '; }
+    const pr=periodsFor(P,[l4,l11],5,per);
+    let h='<div class="lf-sec"><h3>🧭 4th lord line meets 11th lord line<span class="ta">4ஆம் அதிபதி கோடு + 11ஆம் அதிபதி கோடு</span></h3></div><p class="legend">4th lord: <b>'+NAME[l4]+'</b>, 11th lord: <b>'+NAME[l11]+'</b>'+(l4===l11?' (the same planet, so its lines at different signs are crossed with each other)':'')+'. '+dt2+'Meeting points with a town within '+R+' km, within '+maxD+' km of the last known place '+esc(wl(last))+'.'+(pr.length?' Periods of these two lords in the next five years: '+pr.join('; ')+'.':'')+'</p>';
+    h+='<div class="ntscroll"><table class="nttb"><tr><th>#</th><th>Nearest town</th><th>From last place</th><th>Lines meeting</th></tr>'+(top.length?top.map((x,k)=>'<tr><td>'+(k+1)+'</td><td><a href="#" class="acrgo" data-i="'+x.near.i+'"><b>'+esc(wl(x.near.i))+'</b></a><br><small>'+x.near.d.toFixed(x.near.d<10?1:0)+' km from the meeting point</small></td><td>'+Math.round(x.km)+' km, '+bearing(lw.lat,lw.lon,WC[x.near.i].lat,WC[x.near.i].lon)+'</td><td>'+NAME[pts[x.i].id]+' '+sgd(pts[x.i].s)+' '+x.a+'<br>× '+NAME[pts[x.j].id]+' '+sgd(pts[x.j].s)+' '+x.b+'</td></tr>').join(''):'<tr><td colspan="4">No meeting point with a town within '+R+' km. Increase the distance or the search range.</td></tr>')+'</table></div>';
+    h+='<div class="ntrules"><div class="ntr m">The 4th house shows home, the mind and comfort; the 11th shows friends, relatives and fulfilment. Where their lines meet, the person may be with friends or kin, or in a place that feels like home. Use this only as one more pointer.</div><div class="ntr n"><b>Please act in the real world first.</b> Inform the police at once with a recent photograph; in India call 112 (missing child 1098; women in distress 181). Astrology gives guidance for believers, not evidence, and must never be used to accuse anyone.<span class="ta">முதலில் காவல்துறைக்குத் தெரிவியுங்கள் (112; குழந்தை 1098; பெண்கள் 181).</span></div></div>';
+    $('acdOut2').innerHTML=h;
+    MAP={mode:'miss',cv:'acdMMap',pts:top.map((x,k)=>({i:x.near.i,k:k+1})),life:[{i:last,g:'last'}],lines:[],dl:polys(pts),xs:null,N:P}; $('acdMMapW').classList.remove('hide'); V=null; draw('acdMMap');
+  }
+
+
+  /* ---------- F. check a known place against the lines ---------- */
+  function ldist(p,a,lat,lon){
+    if(a==='MC'||a==='IC'){ const l=a==='MC'?p.mc:acNorm(p.mc+180); return Math.abs(acNorm(lon-l))*111.19*Math.cos(lat*D2R); }
+    const x=-Math.tan(lat*D2R)*Math.tan(p.dec*D2R); if(Math.abs(x)>=1)return Infinity; const H=Math.acos(x)/D2R, ln=acNorm(p.ra+(a==='ASC'?-H:H)-p.gst); return Math.abs(acNorm(lon-ln))*111.19*Math.cos(lat*D2R);
+  }
+  function locCheck(){
+    const m=$('aclMsg'); m.textContent='';
+    try{
+      const mm=($('aclLL').value||'').match(/(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/); if(!mm){m.textContent='Enter the place as latitude,longitude, for example 9.912299,78.081792 (copy it from Google Maps).';return;}
+      const LAT=parseFloat(mm[1]), LON=parseFloat(mm[2]); if(Math.abs(LAT)>85||Math.abs(LON)>180){m.textContent='Latitude must be within ±85 and longitude within ±180.';return;}
+      let N0, noAsc=false; const basis=$('aclBasis').value;
+      if(basis==='n')N0=natal(); else { const d=$('aclDT').value, tz=parseFloat($('aclTz').value)||5.5; let ms=Date.now(); if(d){ const a=d.split(/[-T:]/).map(Number); ms=localToUtc(a[0],a[1],a[2],a[3]||0,a[4]||0,String(tz)).ms+(a[5]||0)*1000; } const cp=($('aclCP').value||'').match(/(-?\d+(?:\.\d+)?)\s*[,; ]\s*(-?\d+(?:\.\d+)?)/); noAsc=!cp; N0=build(ms,cp?parseFloat(cp[1]):LAT,cp?parseFloat(cp[2]):LON,$('bpAyan').value||'kp','Chart'); }
+      const D=degPoints(N0), pts=noAsc?D.pts.filter(p=>p.id!=='As'&&p.id!=='Fo'):D.pts, A4=['ASC','DSC','MC','IC'];
+      const base=[]; CODES.forEach(c=>A4.forEach(a=>base.push({n:NAME[c]+' '+a,d:dist(N0.L,c,a,LAT,LON)}))); base.sort((x,y)=>x.d-y.d);
+      const deg=[]; pts.forEach(p=>A4.forEach(a=>deg.push({p:p,a:a,d:ldist(p,a,LAT,LON)}))); deg.sort((x,y)=>x.d-y.d);
+      let seed=987654, rnd=()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296;}, below=0, T=300;
+      for(let t=0;t<T;t++){ const la=LAT+(rnd()-.5)*3, lo=LON+(rnd()-.5)*3; let mn=1e9; for(let i=0;i<pts.length;i++){ for(let k=0;k<4;k++){ const d=ldist(pts[i],A4[k],la,lo); if(d<mn)mn=d; } } if(mn<=deg[0].d)below++; }
+      const pc=Math.round(100*below/T), nearest=deg[0].d;
+      let h='<div class="lf-sec"><h3>📍 Planet lines near this place<span class="ta">இந்த இடத்தருகே கோடுகள்</span></h3></div><p class="legend">Place '+LAT.toFixed(6)+', '+LON.toFixed(6)+'. Chart moment: '+new Date(N0.ms+19800000).toISOString().replace('T',' ').slice(0,19)+' IST.'+(noAsc?' The Ascendant and Fortuna lines are left out because the place where the chart was cast was not given.':'')+'</p>';
+      h+='<div class="ntscroll"><table class="nttb"><tr><th>Nearest planet lines (9 planets × 4)</th><th>km</th></tr>'+base.slice(0,6).map(x=>'<tr><td>'+x.n+'</td><td>'+Math.round(x.d)+'</td></tr>').join('')+'</table></div>';
+      h+='<div class="ntscroll"><table class="nttb"><tr><th>Nearest degree lines (of the 132)</th><th>km</th></tr>'+deg.slice(0,8).map(x=>'<tr><td>'+lbl(x.p)+' '+sgd(x.p.s)+' '+x.a+'</td><td>'+x.d.toFixed(1)+'</td></tr>').join('')+'</table></div>';
+      const strong=nearest<=5?'close':'not close';
+      h+='<div class="ntrules"><div class="ntr '+(pc<=10?'y':'m')+'"><b>Is this meaningful?</b> The nearest of the 528 degree lines is '+nearest.toFixed(1)+' km away. For random places within about 150 km of it, '+pc+'% have a line at least this close. '+(pc<=10?'This is closer than most places, so the line is worth noting.':pc<=30?'This is somewhat closer than average, but not striking.':'This is ordinary: almost any place has a line this near, so no real connection can be claimed.')+'<span class="ta">அருகிலுள்ள கோடு '+nearest.toFixed(1)+' கி.மீ; சீரற்ற இடங்களில் '+pc+'% இதைவிட அருகில்.</span></div><div class="ntr m">Lines are drawn from the planets at the chart moment (or at birth), so they show where a planet rises, sets or culminates on Earth. The 132 lines are dense (about one every 100 km), so a line within a few tens of km happens by chance. A genuine link needs a line within a few km <i>and</i> a meaning that was written down before the search.</div></div>';
+      $('aclOut').innerHTML=h;
+    }catch(e){m.textContent=e.message;}
+  }
+
+
+  /* ---------- G. Chandra Bala muhurtham by birth lagna (v11.8) ---------- */
+  let CBB=null;
+  const CB_BAD=[5,6,8,9,12], CB_REL=[6,8,12];
+  const hFrom=(a,b)=>((b-a+12)%12)+1;
+  function cbbEval(r,strict){
+    const g=SEGS[r.k], A=g.sign, mid=(r.start+r.end)/2, lord=h=>SIGNS[(A+h-1)%12][1], L1=lord(1),L2=lord(2),L3=lord(3),L11=lord(11), good=[L1,L2,L3,L11];
+    const Pm=sidLon('Mo',mid), mg=SEGS[findSeg(Pm)], S=mg.star, mSign=Math.floor(Pm/30)%12;
+    const PS=sidLon(S,mid), sSign=Math.floor(PS/30)%12, hS=hFrom(A,sSign);
+    if(!((hS===2||hS===3||hS===11)||S===L2||S===L3||S===L11))return null;
+    const skipR=!$('cbbRetro')||$('cbbRetro').checked, rtr=p=>{if(p==='Ra'||p==='Ke')return false; try{return !!isRetro(p,mid);}catch(e){return false;}};
+    if(skipR&&rtr(S))return null;
+    if(CB_BAD.indexOf(hS)>=0)return null;
+    const rel=x=>CB_REL.indexOf(hFrom(mSign,x))>=0||(strict&&CB_REL.indexOf(hFrom(x,mSign))>=0);
+    if(rel(sSign))return null;
+    const T=g.star, PT=sidLon(T,mid), tSign=Math.floor(PT/30)%12, hT=hFrom(A,tSign);
+    if(CB_BAD.indexOf(hT)>=0||rel(tSign))return null;
+    if(skipR&&rtr(T))return null;
+    const starOfS=SEGS[findSeg(PS)].star, strongS=good.indexOf(starOfS)>=0, starOfT=SEGS[findSeg(PT)].star, ownerT=SIGNS[tSign][1], strongT=good.indexOf(starOfT)>=0||good.indexOf(ownerT)>=0;
+    const rules=c=>{const o=[]; for(let h=1;h<=12;h++)if(lord(h)===c)o.push(h); return o;}, rs=rules(S), rt=rules(T);
+    const why=[];
+    why.push('Moon\'s star lord <b>'+NAME[S]+'</b> '+(rs.length?'rules the '+rs.map(ORD).join(' and ')+' house':'rules no house')+' and stands in '+SIGNS[sSign][0]+', the <b>'+ORD(hS)+'</b> house from the ascendant; '+ORD(hFrom(mSign,sSign))+' from the Moon.');
+    why.push('Ascendant star lord <b>'+NAME[T]+'</b> stands in '+SIGNS[tSign][0]+', the '+ORD(hT)+' house; '+ORD(hFrom(mSign,tSign))+' from the Moon.');
+    if(strongS)why.push('<b>Strong:</b> '+NAME[S]+' itself is in the star of '+NAME[starOfS]+', a lord of the 1st, 2nd, 3rd or 11th house.');
+    if(strongT)why.push('<b>More auspicious:</b> the ascendant star lord '+NAME[T]+' is '+(good.indexOf(starOfT)>=0?'in the star of '+NAME[starOfT]:'in the sign of '+NAME[ownerT])+', a lord of the 1st, 2nd, 3rd or 11th house.');
+    const info='Moon in '+NAKS[mg.nak]+', '+SIGNS[mSign][0]+' '+inSign(Pm)+'; star lord '+NAME[S]+', sub lord '+NAME[mg.sub];
+    return {S:S,T:T,hS:hS,hT:hT,strongS:strongS,strongT:strongT,level:(strongS?1:0)+(strongT?1:0),why:why,info:info};
+  }
+
+  let CBL=[];
+  const cbE=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function cbbOff(){ const el=$('cbbOff'), t=$('cbbTz').value.trim(); el.className='msg'; if(!t){el.textContent='';return;} try{ el.textContent='Time zone now: '+utcTxt(tzFn(t)(Date.now()))+(/^-?[\d.]+$/.test(t)?'':' ('+t+')'); }catch(e){ el.textContent='The time zone was not recognised.'; el.className='msg err'; } }
+  function cbbPick(){ const x=CBL[parseInt($('cbbCity').value,10)]; if(x){ $('cbbLat').value=x.lat; $('cbbLon').value=x.lon; $('cbbTz').value=x.tz; } cbbOff(); }
+  function cbbFill(){
+    const q=$('cbbSearch').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''), cn=$('cbbCountry').value, stv=$('cbbState').value, all=cn==='*a';
+    let src=all?WC:(WCBY[cn]||[]); if(!all&&stv!=='*s')src=src.filter(x=>(x.st||'')===stv);
+    const cap=all?300:700; let list=[];
+    if(all&&!q)list=[]; else if(!q)list=src.slice(0,cap);
+    else{const a=[],b=[]; for(let i=0;i<src.length&&a.length<cap;i++){const k=plKey(src[i]),at=k.indexOf(q); if(at===0)a.push(src[i]); else if(at>0&&b.length<cap)b.push(src[i]);} list=a.concat(b).slice(0,cap);}
+    if(q.length>=3&&list.length<6){ try{ const w=webC(q,cbbFill); if(w&&w.length)list=list.concat(w.filter(x=>!list.some(y=>y.n===x.n&&Math.abs(y.lat-x.lat)<.2&&Math.abs(y.lon-x.lon)<.2))); }catch(e){} }
+    CBL=list; const sel=$('cbbCity');
+    sel.innerHTML=list.length?list.map((x,i)=>'<option value="'+i+'">'+cbE(x.n)+((all||stv==='*s')&&x.st?', '+cbE(x.st):'')+(all?', '+cbE(x.cc):'')+'</option>').join(''):'<option value="">No match in the offline list. Type the latitude, longitude and time zone below</option>';
+    if(list.length)cbbPick();
+  }
+  function cbbStates(){ const cn=$('cbbCountry').value, el=$('cbbState'); if(cn==='*a'){ el.innerHTML='<option value="*s">All states</option>'; return; } const l=STBY[cn]||[]; el.innerHTML='<option value="*s">All states / provinces / counties ('+l.filter(Boolean).length+')</option>'+l.map(n=>'<option value="'+cbE(n)+'">'+cbE(n||'(state not listed)')+'</option>').join(''); }
+  function cbbPlace(){
+    const cs=$('cbbCountry'); cs.innerHTML='<option value="*a">All countries (use search)</option>'+CITY.cc.map(n=>'<option value="'+cbE(n)+'">'+n+'</option>').join('');
+    cs.addEventListener('change',()=>{cbbStates();cbbFill();}); $('cbbState').addEventListener('change',cbbFill); $('cbbSearch').addEventListener('input',cbbFill); $('cbbCity').addEventListener('change',cbbPick); $('cbbTz').addEventListener('input',cbbOff);
+    cbbStates();
+    // start from the place already set at the top of the app
+    $('cbbLat').value=$('lat').value; $('cbbLon').value=$('lon').value; $('cbbTz').value=$('tz').value; cbbOff();
+  }
+  /* used by the live transit clock: rows {s,e,lb} for the next hours at the clock's place */
+  function cbbGather(L,kind,now,end){
+    const strict=$('cbbStrict')?$('cbbStrict').checked:true, old=CFG, lat=+L.lat, lon=+L.lon, rows=[];
+    try{
+      CFG={lat:lat,lon:lon,kind:kind};
+      for(let s=now;s<end;s+=86400000){ const e=Math.min(s+86400000,end);
+        compute(s,e,lat,lon,kind).forEach(r=>{ if(SEGS[r.k].sub!=='Mo')return; if(SIGNS[(SEGS[r.k].sign+7)%12][1]==='Mo')return; const x=cbbEval(r,strict); if(x)rows.push({s:r.start,e:r.end,lb:x.level===2?'Most auspicious':x.level===1?'Strong':''}); });
+      }
+    }catch(err){ CFG=old; return {rows:[],err:String(err&&err.message||err)}; }
+    CFG=old; return {rows:rows,err:''};
+  }
+  window.GA_CBB={gather:cbbGather};
+  function cbbRun(){
+    const msg=$('cbbMsg'), out=$('cbbOut'); msg.className='msg err'; out.innerHTML='';
+    const lat=parseFloat($('cbbLat').value), lon=parseFloat($('cbbLon').value), tzs=$('cbbTz').value.trim(), f=$('cbbFrom').value, t=$('cbbTo').value, strict=$('cbbStrict').checked;
+    let tz=NaN; try{ tz=tzFn(tzs)($('cbbFrom').value?Date.parse($('cbbFrom').value+'T12:00:00Z'):Date.now()); }catch(e){}
+    if(isNaN(lat)||isNaN(lon)||isNaN(tz)){msg.textContent='Choose the place above, or type its latitude, longitude and time zone.';return;}
+    if(Math.abs(lat)>62){msg.textContent='Latitude beyond 62° is not supported.';return;}
+    if(!f||!t){msg.textContent='Pick both a from date and a to date.';return;}
+    const a=f.split('-').map(Number), b=t.split('-').map(Number);
+    const s0=Date.UTC(a[0],a[1]-1,a[2])-tz*3600000, nd=Math.round((Date.UTC(b[0],b[1]-1,b[2])-Date.UTC(a[0],a[1]-1,a[2]))/86400000)+1;
+    if(nd<1){msg.textContent='The to date must not be before the from date.';return;}
+    if(nd>180){msg.textContent='Please choose at most 180 days.';return;}
+    msg.className='msg';
+    const kind=$('ayan').value, old=CFG; CFG={lat:lat,lon:lon,kind:kind}; const items=[], days=[]; let day=0; $('cbbGo').disabled=true;
+    (function step(){
+      if(day>=nd){ CFG=old; $('cbbGo').disabled=false; CBB={place:(($('cbbCity').selectedOptions[0]&&CBL.length)?$('cbbCity').selectedOptions[0].text:''),items:items,days:days,tz:tz,f:f,t:t,lat:lat,lon:lon,kind:kind}; cbbShow(); return; }
+      const s=s0+day*86400000, e=s+86400000;
+      try{
+        compute(s,e,lat,lon,kind).forEach(r=>{ if(SEGS[r.k].sub!=='Mo')return; if(SIGNS[(SEGS[r.k].sign+7)%12][1]==='Mo')return; const x=cbbEval(r,strict); if(x)items.push({r:r,x:x,day:s}); });
+        const N27=360/27, nk=m=>Math.floor(sidLon('Mo',m)/N27)%27, sg=[]; let n0=nk(s), st=s;
+        for(let m=s+3600000;m<=e;m+=3600000){const n=nk(m); if(n!==n0){let lo=m-3600000,hi=m;for(let i=0;i<14;i++){const q=(lo+hi)/2;if(nk(q)===n0)lo=q;else hi=q;} sg.push({n:n0,s:st,e:hi}); st=hi;n0=n;}}
+        sg.push({n:n0,s:st,e:e}); days.push({day:s,sg:sg});
+      }catch(err){ CFG=old; $('cbbGo').disabled=false; msg.className='msg err'; msg.textContent='Could not finish: '+err.message; return; }
+      day++; msg.textContent='Checking day '+day+' of '+nd+'…'; setTimeout(step,0);
+    })();
+  }
+
+  /* ----- alarms: native on Android and Windows, so they ring offline and with the app closed ----- */
+  const CBK='ga_cbb_ids';
+  const cbbIds=()=>{ try{ return JSON.parse(localStorage.getItem(CBK)||'[]'); }catch(e){ return []; } };
+  const cbbSave=a=>{ try{ localStorage.setItem(CBK,JSON.stringify(a)); }catch(e){} };
+  const cbbId=it=>'cbb-'+Math.round(it.r.start/60000)+'-'+Math.round(CBB.lat*100)+'x'+Math.round(CBB.lon*100);
+  function cbbOn(id){ if(cbbIds().indexOf(id)<0)return false; try{ const h=GA_ALARM.has(id); return h===null?true:!!h; }catch(e){ return true; } }
+  function cbbTxt(it){ const g=SEGS[it.r.k], tz=CBB.tz, x=it.x, pl=(CBB.place||'');
+    return {title:'🔔 Chandra Bala muhurtham · '+fmtHMS(it.r.start,tz)+(x.level===2?' · Most auspicious':x.level===1?' · Strong':''),
+      text:(pl?pl+'\n':'')+fmtHMS(it.r.start,tz)+' – '+fmtHMS(it.r.end,tz)+' ('+dur(it.r.end-it.r.start)+')\n'+SIGNS[g.sign][0]+' ascendant · '+NAME[g.lord]+'/'+NAME[g.star]+'/'+NAME[g.sub]+'\n'+x.info}; }
+  async function cbbToggle(bt,keep){
+    const it=CBB.items[parseInt(bt.dataset.i,10)], id=bt.dataset.id, ids=cbbIds(), msg=$('cbbMsg');
+    if(cbbOn(id)){ await GA_ALARM.cancel(id); cbbSave(ids.filter(x=>x!==id)); bt.textContent='🔔 Set alarm · அலாரம்'; msg.className='msg'; msg.textContent='Alarm cancelled.'; return; }
+    if(it.r.start<=Date.now()+8000){ msg.className='msg err'; msg.textContent='That time has already passed.'; return; }
+    const t=cbbTxt(it), ok=await GA_ALARM.set(id,it.r.start,t.title,t.text,''); 
+    if(ok){ if(ids.indexOf(id)<0)ids.push(id); cbbSave(ids); bt.textContent='🔕 Cancel alarm · அலாரம் நீக்கு'; msg.className='msg'; msg.textContent='Alarm set for '+fmtHMS(it.r.start,CBB.tz)+'. A melody sounds 2 minutes before and 2 melodies at the start, even with the app closed or offline (Android and Windows apps); it fades out by itself.'; }
+    else{ msg.className='msg err'; msg.textContent='The alarm could not be set.'; }
+  }
+  async function cbbAlarmAll(keep){
+    const msg=$('cbbMsg'), now=Date.now(), L=CBB.items.filter(it=>keep(it)&&it.r.start>now+8000).sort((a,b)=>a.r.start-b.r.start).slice(0,30), ids=cbbIds(); let ok=0,bad=0;
+    msg.className='msg'; msg.textContent='Setting the alarms…';
+    for(const it of L){ const id=cbbId(it), t=cbbTxt(it), g=await GA_ALARM.set(id,it.r.start,t.title,t.text,''); if(g){ ok++; if(ids.indexOf(id)<0)ids.push(id); } else bad++; }
+    cbbSave(ids); document.querySelectorAll('.cbbAl').forEach(b=>{ b.textContent=cbbOn(b.dataset.id)?'🔕 Cancel alarm · அலாரம் நீக்கு':'🔔 Set alarm · அலாரம்'; });
+    msg.className=bad?'msg err':'msg'; msg.textContent=ok?(ok+' alarm'+(ok>1?'s':'')+' set (the next 30 only). Each plays a melody 2 minutes before and 2 melodies at the start, and fades out by itself.'+(bad?' '+bad+' could not be set.':'')):'No upcoming timing to set.';
+  }
+  async function cbbAlarmClear(){
+    const ids=cbbIds(); await Promise.all(ids.map(id=>GA_ALARM.cancel(id))); cbbSave([]);
+    document.querySelectorAll('.cbbAl').forEach(b=>{ b.textContent='🔔 Set alarm · அலாரம்'; });
+    $('cbbMsg').className='msg'; $('cbbMsg').textContent='All Chandra Bala alarms cancelled.';
+  }
+  function cbbShow(){
+    const out=$('cbbOut'), tz=CBB.tz, mode=$('cbbShow').value; let h='', n=0;
+    const keep=it=>mode==='all'||(mode==='strong'&&it.x.level>=1)||(mode==='most'&&it.x.level>=2);
+    h+='<p class="legend">Houses are counted from the transit ascendant (the rising sign) and planets are at their transit positions. When Sagittarius is rising the Moon is the 8th lord, so no timing is given.</p>';
+    CBB.days.forEach(d=>{
+      const its=CBB.items.filter(it=>it.day===d.day&&keep(it)); if(!its.length)return;
+      h+='<div class="lf-sec"><h3>'+fmtDate(d.day,tz)+'</h3><p class="lf-note" style="margin:2px 0">Moon: '+d.sg.map(q=>NAKS[q.n]+' ('+NAME[ORDER[q.n%9]]+') '+fmtHMS(q.s,tz)+'–'+(q.e===d.day+86400000?'24:00:00':fmtHMS(q.e,tz))).join(' · ')+'</p></div>';
+      its.forEach(it=>{ n++; const g=SEGS[it.r.k], x=it.x;
+        const pills='<span class="pill gain">Chandra Bala muhurtham · சந்திர பல முகூர்த்தம்</span>'+(x.level===2?'<span class="pill gain">Most auspicious · மிக மிக சுபம்</span>':x.strongS?'<span class="pill gain">Strong · வலிமை</span>':x.strongT?'<span class="pill gain">More auspicious · மிக சுபம்</span>':'');
+        h+='<ul style="margin-top:6px"><li class="row gm" data-s="'+it.r.start+'" data-e="'+it.r.end+'" data-tz="'+tz+'" data-lat="'+CBB.lat+'" data-lon="'+CBB.lon+'" data-kind="'+CBB.kind+'" style="--h:'+HUE[g.sub]+'"><div class="t2"><div><span>Begin</span><b>'+fmtHMS(it.r.start,tz)+'</b></div><div><span>End</span><b>'+fmtHMS(it.r.end,tz)+'</b></div></div><div class="l"><span class="n">'+NAME[g.lord]+'/'+NAME[g.star]+'/'+NAME[g.sub]+'</span><span class="pl">'+pills+'</span><span class="ta">'+tl(g)+'<div class="chk">'+x.info+'<br>'+x.why.join('<br>')+'</div><div class="p"><span>'+SIGNS[g.sign][0]+' ascendant · '+span(g)+' · '+NAKS[g.nak]+'</span><span>lasts '+dur(it.r.end-it.r.start)+'</span></div><div class="btns" style="margin:6px 0 0"><button type="button" class="cbbAl" data-id="'+cbbId(it)+'" data-i="'+CBB.items.indexOf(it)+'">'+(cbbOn(cbbId(it))?'🔕 Cancel alarm · அலாரம் நீக்கு':'🔔 Set alarm · அலாரம்')+'</button></div></li></ul>'; });
+    });
+    $('cbbMsg').textContent=n+' Chandra Bala muhurtham timings from '+CBB.f+' to '+CBB.t+'.';
+    if(!n)h+='<p class="msg">No timing in this range fulfils the rules.</p>'; else h+='<div class="btns"><button id="cbbCopy" type="button">Copy as text</button><button id="cbbAlAll" type="button">🔔 Alarms for all shown (next 30)</button><button id="cbbAlClr" type="button">Clear Chandra Bala alarms</button></div>';
+    out.innerHTML=h;
+    out.querySelectorAll('.cbbAl').forEach(bt=>bt.addEventListener('click',()=>cbbToggle(bt,keep)));
+    const aa=$('cbbAlAll'); if(aa)aa.addEventListener('click',()=>cbbAlarmAll(keep)); const ac=$('cbbAlClr'); if(ac)ac.addEventListener('click',cbbAlarmClear);
+    const cb=$('cbbCopy'); if(cb)cb.addEventListener('click',()=>{ const text='Chandra Bala muhurtham '+CBB.f+' to '+CBB.t+' ('+CBB.lat+', '+CBB.lon+')\n'+CBB.items.filter(keep).map(it=>{const g=SEGS[it.r.k];return fmtDate(it.day,tz)+'  '+fmtHMS(it.r.start,tz)+' - '+fmtHMS(it.r.end,tz)+'  '+SIGNS[g.sign][0]+'  '+NAME[g.lord]+'/'+NAME[g.star]+'/'+NAME[g.sub]+(it.x.level===2?'  MOST AUSPICIOUS':it.x.level===1?'  STRONG':'');}).join('\n'); try{navigator.clipboard.writeText(text).then(()=>{$('cbbMsg').textContent='Copied.';},()=>{});}catch(e){} });
+  }
+  function initCbb(){
+    const P=$('cmPanel'); if(!P||$('cbbBox'))return;
+    const d=new Date(Date.now()+19800000), iso=d.toISOString().slice(0,10), d2=new Date(Date.now()+19800000+29*86400000).toISOString().slice(0,10);
+    const bx=document.createElement('div'); bx.id='cbbBox';
+    bx.innerHTML='<div class="lf-sec"><h3>🌙 Chandra Bala muhurtham (transit ascendant and planets)<span class="ta">கோசார லக்ன சந்திர பல முகூர்த்தம்</span></h3></div><details class="howto"><summary>How It Works<span class="tt">இது எப்படி செயல்படுகிறது</span></summary><p class="legend">Choose dates (up to 180 days). Everything is read from the sky at that moment: the rising (transit) ascendant and the transit planets; no birth chart is used. A timing is listed when (1) the rising ascendant has the <b>Moon as its sub lord</b>; (2) the star lord of the transit Moon is the lord of the 2nd, 3rd or 11th house from the rising sign, or stands in the 2nd, 3rd or 11th house, and does not stand in the 5th, 6th, 8th, 9th or 12th house; (3) the Moon is not in the 6th, 8th or 12th from that star lord; (4) the star lord of the rising ascendant is also not in the 5th, 6th, 8th, 9th or 12th house and not 6th, 8th or 12th from the Moon; (5) neither the Moon\'s star lord nor the ascendant star lord is retrograde (Rahu and Ketu are not counted, as they always move backward; tick off "Skip retrograde" to ignore this). It is <b>Strong</b> when the Moon\'s star lord is itself in the star of the 1st, 2nd, 3rd or 11th lord, and <b>More auspicious</b> when the ascendant star lord is in the star or sign of such a lord. When Sagittarius is rising, the Moon is the 8th lord and no timing is given. Choose the place (country, state, town or village) in this section; the ayanamsa comes from the form at the top.</p><p class="legend ta" style="font-family:var(--ta);color:var(--accent)">பிறப்பு ஜாதகம் இங்கு பயன்படுத்தப்படுவதில்லை. கோசார லக்னம், கோசார கிரகங்களை வைத்தே பார்க்கப்படும். கோசார லக்னத்தின் உப அதிபதி சந்திரனாக இருக்கும்போது, சந்திரனின் நட்சத்திர அதிபதி 2, 3, 11-ஆம் அதிபதியாக அல்லது அந்த வீடுகளில் இருந்து, 5, 6, 8, 9, 12-ல் இல்லாமல், சந்திரன் அவரிலிருந்து 6, 8, 12-ல் இல்லாமல் இருந்தால் பட்டியலிடப்படும். சந்திரனின் நட்சத்திர அதிபதி அல்லது லக்ன நட்சத்திர அதிபதி வக்ரத்தில் இருந்தால் நீக்கப்படும் (ராகு, கேது தவிர).</p></details>'
+     +'<div class="lf-sec"><h3>Place where you want the muhurtham<span class="ta">முகூர்த்தம் தேவைப்படும் இடம்</span></h3></div><div class="group"><div class="cell search"><label for="cbbSearch" class="vh">Search a city, town or village</label><input id="cbbSearch" placeholder="City, town or village: Sendurai, North Brunswick, Chennai" autocomplete="off"></div></div>'
+     +'<div class="group"><label class="cell" for="cbbCountry"><span class="cl">Country</span><select id="cbbCountry"></select></label><label class="cell" for="cbbState"><span class="cl">State / Province / County</span><select id="cbbState"></select></label><label class="cell" for="cbbCity"><span class="cl">City / Town / Village</span><select id="cbbCity"></select></label></div>'
+     +'<div class="group"><label class="cell" for="cbbLat"><span class="cl">Latitude<small>Type it for any village</small></span><input id="cbbLat" inputmode="decimal"></label><label class="cell" for="cbbLon"><span class="cl">Longitude</span><input id="cbbLon" inputmode="decimal"></label><label class="cell" for="cbbTz"><span class="cl">Time Zone<small>Name like America/New_York, or hours like 5.5</small></span><input id="cbbTz" autocomplete="off"></label></div><div class="msg" id="cbbOff"></div>'
+     +'<div class="group"><label class="cell" for="cbbFrom"><span class="cl">From</span><input type="date" id="cbbFrom" value="'+iso+'"></label><label class="cell" for="cbbTo"><span class="cl">To<small>up to 180 days</small></span><input type="date" id="cbbTo" value="'+d2+'"></label><label class="cell" for="cbbShow"><span class="cl">Show</span><select id="cbbShow"><option value="all">All timings</option><option value="strong">Strong or better</option><option value="most">Most auspicious only</option></select></label><label class="cell chk" for="cbbRetro"><span class="cl">Skip retrograde<small>Moon\'s star lord and ascendant star lord (Rahu, Ketu excepted)</small></span><input type="checkbox" id="cbbRetro" checked></label><label class="cell chk" for="cbbStrict"><span class="cl">Strict 6/8/12 check<small>Count the Moon from the planet as well</small></span><input type="checkbox" id="cbbStrict" checked></label></div>'
+     +'<div class="btns"><button class="primary" id="cbbGo" type="button">Find Chandra Bala Muhurtham</button></div><div class="msg" id="cbbMsg" role="status"></div><div id="cbbOut"></div>';
+    P.appendChild(bx); cbbPlace(); $('cbbGo').addEventListener('click',cbbRun); $('cbbShow').addEventListener('change',()=>{ if(CBB)cbbShow(); });
+  }
+
+  /* ---------- UI ---------- */
+  function init(){
+    try{initCbb();}catch(e){console.error('cbb',e);}
+    const P=$('acPanel'); if(!P||$('acrBox'))return;
+    const st=document.createElement('style'); st.textContent='.acrrow{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--card,#fff);border-radius:12px;padding:8px;margin:8px 0}.acrrow input,.acrrow select{width:100%;min-width:0;box-sizing:border-box;font:inherit;padding:8px;border-radius:8px;border:1px solid rgba(128,128,128,.35);background:transparent;color:inherit}.acrrow .acrq,.acrrow .acrs{grid-column:1/3}.acrx{font-size:20px;line-height:1;border:0;border-radius:8px;background:rgba(200,0,0,.12);color:#c62828}#acrBox .ntscroll{overflow-x:auto}#acrBox .nttb{font-size:12px;border-collapse:collapse}#acrBox .nttb td,#acrBox .nttb th{padding:5px 7px;border-bottom:1px solid rgba(128,128,128,.25);text-align:left;vertical-align:top}#acrBox .ntP{color:#1e8e3e;font-weight:600}#acrBox .ntA{color:#c62828;font-weight:600}#acrBox .ntM{color:#8a6d00;font-weight:600}#acrBox canvas{border-radius:12px;touch-action:none}'; document.head.appendChild(st);
+    const box=document.createElement('div'); box.id='acrBox'; box.innerHTML=
+     '<div class="lf-sec"><h3>🔬 Astrocartography research<span class="ta">இடம் சார்ந்த ஆராய்ச்சி</span></h3></div>'
+    +'<details class="howto" open><summary>How It Works<span class="tt">எப்படி செயல்படுகிறது</span></summary><p class="legend">Step 1: add the places where you lived or travelled, with the arrival date and whether life was good there. The tool finds which planet lines (Ascendant, MC, Descendant, IC) of your birth chart pass near each place, the dasha and bhukti running then, the transit of Jupiter and Saturn, and the lagna of the place at that time. It then finds the pattern (which lines were near the good places and the not-good places) and tests whether your moves fell in high-chance dasha periods. Step 2 predicts, period by period, the cities, states and countries where the lines of the running dasha and bhukti lords pass. Step 3 helps to find a missing person. All offline, from the birth details entered in the Birth chart form.</p><p class="legend ta" style="font-family:var(--ta);color:var(--accent)">வாழ்ந்த இடங்களையும் தேதிகளையும் தந்தால், அவற்றின் அருகே செல்லும் கிரகக் கோடுகள், அன்றைய தசா புக்தி, குரு சனி கோசாரம் ஆகியவற்றைக் கண்டு, வடிவத்தைக் கண்டறிந்து, எதிர்காலத் தசா காலங்களில் எந்த நகரம், மாநிலம், நாடு என்பதைக் கணிக்கும்; காணாமல் போனவரைத் தேடவும் உதவும்.</p></details>'
+    +'<h4>1 · Places of your life · வாழ்ந்த இடங்கள்</h4><div id="acrRows"></div><div class="btns"><button id="acrAdd" type="button">+ Add place</button><button class="primary" id="acrGo" type="button">Analyse My Places</button></div>'
+    +'<div class="group"><label class="cell" for="acrOrb"><span class="cl">Line closeness<small>How near a line counts</small></span><select id="acrOrb"><option value="400">400 km</option><option value="700" selected>700 km</option><option value="1000">1000 km</option></select></label></div><div class="msg" id="acrMsg" role="status"></div><div id="acrOut"></div>'
+    +'<h4>2 · Where will I be, by dasha · தசா வாரியாக இடம்</h4><div class="group"><label class="cell" for="acrYrs"><span class="cl">Years ahead</span><select id="acrYrs"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option></select></label><label class="cell" for="acrR"><span class="cl">Line closeness (km)</span><select id="acrR"><option value="300">300</option><option value="500" selected>500</option><option value="800">800</option></select></label></div><div class="btns"><button class="primary" id="acrPred" type="button">Predict Places by Dasha</button></div><div id="acrPOut"></div>'
+    +'<div class="acmapw hide" id="acrMapW"><canvas id="acrMap" style="width:100%" aria-label="Map of life places and predicted places"></canvas></div><p class="legend" id="acrLeg"></p>'
+    +'<h4>3 · Missing person · காணாமல் போனவர்</h4><div class="group">'
+    +'<label class="cell" for="acmBasis"><span class="cl">Chart to use</span><select id="acmBasis"><option value="birth">Missing person\'s birth chart</option><option value="q">Question-time chart (birth details unknown)</option></select></label>'
+    +'<label class="cell" for="acmBd"><span class="cl">Date of birth</span><input type="date" id="acmBd"></label><label class="cell" for="acmBt"><span class="cl">Time of birth</span><input type="time" id="acmBt" step="1" value="12:00:00"></label>'
+    +'<label class="cell" for="acmBq"><span class="cl">Birth place<small>Type, then choose</small></span><input id="acmBq" placeholder="Town, state, country"><select id="acmBSel"></select></label>'
+    +'<label class="cell" for="acmTz"><span class="cl">Time zone if place has none</span><input id="acmTz" value="5.5"></label>'
+    +'<label class="cell" for="acmDate"><span class="cl">Date went missing</span><input type="date" id="acmDate"></label>'
+    +'<label class="cell" for="acmLastQ"><span class="cl">Last known place</span><input id="acmLastQ" placeholder="Town, state, country"><select id="acmLastSel"></select></label>'
+    +'<label class="cell" for="acmMax"><span class="cl">Search up to (km)</span><select id="acmMax"><option value="500">500</option><option value="1500">1500</option><option value="3000" selected>3000</option><option value="8000">8000</option></select></label>'
+    +'<label class="cell" for="acmR"><span class="cl">Line closeness (km)</span><select id="acmR"><option value="300">300</option><option value="600" selected>600</option><option value="900">900</option></select></label></div>'
+    +'<div class="btns"><button class="primary" id="acmGo" type="button">Find Likely Places</button></div><div class="msg" id="acmMsg" role="status"></div><div id="acmOut"></div><div class="acmapw hide"><canvas id="acmMap" style="width:100%" aria-label="Map of likely places"></canvas></div>';
+    P.appendChild(box);
+    const rows=$('acrRows'); rows.innerHTML=DEF.map(rowHtml).join('');
+    [].slice.call(rows.querySelectorAll('.acrrow')).forEach(r=>fillSel(r));
+    rows.addEventListener('input',e=>{ if(e.target.classList.contains('acrq'))fillSel(e.target.parentNode); });
+    rows.addEventListener('click',e=>{ if(e.target.classList.contains('acrx'))e.target.parentNode.remove(); });
+    $('acrAdd').addEventListener('click',()=>{ const d=document.createElement('div'); d.innerHTML=rowHtml(['','','unk'],0); rows.appendChild(d.firstChild); });
+    const bindSearch=(q,s)=>$(q).addEventListener('input',()=>{ const f=find($(q).value); $(s).innerHTML=f.length?f.map(i=>'<option value="'+i+'">'+esc(wl(i))+'</option>').join(''):'<option value="-1">(no match)</option>'; });
+    bindSearch('acmBq','acmBSel'); bindSearch('acmLastQ','acmLastSel');
+    $('acrGo').addEventListener('click',()=>{ const m=$('acrMsg'); m.textContent=''; try{ N=natal(); const pl=readRows(); if(!pl.length){m.textContent='Add at least one place.';return;} const orb=parseInt($('acrOrb').value,10), r=placesReport(N,pl,orb); $('acrOut').innerHTML=r.html+backtest(N,pl); N.pers=r; MAP={mode:'life',pts:[],life:pl.map(p=>({i:p.i,g:p.g})),lines:[],N:N}; $('acrMapW').classList.remove('hide'); V=null; draw('acrMap'); $('acrLeg').innerHTML='Green = good place, red = not-good place, grey = not rated. Violet numbered dots = predicted places.'; }catch(e){m.textContent=e.message;} });
+    $('acrPred').addEventListener('click',()=>{ const m=$('acrMsg'); try{ if(!N)N=natal(); const pr=predict(N,N.pers,parseInt($('acrYrs').value,10),parseInt($('acrR').value,10)); $('acrPOut').innerHTML=predReport(N,pr,(N.pers&&N.pers.bad)||[]); const pts=[]; let k=0; pr.forEach(p=>{ const t=pickDiverse(p.rows,1)[0]; if(t&&mvLabel(p.mv)[0]!=='Low'&&!pts.some(q=>q.i===t.i))pts.push({i:t.i,k:++k}); }); const pl=readRows(); MAP={mode:'pred',pts:pts.slice(0,20),life:pl.map(p=>({i:p.i,g:p.g})),lines:[],N:N}; $('acrMapW').classList.remove('hide'); V=null; draw('acrMap'); $('acrLeg').innerHTML='Violet numbered dots: top place of each period with a Medium or High move chance (numbered in time order).'; }catch(e){m.textContent=e.message;} });
+    $('acmGo').addEventListener('click',missing);
+    P.addEventListener('click',e=>{ const a=e.target.closest&&e.target.closest('.acrgo'); if(!a)return; e.preventDefault(); const i=parseInt(a.dataset.i,10), w=WC[i]; if(V&&MAP){ V.cx=w.lon; V.cy=w.lat; V.s=Math.max(V.s,6); draw(MAP.cv||(MAP.mode==='miss'?'acmMap':MAP.mode==='cross'?'acxMap':'acrMap')); } });
+    bindMap('acrMap'); bindMap('acmMap');
+    const bx=document.createElement('div'); bx.innerHTML='<h4>4 · House-lord line crossings · பாவாதிபதி கோடுகள் சந்திப்பு</h4><p class="legend">Draws the lines of the lords of all houses over the world and finds where two lines meet. Shows favourable and unfavourable places, what each can give, and the dasha–bhukti periods when it may happen.</p><div class="group"><label class="cell" for="acxBasis"><span class="cl">Chart to use</span><select id="acxBasis"><option value="n">Birth chart (form above)</option><option value="q">Prasnam: question chart now</option></select></label><label class="cell" for="acxQ"><span class="cl">Question place<small>Prasnam only</small></span><input id="acxQ" placeholder="Town, state, country"><select id="acxSel"></select></label><label class="cell" for="acxYrs"><span class="cl">Years ahead</span><select id="acxYrs"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></label><label class="cell" for="acxR"><span class="cl">Town within (km)</span><select id="acxR"><option value="150">150</option><option value="300" selected>300</option><option value="500">500</option></select></label><label class="cell" for="acxReg"><span class="cl">Only region<small>country or state, optional</small></span><input id="acxReg" placeholder="e.g. United States"></label></div><div class="btns"><button class="primary" id="acxGo" type="button">Find Favourable &amp; Unfavourable Places</button></div><div class="msg" id="acxMsg" role="status"></div><div class="acmapw hide" id="acxMapW"><canvas id="acxMap" style="width:100%" aria-label="Map of house-lord lines and meeting points"></canvas></div><p class="legend" id="acxLeg"></p><div id="acxOut"></div>';
+    box.appendChild(bx);
+    bindSearch('acxQ','acxSel'); $('acxGo').addEventListener('click',crossGo); bindMap('acxMap');
+    const bd=document.createElement('div'); bd.innerHTML='<h4>5 · Degree waves: 132 lines · டிகிரி அலைகள்</h4><p class="legend">Takes the degree of the Ascendant, the nine planets and Fortuna inside their signs, and draws lines for that degree in every sign (11 × 12 = 132 lines). Finds where lines of favourable lords (1, 2, 3, 5, 9, 10) meet, and where 6th, 8th, 12th lord lines meet, and lists the nearest towns with dasha periods.</p><div class="group"><label class="cell" for="acdBasis"><span class="cl">Chart to use</span><select id="acdBasis"><option value="n">Birth chart (form above)</option><option value="q">Prasnam: question chart now</option></select></label><label class="cell" for="acdQ"><span class="cl">Question place<small>Prasnam only</small></span><input id="acdQ" placeholder="Town, state, country"><select id="acdSel"></select></label><label class="cell" for="acdR"><span class="cl">Town within (km)<small>Accuracy</small></span><select id="acdR"><option>10</option><option>20</option><option>30</option><option selected>50</option><option>100</option><option>200</option><option>300</option><option>500</option></select></label><label class="cell" for="acdYrs"><span class="cl">Years ahead</span><select id="acdYrs"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></label><label class="cell" for="acdReg"><span class="cl">Only region<small>optional</small></span><input id="acdReg" placeholder="e.g. United States"></label><label class="cell" for="acdLines"><span class="cl">Lines on map</span><select id="acdLines"><option value="all">All 132 degree lines</option><option value="none">Meeting points only</option></select></label></div><div class="btns"><button class="primary" id="acdGo" type="button">Find Places from Degree Waves</button></div><div class="msg" id="acdMsg" role="status"></div><div class="acmapw hide" id="acdMapW"><canvas id="acdMap" style="width:100%" aria-label="Map of the 132 degree lines"></canvas></div><p class="legend" id="acdLeg"></p><div id="acdOut"></div>'
+     +'<h4>5b · Missing person: 4th lord line × 11th lord line · காணாமல் போனவர்</h4><p class="legend">Uses the details you entered in section 3 (birth chart or question chart, date missing, last known place, search range). Finds where the 4th lord and 11th lord degree lines meet.</p><div class="group"><label class="cell" for="acd4R"><span class="cl">Town within (km)</span><select id="acd4R"><option>10</option><option>20</option><option>30</option><option selected>50</option><option>100</option><option>200</option><option>300</option><option>500</option></select></label></div><div class="btns"><button class="primary" id="acd4Go" type="button">Find 4th–11th Lord Meeting Places</button></div><div class="msg" id="acdMsg2" role="status"></div><div id="acdOut2"></div><div class="acmapw hide" id="acdMMapW"><canvas id="acdMMap" style="width:100%" aria-label="Map of 4th and 11th lord lines"></canvas></div>';
+    box.appendChild(bd); bindSearch('acdQ','acdSel'); $('acdGo').addEventListener('click',degGo); $('acd4Go').addEventListener('click',miss411); bindMap('acdMap'); bindMap('acdMMap');
+    const bf=document.createElement('div'); bf.innerHTML='<h4>6 · Check a known place · இடத்தைச் சோதிக்க</h4><p class="legend">Paste a latitude,longitude (for example from Google Maps) and see which planet lines pass near it, with a test of whether the closeness is meaningful or just chance. Use the birth chart, or the date and time of a prasnam or event.</p><div class="group"><label class="cell" for="aclLL"><span class="cl">Latitude, longitude</span><input id="aclLL" placeholder="9.912299,78.081792"></label><label class="cell" for="aclBasis"><span class="cl">Chart</span><select id="aclBasis"><option value="n">Birth chart (form above)</option><option value="e">Date and time of prasnam / event</option></select></label><label class="cell" for="aclDT"><span class="cl">Date and time<small>for prasnam / event</small></span><input type="datetime-local" id="aclDT" step="1"></label><label class="cell" for="aclTz"><span class="cl">Time zone (hours)</span><input id="aclTz" value="5.5"></label><label class="cell" for="aclCP"><span class="cl">Place where the chart was cast<small>latitude,longitude; needed for the Ascendant lines</small></span><input id="aclCP" placeholder="13.0827,80.2707"></label></div><div class="btns"><button class="primary" id="aclGo" type="button">Check Lines Near This Place</button></div><div class="msg" id="aclMsg" role="status"></div><div id="aclOut"></div>';
+    box.appendChild(bf); $('aclGo').addEventListener('click',locCheck);
+
+
+
+  }
+  return {degPoints:degPoints,crossPts:crossPts,curve:curve,vAt:vAt,crossings:crossings,init:init,natal:natal,build:build,dashas:dashas,predict:predict,dist:dist,find:find,moveScore:moveScore,placesReport:placesReport,backtest:backtest};
+})();
+
+try{GA_ACR.init();}catch(e){console.error("ACR init",e);}
 })();

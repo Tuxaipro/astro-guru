@@ -541,10 +541,15 @@
     var NAMES = { rx: /numerolog|nameolog|(lucky|good|best|suitable) (mobile|phone|cell|vehicle|car|bike) numbers?|மொபைல் எண்|name numbers?|lucky name|baby names?|names? for (my|a|the|our) (baby|child|son|daughter|business|company|shop)|business names?|name correction|change (my|the) name|பெயர் எண்|எண் கணித|குழந்தைப் பெயர்|குழந்தைக்குப் பெயர்|தொழில் பெயர்/i,
       reply: 'Name and number readings are in two tools: Nameology & Numerology for a name (yours, a baby’s or a business’s), and Mobile Numerology for a mobile or vehicle number.',
       chips: [['Open: Nameology & Numerology', openTool('nmBtn')], ['Open: Mobile Numerology', openTool('mnBtn')]] };
+    // 12.3 adds Nifty Intraday Astro but no chat rule for it: intraday and index questions point at the tool.
+    var NIFTY = { rx: /nifty|sensex|intraday|intra-day|day[ -]?trad|scalp|நிஃப்டி|நாள்வர்த்தக|இன்ட்ராடே/i,
+      reply: 'Intraday timings for the market day are in Nifty Intraday Astro: the horas, Rahu Kaal, Abhijit and the Moon’s aspects as permitted and avoided windows, with a trade plan and a risk calculator.',
+      chips: [['Open: Nifty Intraday Astro', openTool('nfBtn')]] };
     function smallTalk(t) {
       for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; }
       if (SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
       if (NAMES.rx.test(t)) return NAMES;
+      if (NIFTY.rx.test(t)) return NIFTY;
       return null;
     }
     // The question's language: the chat's own "Reply in" choice first, then the app language.
