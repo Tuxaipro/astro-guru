@@ -125,6 +125,9 @@ every calculation in the v12.3 engine stays as it was.
 - **Lighter start-up:** the world map outline (0.5 MB) loads after the page, and `npm start` compresses files
   the way real hosts do. The city list goes over the network as 3.1 MB instead of 9.6 MB, and the build
   writes it as `JSON.parse('…')`, which browsers read faster than the same data as script.
+- **Phone on its side** (under 500 px tall): the conversation tools (Ask, Vehicle/Agriculture, Mobile
+  Numerology, Nameology) size their conversation to the screen and open scrolled to it; the header and chip
+  rows are a scroll up. Chip rows wrap only on screens at least 600 px wide and 600 px tall.
 - **Start-up screen:** until the new layout is ready, the page shows the logo, the name and a moving bar
   in the chosen theme (the build writes it into `index.html`). The bar runs on the compositor, so it keeps
   moving while the scripts block the page. A first visit adds a line, in English and Tamil, that the next
@@ -195,7 +198,7 @@ Edit files in `revamp/`, then run `npm run build` (the same as `npm run import`)
 ```bash
 npm test                 # import check + engine results (fast)
 npm run test:revamp      # the revamp layer headless: saved people, list folding, place line (fast)
-npm run test:pages       # every page in Chrome, desktop, phone and tablet: loads, main button works, no script errors
+npm run test:pages       # every page in Chrome, desktop, phone, tablet and phone sideways: loads, main button works, no script errors
 npm run test:all         # all three
 npm test -- --update     # accept the current engine results as the new reference
 node scripts/style-diff.mjs --save   # record every element's style (before a CSS refactor)
@@ -264,6 +267,10 @@ They are worth reporting to the author:
   now runs only its own search (`features.js`).
 - **Nifty Intraday Astro** (12.3) is built but its button and ✕ are never wired (`revamp.js` wires them).
 - **Tamil copies hidden in Tamil mode** inside the 11.2 reports and Nameology (see Translations).
+- **Desktop switch on a phone** (`js/03-stage-layout.js`) sets the viewport to `width=1100`. The revamp picks
+  the sidebar layout from 900 px wide, so a big phone turned sideways (932 px) was drawn 1100 px wide and
+  shrunk, and stayed that way after turning back (desktop layout at about 40% on a portrait phone).
+  `revamp.js` keeps the device viewport whenever it changes; `test-pages` checks the layout width.
 - **Shared panel:** Vehicle Muhurtham opens Agriculture Muhurtham's panel in a vehicle mode; `PANEL_OF` in
   `revamp.js` keeps their addresses apart.
 

@@ -66,13 +66,21 @@
     placeNow();
   }
   var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(applyView, 120); });
-  // The old Mobile/Desktop switch could save "desktop" and widen a phone's viewport to 1100px,
-  // which would make the window look wide. Drop that choice and restore the device viewport first.
+  // The engine's Desktop button, on a phone, also sets the viewport to width=1100 and saves the choice.
+  // applyView presses that button when a big phone turns sideways (932 px is past WIDE), so the page was
+  // drawn 1100 px wide and shrunk, and after turning back it stayed 1100 px wide (desktop layout at ~40%
+  // size on a portrait phone). The device viewport is kept whenever anything changes it, and the saved
+  // choice is dropped.
   try { localStorage.removeItem('gaView2'); } catch (e) {}
   var vpMeta = document.querySelector('meta[name=viewport]');
-  if (vpMeta && /width=1100/.test(vpMeta.getAttribute('content') || '')) {
-    vpMeta.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+  function nativeViewport() {
+    if (vpMeta && /width=1100/.test(vpMeta.getAttribute('content') || '')) {
+      vpMeta.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+      try { localStorage.removeItem('gaView2'); } catch (e) {}
+    }
   }
+  nativeViewport();
+  if (vpMeta) new MutationObserver(nativeViewport).observe(vpMeta, { attributes: true, attributeFilter: ['content'] });
   setTimeout(applyView, 300);
 
   /* ---------- 12.3: Nifty Intraday Astro ----------
@@ -374,6 +382,13 @@
         setTimeout(function () {
           var h = panel && panel.querySelector('.sh-head h2');
           if (h && !panel.classList.contains('hide')) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+          // A phone on its side (under 500 px tall): the header and chip rows filled the screen, so a
+          // conversation tool opened with its conversation out of sight. It opens at the conversation; the
+          // header and chips are a scroll up.
+          var log = panel && !panel.classList.contains('hide') && panel.querySelector('.ak-log');
+          if (log && sc && stage.dataset.view === 'mobile' && window.innerHeight < 500) {
+            sc.scrollTop += log.getBoundingClientRect().top - sc.getBoundingClientRect().top - 8;
+          }
         }, 120);
       }
     }

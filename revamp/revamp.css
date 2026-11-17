@@ -1114,8 +1114,17 @@ body.rv .stage[data-view="mobile"] #agPanel .ak-bar .ak-chip{padding:4px 10px;fo
 body.rv .stage[data-view="mobile"] #agPanel .ak-bar .ak-who{flex:1 1 auto!important;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* Portrait tablets use the phone layout but have room: chip rows wrap instead of scrolling sideways
    (at 768 px the Ask shortcut row missed fitting by 28 px, so its last chip looked cut off). */
-@media (min-width:600px){body.rv .stage[data-view="mobile"] :is(#akPanel,#agPanel,#mnPanel,#nmPanel) .ak-bar{flex-wrap:wrap;overflow-x:visible}}
+@media (min-width:600px) and (min-height:600px){body.rv .stage[data-view="mobile"] :is(#akPanel,#agPanel,#mnPanel,#nmPanel) .ak-bar{flex-wrap:wrap;overflow-x:visible}}
 body.rv .stage[data-view="mobile"] #agPanel .ak-log{height:calc(100dvh - 300px);max-height:none;min-height:260px}
+/* Short screens (a phone on its side, 375-430 px tall): header and chips alone took most of the height, so
+   the conversation was a sliver under the message box and tab bar. The conversation box now fills the
+   screen above the message box (phone layout: and the 61 px tab bar); the header and chips scroll away
+   above it. Chip rows stay one sideways line each. */
+@media (max-height:500px){
+body.rv .stage[data-view="mobile"] #akPanel .ak-log{height:calc(100dvh - 145px);min-height:150px}
+body.rv .stage[data-view="mobile"] :is(#agPanel,#mnPanel,#nmPanel) .ak-log{height:calc(100dvh - 85px);min-height:150px}
+body.rv .stage[data-view="desktop"] :is(#akPanel,#agPanel,#mnPanel,#nmPanel) .ak-log{height:calc(100dvh - 90px);min-height:150px}
+}
 /* Result tables in a chat bubble (Vehicle and Agriculture Muhurtham, Ask): the bubble lets words break
    anywhere, so on a phone the headers broke letter by letter ("Mi nut es"). The table scrolls sideways
    inside the bubble instead, with whole words. */

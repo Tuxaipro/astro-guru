@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Page test: opens every page of the built app (public/) in Chrome, on desktop, phone and tablet sizes,
+// Page test: opens every page of the built app (public/) in Chrome, on desktop, phone, tablet and sideways phone sizes,
 // presses each page's main button and checks that it loads, works and shows no script errors.
 //
-//   npm run test:pages            all pages, desktop, phone and portrait tablet
+//   npm run test:pages            all pages: desktop, phone, portrait tablet, phone sideways
 //   npm run test:pages -- --quick desktop only, no calculations
 //
 // Uses the Chrome installed on this computer (playwright-core, no browser download).
@@ -56,7 +56,9 @@ const today = new Date();
 const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 const SIZES = QUICK ? [['desktop', { width: 1440, height: 900 }]] :
   [['desktop', { width: 1440, height: 900 }], ['phone', { width: 390, height: 844, isMobile: true, hasTouch: true }],
-   ['tablet', { width: 768, height: 1024, isMobile: true, hasTouch: true }]];
+   ['tablet', { width: 768, height: 1024, isMobile: true, hasTouch: true }],
+   // A big phone on its side: past the 900 px desktop width, so it gets the sidebar layout, at its own width.
+   ['phone sideways', { width: 932, height: 430, isMobile: true, hasTouch: true }]];
 
 let failures = 0;
 for (const [name, size] of SIZES) {
@@ -97,12 +99,15 @@ for (const [name, size] of SIZES) {
         visible: !!shown && getComputedStyle(shown).display !== 'none' && r.height > 40,
         wide: Math.max(document.documentElement.scrollWidth, sc ? sc.scrollWidth : 0) > innerWidth + 1,
         hasGo: !!(panel && panel.querySelector('.btns > button.primary')),
+        layoutWidth: innerWidth,
       };
     }, { route, btn, pid: panelId(btn) });
     if (state.hash !== '#/' + route) problems.push(`address is ${state.hash}`);
     if (state.on !== btn) problems.push(`sidebar highlights ${state.on}`);
     if (!state.visible) problems.push('page content is not visible');
     if (state.wide) problems.push('page is wider than the screen');
+    // The engine's Desktop switch sets a phone's viewport to 1100 px, drawing the page shrunk to fit.
+    if (state.layoutWidth !== viewport.width) problems.push(`page laid out ${state.layoutWidth} px wide on a ${viewport.width} px screen`);
 
     if (!QUICK && RUN[route]) {
       try {
