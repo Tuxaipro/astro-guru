@@ -197,10 +197,11 @@ if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
   out = out.replace(/(<body\b[^>]*>\n?)/, `$1${screen}`);
 }
 // Link previews and search listings: a description, and Open Graph tags for WhatsApp, Facebook, X and
-// others. A preview image needs the site's full address: set SITE_URL when building
-// (SITE_URL=https://your.site npm run build) to add og:url and og:image; without it the text still shows.
+// others. A preview image needs the site's full address: "homepage" in package.json, or SITE_URL when
+// building (SITE_URL=https://other.site npm run build) to override it; without either the text still shows.
 if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
-  const site = (process.env.SITE_URL || '').replace(/\/+$/, '');
+  let home = ''; try { home = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).homepage || ''; } catch (e) {}
+  const site = (process.env.SITE_URL || home).replace(/\/+$/, '');
   const logo = (out.match(/<img\b[^>]*\bclass="logo"[^>]*\bsrc="([^"]+)"/) || [])[1];
   const desc = 'KP astrology in your browser: lagna and sub-lord timings for any day and place, muhurthams, birth chart and dasha, ' +
     'marriage matching, Gowri nalla neram, Sade Sati and transits, horary answers and more. English and Tamil. Calculated on your device.';
@@ -212,6 +213,8 @@ if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
     `<meta property="og:description" content="${desc}">`,
     site ? `<meta property="og:url" content="${site}/">` : '',
     site && logo ? `<meta property="og:image" content="${site}/${logo.replace(/\?.*$/, '')}">` : '',
+    site && logo ? '<meta property="og:image:alt" content="Guru Agasthiya">' : '',
+    site ? `<link rel="canonical" href="${site}/">` : '',
     `<meta name="twitter:card" content="summary">`,
   ].filter(Boolean).join('\n');
   out = out.replace(/(<title>[^<]*<\/title>\n?)/, `$1${tags}\n`);
