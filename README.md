@@ -125,6 +125,10 @@ every calculation in the v12.3 engine stays as it was.
 - **Lighter start-up:** the world map outline (0.5 MB) loads after the page, and `npm start` compresses files
   the way real hosts do. The city list goes over the network as 3.1 MB instead of 9.6 MB, and the build
   writes it as `JSON.parse('…')`, which browsers read faster than the same data as script.
+- **Start-up screen:** until the new layout is ready, the page shows the logo, the name and a moving bar
+  in the chosen theme (the build writes it into `index.html`). The bar runs on the compositor, so it keeps
+  moving while the scripts block the page. A first visit adds a line, in English and Tamil, that the next
+  visit is quicker; `rvBooted` in localStorage marks later visits.
 - **Lighter idle** (the home clock changes the page every second): fields' labels are found in one walk
   instead of one per field, `<html lang>` and `dir` are written only when they change, and the "Rising now"
   pulse runs on the compositor instead of repainting. See Engine costs below.

@@ -117,18 +117,41 @@ if (out.includes(';base64,')) console.warn('warning: some data URIs were left in
 if (/\$\('(cityData|landData)'\)/.test(out)) console.warn('warning: code still reads cityData/landData from the DOM');
 
 // Start-up: the engine's page would paint in its original layout while the scripts load (the city list
-// alone is several MB), and the revamp would then rearrange it. Keep the page behind a plain splash in
+// alone is several MB), and the revamp would then rearrange it. Keep the page behind a start-up screen in
 // the chosen theme until the revamp has laid it out; revamp.js removes rv-boot.
+// The screen shows the logo, the name and a moving bar. The bar moves by transform, which the browser
+// animates off the main thread, so it keeps moving while the scripts block the page. On a first visit
+// (nothing stored yet) a line says that the next visit is quicker. The Tamil half of that line is CSS
+// text, so the engine's Tamil wrapper and the translator never touch it.
 if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
+  const logo = (out.match(/<img\b[^>]*\bclass="logo"[^>]*\bsrc="([^"]+)"/) || [])[1];
   const boot = `<script>(function(){var d=document.documentElement;d.classList.add('rv-boot');` +
-    `try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);}catch(e){}` +
-    `addEventListener('load',function(){setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>\n` +
-    `<style>@layer rvfix, engine;html.rv-boot{background:#F4F5F9}html.rv-boot[data-theme=dark]{background:#0D1020}` +
-    `@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020}}` +
-    `html.rv-boot body{background:transparent!important}html.rv-boot body>*{visibility:hidden!important}` +
-    `html.rv-boot body::before{content:"GuruAgasthiya";position:fixed;inset:0;display:grid;place-items:center;` +
-    `font:600 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.01em;color:#8B8FAE}</style>\n`;
+    `try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);if(!localStorage.getItem('rvBooted'))d.classList.add('rv-first');}catch(e){}` +
+    `addEventListener('load',function(){try{localStorage.setItem('rvBooted','1');}catch(e){}` +
+    `setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>\n` +
+    `<style>@layer rvfix, engine;` +
+    `html.rv-boot{background:#F4F5F9;--bt-fg:#1C1E2E;--bt-mute:#6E7290;--bt-track:rgba(110,114,144,.18)}` +
+    `html.rv-boot[data-theme=dark]{background:#0D1020;--bt-fg:#E9EAF4;--bt-mute:#9295B3;--bt-track:rgba(146,149,179,.2)}` +
+    `@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020;--bt-fg:#E9EAF4;--bt-mute:#9295B3;--bt-track:rgba(146,149,179,.2)}}` +
+    `html.rv-boot body{background:transparent!important}html.rv-boot body>:not(#rvBoot){visibility:hidden!important}` +
+    `#rvBoot{display:none}` +
+    `html.rv-boot #rvBoot{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;` +
+    `gap:14px;margin:0;padding:24px;font:400 14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--bt-mute);text-align:center}` +
+    `#rvBoot img{display:block;width:64px;height:64px;border-radius:18px;object-fit:cover;margin:0 0 2px;box-shadow:0 6px 20px rgba(13,16,32,.18)}` +
+    `#rvBoot b{display:block;font:650 21px/1.1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.015em;color:var(--bt-fg)}` +
+    `#rvBoot i{display:block;position:relative;width:132px;height:3px;border-radius:3px;overflow:hidden;background:var(--bt-track);` +
+    `animation:rvBootIn .35s .4s both}` +
+    `#rvBoot i::after{content:"";position:absolute;top:0;left:0;width:40%;height:100%;border-radius:3px;background:#E9A92C;` +
+    `transform:translateX(-100%);animation:rvBootBar 1.15s cubic-bezier(.45,0,.4,1) infinite;will-change:transform}` +
+    `#rvBoot p{display:none;max-width:280px;margin:4px 0 0;animation:rvBootIn .35s .6s both}` +
+    `html.rv-first #rvBoot p{display:block}` +
+    `#rvBoot p::after{content:"முதல் முறை மட்டும் சற்று நேரம் ஆகும்";display:block;margin-top:2px;font-size:13px}` +
+    `@keyframes rvBootBar{to{transform:translateX(250%)}}@keyframes rvBootIn{from{opacity:0}to{opacity:1}}` +
+    `@media (prefers-reduced-motion:reduce){#rvBoot i::after{animation:none;transform:none;width:100%;opacity:.5}}</style>\n`;
   out = out.replace(/(<meta name="viewport"[^>]*>\n?)/, `$1${boot}`);
+  const screen = `<div id="rvBoot" role="status">` + (logo ? `<img src="${logo}" alt="" width="64" height="64">` : '') +
+    `<b>GuruAgasthiya</b><i></i><p>First visit: getting 225,000 places ready. Next time opens faster.</p></div>\n`;
+  out = out.replace(/(<body\b[^>]*>\n?)/, `$1${screen}`);
 }
 // The APK's page asks iOS to open a home-screen bookmark full screen. This is a plain website now, and
 // Chrome warns about the old tag name, so drop it (the home-screen title tag is harmless and stays).
