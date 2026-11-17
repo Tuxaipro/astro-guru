@@ -195,7 +195,7 @@ Edit files in `revamp/`, then run `npm run build` (the same as `npm run import`)
 ```bash
 npm test                 # import check + engine results (fast)
 npm run test:revamp      # the revamp layer headless: saved people, list folding, place line (fast)
-npm run test:pages       # every page in Chrome, desktop and phone: loads, main button works, no script errors
+npm run test:pages       # every page in Chrome, desktop, phone and tablet: loads, main button works, no script errors
 npm run test:all         # all three
 npm test -- --update     # accept the current engine results as the new reference
 node scripts/style-diff.mjs --save   # record every element's style (before a CSS refactor)

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Page test: opens every page of the built app (public/) in Chrome, on desktop and phone sizes,
+// Page test: opens every page of the built app (public/) in Chrome, on desktop, phone and tablet sizes,
 // presses each page's main button and checks that it loads, works and shows no script errors.
 //
-//   npm run test:pages            all pages, desktop and phone
+//   npm run test:pages            all pages, desktop, phone and portrait tablet
 //   npm run test:pages -- --quick desktop only, no calculations
 //
 // Uses the Chrome installed on this computer (playwright-core, no browser download).
@@ -55,7 +55,8 @@ try {
 const today = new Date();
 const day = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 const SIZES = QUICK ? [['desktop', { width: 1440, height: 900 }]] :
-  [['desktop', { width: 1440, height: 900 }], ['phone', { width: 390, height: 844, isMobile: true, hasTouch: true }]];
+  [['desktop', { width: 1440, height: 900 }], ['phone', { width: 390, height: 844, isMobile: true, hasTouch: true }],
+   ['tablet', { width: 768, height: 1024, isMobile: true, hasTouch: true }]];
 
 let failures = 0;
 for (const [name, size] of SIZES) {
