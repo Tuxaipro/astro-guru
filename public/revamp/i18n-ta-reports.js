@@ -83,7 +83,7 @@
     [rx('(.+): Tara (\\d) ' + R_TARA + ' is weak(?: \\((.+)\\))?'), function (m) { return nm(m[1]) + ': தாரை ' + m[2] + ' ' + TARA[m[3]] + ' பலவீனம்' + (m[4] ? ' (' + note(m[4]) + ')' : ''); }],
     [rx('(.+): Tara (\\d) ' + R_TARA + ' is good'), function (m) { return nm(m[1]) + ': தாரை ' + m[2] + ' ' + TARA[m[3]] + ' நல்லது'; }],
     [rx('(.+): Tara (\\d) ' + R_TARA + '(?: \\(cycle (\\d)\\))?'), function (m) { return nm(m[1]) + ': தாரை ' + m[2] + ' ' + TARA[m[3]] + (m[4] ? ' (சுற்று ' + m[4] + ')' : ''); }],
-    [rx('(\\d) ' + R_TARA + ' · (\\S+)(?: \\(cycle (\\d)\\))?'), function (m) { return m[1] + ' ' + TARA[m[2]] + (m[4] ? ' (சுற்று ' + m[4] + ')' : ''); }],
+    [rx('(\\d) ' + R_TARA + ' · (.+?)(?: \\(cycle (\\d)\\))?'), function (m) { return m[1] + ' ' + TARA[m[2]] + (m[4] ? ' (சுற்று ' + m[4] + ')' : ''); }],
     [/^(.*[\u0B80-\u0BFF].*) \(cycle (\d)\)$/, function (m) { return m[1] + ' (சுற்று ' + m[2] + ')'; }],
     [/^(.*[\u0B80-\u0BFF].*: )Person (\d+)$/, function (m) { return m[1] + 'நபர் ' + m[2]; }],
     [rx('(.*[\\u0B80-\\u0BFF].*) \\(' + R_PL + '\\)'), function (m) { return m[1] + ' (' + PL[m[2]] + ')'; }],
@@ -182,6 +182,8 @@
   }
   function list(s, look) {
     var whole = one(s, look); if (whole) return whole;
+    // "English · தமிழ்" twins are left to i18n.js, which keeps the Tamil half; splitting them would repeat it.
+    if (/[\u0B80-\u0BFF]/.test(s) && s.indexOf(' · ') >= 0 && s.indexOf('; ') < 0) return null;
     var sep = s.indexOf('; ') >= 0 ? '; ' : s.indexOf(' · ') >= 0 ? ' · ' : null;
     if (!sep) return null;
     var any = false;
@@ -197,6 +199,12 @@
     // where the engine's all-Tamil text is main text, not a copy to hide (see mainTamil in i18n.js)
     main: '#cmpOut, #lnRepAll, #mkxRep, #nmPanel',
     // core: the text of one text node; look: i18n.js's own translation of a phrase (map and patterns).
-    tr: function (core, look) { return list(core, look); }
+    tr: function (core, look) { return list(core, look); },
+    // A person's name as typed: the first, bold cell of a row in the muhurtham reports. A name such as Rohini
+    // or Shiva is also a star or yoga name and must not be translated as one. The engine's "Person 1" is.
+    isName: function (el, text) {
+      return el.tagName === 'B' && !!el.parentNode && el.parentNode.tagName === 'TD' && el.parentNode.cellIndex === 0 &&
+        !!el.closest('#cmpOut, #lnRepAll') && !/^Person \d+$/.test(text);
+    }
   };
 })();

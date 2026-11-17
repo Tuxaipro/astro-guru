@@ -73,7 +73,8 @@
     "What's new in 12.3 and on the web": '12.3-இலும் இணையப் பதிப்பிலும் புதியவை',
     // Revamp: Ask GuruAgasthiya pointer to the 12.3 tool
     'Intraday timings for the market day are in Nifty Intraday Astro: the horas, Rahu Kaal, Abhijit and the Moon’s aspects as permitted and avoided windows, with a trade plan and a risk calculator.': 'சந்தை நாளின் நாள்வர்த்தக நேரங்கள் நிஃப்டி நாள்வர்த்தக ஜோதிடம் கருவியில் உள்ளன: ஹோரைகள், ராகு காலம், அபிஜித், சந்திரப் பார்வைகள் ஆகியவை அனுமதி மற்றும் தவிர்ப்பு நேரங்களாக; வர்த்தகத் திட்டமும் இடர் கணிப்பானும் உடன்.',
-    'Open: Nifty Intraday Astro': 'திற: நிஃப்டி நாள்வர்த்தக ஜோதிடம்',
+    'Open: Nifty Intraday Astro': 'திற: நிஃப்டி நாள்வர்த்தக ஜோதிடம்', 'Open: Market Transit': 'திற: சந்தை கோசாரம்',
+    'For the market day, Nifty Intraday Astro gives the permitted and avoided windows. For the days and weeks ahead, Market Transit has a forecast report for Nifty, Sensex and the sectors.': 'சந்தை நாளுக்கு, நிஃப்டி நாள்வர்த்தக ஜோதிடம் அனுமதி, தவிர்ப்பு நேரங்களைத் தரும். வரும் நாட்கள், வாரங்களுக்கு, சந்தை கோசாரம் கருவியில் நிஃப்டி, சென்செக்ஸ், துறைகளுக்கான முன்னறிவிப்பு அறிக்கை உள்ளது.',
     // Engine 12.3: Nifty Intraday Astro (the engine translates the shared labels itself; these are its own)
     'Trading date': 'வர்த்தக நாள்', 'For sunrise and sunset (default Mumbai)': 'சூரிய உதயம், அஸ்தமனத்திற்கு (இயல்பு: மும்பை)',
     'Previous close (optional)': 'முந்தைய முடிவு விலை (விருப்பம்)', 'Labels the chart in index points': 'வரைபடத்தில் குறியீட்டுப் புள்ளிகளைக் காட்டும்',
@@ -757,16 +758,19 @@
   function lang() { return document.body.getAttribute('data-lang') || 'bi'; }
   function active(l) { return l !== 'bi' && l !== 'en' && !!MAP[l]; }
   function translate(core, l, node) {
+    // 11.2 reports printed in English only (i18n-ta-reports.js): inside their own boxes their templates come
+    // first, before the general patterns (the "English · தமிழ்" one would drop a Tara number), and a name
+    // the user typed for a person is left as typed.
+    var REP = window.RV_TA_REPORTS, el = node && node.parentNode, inRep = l === 'ta' && REP && el && el.closest && el.closest(REP.scope);
+    if (inRep && REP.isName(el, core)) return null;
     var hit = MAP[l][core];
     if (hit) return hit;
-    if (l === 'ta') for (var i = 0; i < TA_RX.length; i++) {
-      var m = core.match(TA_RX[i][0]); if (m) { var r = TA_RX[i][1](m); if (r) return r; }
-    }
-    // 11.2 reports printed in English only (i18n-ta-reports.js), inside their own boxes
-    var REP = window.RV_TA_REPORTS, el = node && node.parentNode;
-    if (l === 'ta' && REP && el && el.closest && el.closest(REP.scope)) {
+    if (inRep) {
       var t = REP.tr(core, function (s) { return translate(s, 'ta'); });
       if (t && t !== core) return t;
+    }
+    if (l === 'ta') for (var i = 0; i < TA_RX.length; i++) {
+      var m = core.match(TA_RX[i][0]); if (m) { var r = TA_RX[i][1](m); if (r) return r; }
     }
     return null;
   }
@@ -819,7 +823,9 @@
   // There, only the <small> lines under a translated name are real copies.
   function mainTamil(el) {
     var REP = window.RV_TA_REPORTS;
-    return current === 'ta' && !!REP && el.tagName !== 'SMALL' && !!el.closest && !!el.closest(REP.main);
+    // The live language, not `current`: on a change away from Tamil the engine re-marks its copies before the
+    // data-lang observer has updated `current`, and they must stay hidden then.
+    return lang() === 'ta' && !!REP && el.tagName !== 'SMALL' && !!el.closest && !!el.closest(REP.main);
   }
   function mine(el) {
     if (!el || el.nodeType !== 1) return;
@@ -986,7 +992,14 @@
     ms.forEach(function (m) {
       if (m.type === 'characterData') { if (!skipped(m.target.parentNode)) doText(m.target, current); return; }
       if (m.type === 'attributes') {
-        if (m.attributeName === 'class') { if (m.target.classList.contains('tam60') && (ours(m.target) || mainTamil(m.target))) mine(m.target); return; }
+        if (m.attributeName === 'class') {
+          if (!m.target.classList.contains('tam60')) return;
+          if (ours(m.target)) mine(m.target);
+          // engine-written Tamil in an 11.2 report: unhidden only, not marked as translated here, so it is
+          // hidden again when the language changes
+          else if (mainTamil(m.target)) m.target.classList.remove('tam60');
+          return;
+        }
         if (!skipped(m.target)) doAttrs(m.target, current); return;
       }
       m.addedNodes.forEach(function (a) { walk(a, current); });

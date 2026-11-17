@@ -252,7 +252,8 @@
     // 11.x tools carry the engine's own Copy, Share and Print (📋 ↗ 🖨) in their heading: the bar then
     // keeps only Jump to now and Add to calendar, and only for timing lists.
     function engineOwn() {
-      return !!scope && [].some.call(scope.querySelectorAll('.sh-head button'), function (b) { return b.textContent.trim() === '📋'; });
+      // by its container: the 📋 itself reads "✓ Copied" for a moment after a copy
+      return !!scope && !!scope.querySelector('.sh-head .gaOutBar');
     }
     function sync() {
       var has = (target.textContent || '').trim().length > 0 && !target.classList.contains('hide');
@@ -541,15 +542,20 @@
     var NAMES = { rx: /numerolog|nameolog|(lucky|good|best|suitable) (mobile|phone|cell|vehicle|car|bike) numbers?|மொபைல் எண்|name numbers?|lucky name|baby names?|names? for (my|a|the|our) (baby|child|son|daughter|business|company|shop)|business names?|name correction|change (my|the) name|பெயர் எண்|எண் கணித|குழந்தைப் பெயர்|குழந்தைக்குப் பெயர்|தொழில் பெயர்/i,
       reply: 'Name and number readings are in two tools: Nameology & Numerology for a name (yours, a baby’s or a business’s), and Mobile Numerology for a mobile or vehicle number.',
       chips: [['Open: Nameology & Numerology', openTool('nmBtn')], ['Open: Mobile Numerology', openTool('mnBtn')]] };
-    // 12.3 adds Nifty Intraday Astro but no chat rule for it: intraday and index questions point at the tool.
-    var NIFTY = { rx: /nifty|sensex|intraday|intra-day|day[ -]?trad|scalp|நிஃப்டி|நாள்வர்த்தக|இன்ட்ராடே/i,
+    // 12.3 adds Nifty Intraday Astro but no chat rule for it. Intraday questions point at that tool; other
+    // Nifty or Sensex questions ("will Nifty go up next week?") also get Market Transit, whose forecast report
+    // covers days and weeks (the engine's own tool suggestion offered it before).
+    var NIFTY = { rx: /nifty|sensex|intraday|intra-day|day[ -]?trad|\bscalp(ing|er|ers)\b|நிஃப்டி|நாள்வர்த்தக|இன்ட்ராடே/i,
+      intra: /intraday|intra-day|day[ -]?trad|\bscalp(ing|er|ers)\b|today|now|நாள்வர்த்தக|இன்ட்ராடே|இன்று/i,
       reply: 'Intraday timings for the market day are in Nifty Intraday Astro: the horas, Rahu Kaal, Abhijit and the Moon’s aspects as permitted and avoided windows, with a trade plan and a risk calculator.',
+      replyBoth: 'For the market day, Nifty Intraday Astro gives the permitted and avoided windows. For the days and weeks ahead, Market Transit has a forecast report for Nifty, Sensex and the sectors.',
       chips: [['Open: Nifty Intraday Astro', openTool('nfBtn')]] };
     function smallTalk(t) {
       for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; }
       if (SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
       if (NAMES.rx.test(t)) return NAMES;
-      if (NIFTY.rx.test(t)) return NIFTY;
+      if (NIFTY.rx.test(t)) return NIFTY.intra.test(t) ? NIFTY
+        : { reply: NIFTY.replyBoth, chips: NIFTY.chips.concat([['Open: Market Transit', openTool('mkBtn')]]) };
       return null;
     }
     // The question's language: the chat's own "Reply in" choice first, then the app language.
@@ -1022,6 +1028,46 @@
     var d = $('rvSettings'); if (d) d.addEventListener('close', sync);
     document.querySelector('.rv-setbtn') && document.querySelector('.rv-setbtn').addEventListener('click', sync);
     sync();
+  })();
+
+  /* ---------- Engine fixes: duplicate element ids (in the author's page too) ----------
+     The engine finds elements by id when it runs, and getElementById returns the first match. */
+
+  // Horary Answers: the panel title and the custom-time field are both #hqT, so the engine read the title
+  // (no value) as the time and every "date and time I choose" question was cast for 00:00. The title gets
+  // its own id; the dialog keeps its name.
+  (function () {
+    var p = $('hqPanel'), h = p && p.querySelector('h2#hqT');
+    if (!h || !p.querySelector('input#hqT')) return;
+    h.id = 'hqTitle';
+    if (p.getAttribute('aria-labelledby') === 'hqT') p.setAttribute('aria-labelledby', 'hqTitle');
+  })();
+
+  // Mundane Astrology's map block (#acgBox) reuses Astrocartography's #acGo and #acMsg. The engine wired the
+  // map search to the first #acGo, Astrocartography's button: "Draw Astro Map" also ran a half-year world
+  // search and blanked its own "Done" message, and "Show events on the map" did nothing. Each button now
+  // runs only its own search. The engine's functions are out of reach, so:
+  // - Astrocartography's button is replaced by a copy that draws through the Birth Chart's "Astro map"
+  //   button (#bpAcg), which runs only the drawing;
+  // - the map button clicks the original button, which carries both searches. During that call the
+  //   lookups of #acMsg are routed: the first (the drawing's) to a spare element, the next (the map's) to
+  //   the map's own message line. The drawing still runs once, unseen, on the hidden Astrocartography page.
+  (function () {
+    var box = $('acgBox'), ac = $('acPanel'), bpAcg = $('bpAcg');
+    var astroBtn = ac && ac.querySelector('#acGo'), mapBtn = box && box.querySelector('#acGo'), mapMsg = box && box.querySelector('#acMsg');
+    if (!astroBtn || !mapBtn || !mapMsg || !bpAcg) return;
+    var clean = astroBtn.cloneNode(true);
+    astroBtn.parentNode.replaceChild(clean, astroBtn);
+    clean.addEventListener('click', function () { bpAcg.click(); });
+    mapBtn.id = 'acGoMap'; mapMsg.id = 'acMsgMap';
+    mapBtn.addEventListener('click', function () {
+      var real = document.getElementById, spare = document.createElement('div'), n = 0;
+      document.getElementById = function (id) {
+        if (id === 'acMsg') return ++n === 1 ? spare : mapMsg;
+        return real.call(document, id);
+      };
+      try { astroBtn.click(); } finally { delete document.getElementById; if (document.getElementById !== real) document.getElementById = real; }
+    });
   })();
 
   /* ---------- Lighter start-up: the world map outline loads after the page ---------- */

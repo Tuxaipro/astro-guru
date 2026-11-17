@@ -107,6 +107,14 @@ every calculation in the v12.3 engine stays as it was.
 - **Long result lists** (more than 90 rows, such as a two-week Guru Agasthiya Muhurtham) show 60 rows and a
   **Show more** bar; days with nothing left to show fold away with their heading. Copy, Print and Add to
   calendar still take every row, and Jump to now unfolds the list first.
+- **Ask GuruAgasthiya** is the engine's rule-based chat (no AI). Around it:
+  - a question no rule matches gets a card of the closest topics, each with a question the rules do answer;
+  - common misspellings ("jathakam", "lotery") are corrected and unknown phrases ("rasi palan") are pointed at
+    the rule that answers them before the engine reads the question;
+  - small talk ("thanks", "who are you", "ok") is answered by the revamp, in English or Tamil;
+  - name, baby-name, mobile-number and Nifty questions are pointed at their 11.2 and 12.3 tools;
+  - **Questions I could not match**, under the message box, keeps the unmatched questions on the device, with
+    Copy list and Clear, so the rules can be widened from what people type.
 - **Question log:** GMP Prasnam, Horary and Lost and Found save each answer on the device. Mark later whether it
   happened; the log counts how many readings came true.
 - **Alarms:** the alarm panel explains that alarms ring while the app is open and that calendar alerts work
@@ -138,6 +146,12 @@ The engine translates 109 labels into 44 languages. The revamp follows the same 
     table headings, hora natures and rules; the Astrocartography research forms; the Chandra Bala muhurtham
     form and the Live Transit Clock option). Ask GuruAgasthiya's own replies come from
     the engine in the chosen language.
+  - Three 11.2 reports hold a Tamil text for every reason but print only the English: the personal Chandra
+    Muhurtham report, the lottery number studio (which reuses it) and the market forecast report.
+    `revamp/i18n-ta-reports.js` translates text inside those report boxes only: the market report from the
+    engine's own Tamil (`window.__mkx`), the muhurtham report from its reason templates and the engine's Tamil
+    words. In Tamil the engine also hid its own Tamil there (it marks all-Tamil text as a copy, class `tam60`);
+    inside those boxes and in Nameology that text now stays visible.
 - **The other 43 languages:** the main revamp labels are translated: sidebar groups, Now, Next timings,
   Settings, search, and the Copy, Print, Share and calendar buttons. Long help text stays in English, as it
   does in the engine.
@@ -220,11 +234,33 @@ The unchanged v7.7 port is kept read-only in `../guruagasthiya-v7.7-original/`.
   buttons, and the problem log.
 - `revamp/i18n.js`: translations.
 - `revamp/i18n-ta.js`: Tamil for the long help paragraphs.
+- `revamp/i18n-ta-reports.js`: Tamil for the 11.2 reports that the engine prints in English only.
 - `revamp/place.js`: the one-line place picker.
 - `revamp/text.js`: tidying engine text. Read more, page icons, date chips, and the daily disclaimer.
 - `revamp/revamp.css`: all styles. The engine's styles are in a lower cascade layer (`@layer engine`), so
   revamp rules win without `!important`. The few left override inline styles the engine sets.
 - `revamp.js` loads first, then the others in name order, then routes start once every script has run.
+
+### Engine bugs worked around
+
+The engine files are never edited, so these bugs in the author's own page are worked around in the revamp.
+They are worth reporting to the author:
+
+- **Sub-lord timing list** (Ask GuruAgasthiya, "lagna timings today"): `subList()` defines a local `sg` that
+  calls itself, so the list ends in "Maximum call stack size exceeded". The chat points those questions at
+  Lagna Timings instead (`features.js`).
+- **Horary Answers custom time:** the panel title and the time field are both `#hqT`; the engine read the
+  title, so every "date and time I choose" question was cast for 00:00. The title gets its own id.
+- **Mundane Astrology's map** reuses Astrocartography's `#acGo` and `#acMsg`: "Draw Astro Map" also ran a
+  half-year world search and blanked its own message, and "Show events on the map" did nothing. Each button
+  now runs only its own search (`features.js`).
+- **Nifty Intraday Astro** (12.3) is built but its button and ✕ are never wired (`revamp.js` wires them).
+- **Tamil copies hidden in Tamil mode** inside the 11.2 reports and Nameology (see Translations).
+- **Shared panel:** Vehicle Muhurtham opens Agriculture Muhurtham's panel in a vehicle mode; `PANEL_OF` in
+  `revamp.js` keeps their addresses apart.
+
+`test-revamp` fails when any element id appears twice on the page, so a new engine version that repeats an
+id is caught at once.
 
 ### Problems and the problem log
 

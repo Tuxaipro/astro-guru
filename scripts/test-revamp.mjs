@@ -258,6 +258,15 @@ await check('ask nifty: intraday questions point to the 12.3 tool', async () => 
   const chip = bot.querySelector('.ak-chip');
   return chip ? eq('chip', chip.textContent.trim(), 'Open: Nifty Intraday Astro') : 'no chip in the reply';
 }, true);
+await check('ask nifty: a question about days ahead gets Market Transit too; "scalp" alone is not trading', async () => {
+  const added = await sendAsk('will nifty go up next week');
+  const bot = added.find((n) => n.classList.contains('ak-b'));
+  if (!bot) return 'no reply';
+  const chips = [...bot.querySelectorAll('.ak-chip')].map((c) => c.textContent.trim()).join(' | ');
+  const why = eq('chips', chips, 'Open: Nifty Intraday Astro | Open: Market Transit'); if (why) return why;
+  const health = await sendAsk('my scalp itches, will it heal?');
+  return health.some((n) => /Nifty Intraday/.test(n.textContent)) ? 'a health question was pointed at the Nifty tool' : '';
+}, true);
 await check('ask sub-lord timings: the engine\'s crashing list is replaced by a pointer to Lagna Timings', async () => {
   const added = await sendAsk('lagna timings today');
   const bots = added.filter((n) => n.classList.contains('ak-b'));
@@ -303,7 +312,8 @@ check('tamil reports: 11.2 reasons are rebuilt from the engine templates, unrela
 d.body.setAttribute('data-lang', 'ta'); await sleep(100);
 {
   const box = $('cmpOut'), hold = d.createElement('div');
-  hold.innerHTML = '<div class="lf-sec"><h3>தனிப்பட்ட சந்திர முகூர்த்த அறிக்கை</h3></div><p class="rv-t-reason">Tithi Chaturthi (Shukla) is to be avoided</p><p>Aries<br><small>மேஷம்</small></p>';
+  hold.innerHTML = '<div class="lf-sec"><h3>தனிப்பட்ட சந்திர முகூர்த்த அறிக்கை</h3></div><p class="rv-t-reason">Tithi Chaturthi (Shukla) is to be avoided</p><p>Aries<br><small>மேஷம்</small></p>' +
+    '<table><tr><td><b class="rv-t-name">Rohini</b></td><td class="rv-t-tara">4 Kshema · க்ஷேம (cycle 2)</td></tr><tr><td><b class="rv-t-p1">Person 1</b></td><td class="rv-t-tara2">9 Parama Mitra · பரம மித்ர (cycle 3)</td></tr></table>';
   box.appendChild(hold); await sleep(50);
   hold.querySelector('h3').classList.add('tam60'); hold.querySelector('small').classList.add('tam60'); await sleep(50);
   const outside = d.createElement('p'); outside.textContent = 'Tithi Chaturthi (Shukla) is to be avoided'; $('cmPanel').appendChild(outside); await sleep(50);
@@ -311,7 +321,16 @@ d.body.setAttribute('data-lang', 'ta'); await sleep(100);
     eq('reason', hold.querySelector('.rv-t-reason').textContent, 'திதி வளர்பிறை சதுர்த்தி தவிர்க்கவும்') ||
     eq('heading not hidden as a copy', hold.querySelector('h3').classList.contains('tam60'), false) ||
     eq('small copy still hidden', hold.querySelector('small').classList.contains('tam60'), true) ||
-    eq('outside the report boxes', outside.textContent, 'Tithi Chaturthi (Shukla) is to be avoided'));
+    eq('outside the report boxes', outside.textContent, 'Tithi Chaturthi (Shukla) is to be avoided') ||
+    eq('typed name', hold.querySelector('.rv-t-name').textContent, 'Rohini') || eq('default name', hold.querySelector('.rv-t-p1').textContent, 'நபர் 1') ||
+    eq('reckoner Tara', hold.querySelector('.rv-t-tara').textContent, '4 க்ஷேம (சுற்று 2)') ||
+    eq('reckoner Tara with a space', hold.querySelector('.rv-t-tara2').textContent, '9 பரம மித்ர (சுற்று 3)'));
+  // Leaving Tamil: the engine marks its Tamil copies again and they must stay hidden.
+  const h3 = hold.querySelector('h3');
+  d.body.setAttribute('data-lang', 'hi'); h3.classList.add('tam60'); await sleep(80);
+  check('tamil reports: after a change away from Tamil, the engine\'s Tamil copies stay hidden', () =>
+    eq('heading marked as a copy', h3.classList.contains('tam60'), true));
+  d.body.setAttribute('data-lang', 'ta'); await sleep(50);
   hold.remove(); outside.remove();
 }
 d.body.setAttribute('data-lang', 'bi'); await sleep(100);
@@ -350,6 +369,33 @@ check('miss log: unmatched questions are kept on the device, with a count and a 
   det.querySelector('button[data-k="clear"]').click();
   return eq('cleared', w.localStorage.getItem('rvAskMiss'), '[]') || eq('count after clear', det.querySelector('.rv-log-n').textContent.trim(), 'empty');
 });
+
+// Engine ids that appear twice (in the author's page too): the revamp separates them.
+check('engine ids: no element id is used twice on the page', () => {
+  const n = {}; d.querySelectorAll('[id]').forEach((e) => { n[e.id] = (n[e.id] || 0) + 1; });
+  const dup = Object.keys(n).filter((k) => n[k] > 1);
+  return dup.length ? `used more than once: ${dup.join(', ')}` : '';
+});
+check('engine ids: Horary Answers reads its custom time from the time field, not the title', () =>
+  eq('#hqT', $('hqT').tagName, 'INPUT') || eq('dialog name', $('hqPanel').getAttribute('aria-labelledby'), 'hqTitle') ||
+  eq('title', $('hqTitle').textContent.trim(), 'Horary Answers'));
+{
+  // "Draw Astro Map" must not run the mundane map search, which writes "Reading the sky…" and its results.
+  const astroMsg = $('acPanel').querySelector('#acMsg');
+  $('acOut').innerHTML = '';
+  $('acPanel').querySelector('#acGo').click(); await sleep(400);
+  const afterAstro = astroMsg.textContent, outAfterAstro = $('acOut').innerHTML.length;
+  // "Show events on the map" runs the mundane search, which answers in its own message line. Equal dates
+  // stop it at its first check ("The last date must be after the first date."), so nothing heavy runs.
+  $('acFrom').value = '2026-11-17'; $('acTo').value = '2026-11-17';
+  $('acGoMap').click(); await sleep(400);
+  check('engine ids: each map button runs only its own search', () =>
+    (/Reading the sky/.test(afterAstro) ? `Astrocartography shows the mundane message: ${JSON.stringify(afterAstro)}` : '') ||
+    eq('mundane results after "Draw Astro Map"', outAfterAstro, 0) ||
+    eq('map message', $('acMsgMap').textContent, 'The last date must be after the first date.') ||
+    (/last date/.test(astroMsg.textContent) ? 'the map message went to Astrocartography' : '') ||
+    eq('lookups restored', d.getElementById === w.Document.prototype.getElementById, true));
+}
 
 // (5) What's new: the revamp's own page, at #/whats-new, listed beside About and linked from it.
 check('whats-new: the sidebar entry sits next to About with data-route="whats-new"', () => {
