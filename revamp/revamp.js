@@ -352,10 +352,12 @@
   }
   function show(r) {
     var changed = r !== route; route = r;
+    wantNow = false;
     if (isBase(r)) {
       routing = true; closeSheets(); routing = false;
       document.body.classList.remove('rv-p-tool');
       setPage(r === 'now' ? 'now' : 'lagna');
+      if (r === 'lagna-timings') openAtNow();
     } else {
       var id = ROUTES[r], panel = panelOf(id);
       // Open it when hidden, or when another tool's mode of a shared panel is showing.
@@ -448,7 +450,10 @@
     });
   }
   var nt;
-  if ($('list')) new MutationObserver(function () { clearTimeout(nt); nt = setTimeout(renderNext, 150); }).observe($('list'), { childList: true });
+  if ($('list')) new MutationObserver(function () {
+    clearTimeout(nt); nt = setTimeout(renderNext, 150);
+    if (wantNow && scrollToNow()) wantNow = false;
+  }).observe($('list'), { childList: true });
   setInterval(renderNext, 20000);
   document.addEventListener('rv-lang', renderNext);
 
@@ -559,6 +564,25 @@
       var c = s.querySelector('[id$="Close"], .close, button[aria-label="Close"]'); if (c) c.click();
     });
   }
+  /* ---------- Lagna Timings opens at the running period ----------
+     A reload, a link or the sidebar lands on the row of the time now (the engine marks it .now), set a
+     third of the way down so the periods just before it show above and the next ones fill the screen;
+     the form is a scroll up. Another day's list has no such row and stays at the top. The list may be
+     built after the page shows (the engine computes it once the place is known), so the wish is kept
+     until the rows arrive. */
+  var wantNow = false;
+  function nowRow() {
+    var list = document.querySelector('#results ul:not(.hide)');
+    return list && list.querySelector('li.row.now:not(.hide)');
+  }
+  function scrollToNow() {
+    var r = nowRow(); if (!r || !scroller) return false;
+    var top = r.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - Math.round(scroller.clientHeight * 0.3);
+    scroller.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+    return true;
+  }
+  // Straight away, not on the next frame: a page opened in a background tab gets no frames until it is seen.
+  function openAtNow() { wantNow = !scrollToNow(); }
   function openTools() { stage.classList.add('rv-tools-open'); syncTabs(); }
   function closeTools() { stage.classList.remove('rv-tools-open'); syncTabs(); }
   var activeTab = 'now';

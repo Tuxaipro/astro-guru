@@ -269,6 +269,25 @@ await check('ask sub-lord timings: the engine\'s crashing list is replaced by a 
   chip.click(); await sleep(50);
   return eq('chat closed', $('akPanel').classList.contains('hide'), true) || eq('address', w.location.hash, '#/lagna-timings');
 }, true);
+await check('lagna timings: arriving at the page (a reload, a link, the sidebar) scrolls to the running period', async () => {
+  // The layout script that shows today's timings at start-up is left out above: press Show Timings here.
+  if (!d.querySelector('#list li.row')) { $('go').click(); await settle(); }
+  const sc = $('scroller'), calls = [];
+  w.location.hash = '#/now'; await settle();
+  const row = d.querySelector('#results ul:not(.hide) li.row.now');
+  if (!row) return 'no running-period row: the engine did not build today\'s list';
+  // jsdom lays nothing out: give the row a position and record what the page scrolls to.
+  sc.scrollTo = (o) => calls.push(o);
+  sc.getBoundingClientRect = () => ({ top: 0 });
+  row.getBoundingClientRect = () => ({ top: 1000 });
+  w.location.hash = '#/lagna-timings'; await settle();
+  const atRow = calls.filter((o) => o && o.top === 1000).length;
+  w.location.hash = '#/now'; await settle();
+  const afterHome = calls.filter((o) => o && o.top === 1000).length - atRow;
+  delete sc.scrollTo; delete sc.getBoundingClientRect; delete row.getBoundingClientRect;
+  if (!atRow) return `the page did not scroll to the row (scrolls: ${JSON.stringify(calls)})`;
+  return afterHome ? 'the Now page scrolled to the row too' : '';
+}, true);
 $('akBtn').click(); await sleep(100); // reopen the chat for the next checks
 
 // 11.2 reports in Tamil: the engine prints their reasons in English only and hides its own Tamil there.

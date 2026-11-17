@@ -44,8 +44,9 @@ every calculation in the v12.3 engine stays as it was.
 - **Desktop:** two columns, the sidebar and one workspace that shows a single page at a time:
   - **Now** (the home page): Rising now across the top, then the transit chart beside the next six timings.
     Click a timing to jump to it in Lagna Timings.
-  - **Lagna Timings:** the full list on its own; the transit chart lives on the Now page. Tapping a row slides
-    the chart in from the right, set to that time (close it with ✕ or Esc).
+  - **Lagna Timings:** the full list on its own; the transit chart lives on the Now page. The page opens at the
+    running period (on a reload, a link or from the sidebar), with the form a scroll up; another day's list
+    opens at the top. Tapping a row slides the chart in from the right, set to that time (close it with ✕ or Esc).
   - **Every other tool is its own page** with its own address, such as `#/birth-chart`, `#/gmp-prasnam` or
     `#/money-manifestation`. Back, forward, reload and bookmarks all work. ✕ or Esc returns to Now or
     Lagna Timings. The page header stays at the top while you scroll, and the buttons follow the form, so
