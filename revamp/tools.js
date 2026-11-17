@@ -28,6 +28,8 @@
   function T(en, ta) { var l = lg(); return l === 'ta' ? ta : l === 'bi' ? en + ' <span class="tm">' + ta + '</span>' : en; }
   function B(en, ta) { var l = lg(); return l === 'ta' ? ta : l === 'bi' ? en + '<span class="rvt-ta">' + ta + '</span>' : en; }
   function S(en, ta) { return lg() === 'ta' ? ta : en; }
+  // Plain text in both (dropdown choices, buttons, messages): "English · தமிழ்", like the engine's buttons.
+  function P(en, ta) { var l = lg(); return l === 'ta' ? ta : l === 'bi' ? en + ' · ' + ta : en; }
 
   var NAK_TA = ['அசுவினி', 'பரணி', 'கார்த்திகை', 'ரோகிணி', 'மிருகசீரிடம்', 'திருவாதிரை', 'புனர்பூசம்', 'பூசம்', 'ஆயில்யம்', 'மகம்', 'பூரம்', 'உத்திரம்', 'அஸ்தம்', 'சித்திரை', 'சுவாதி', 'விசாகம்', 'அனுஷம்', 'கேட்டை', 'மூலம்', 'பூராடம்', 'உத்திராடம்', 'திருவோணம்', 'அவிட்டம்', 'சதயம்', 'பூரட்டாதி', 'உத்திரட்டாதி', 'ரேவதி'];
   var WD_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -35,9 +37,13 @@
   var MON_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var MON_TA = ['ஜன.', 'பிப்.', 'மார்ச்', 'ஏப்.', 'மே', 'ஜூன்', 'ஜூலை', 'ஆக.', 'செப்.', 'அக்.', 'நவ.', 'டிச.'];
   var WD_LORD = ['Su', 'Mo', 'Ma', 'Me', 'Ju', 'Ve', 'Sa'];
-  function nak(i) { return S(C.NAKS[i], NAK_TA[i]); }
-  function sign(i) { return S(C.SIGNS[i][0], C.TSIGN[i]); }
-  function pl(c) { return S(C.NAME[c], C.TA[c]); }
+  // Names as HTML: English with its Tamil beside it in English + Tamil (nakP: as plain text).
+  function nak(i) { return T(C.NAKS[i], NAK_TA[i]); }
+  function sign(i) { return T(C.SIGNS[i][0], C.TSIGN[i]); }
+  function pl(c) { return T(C.NAME[c], C.TA[c]); }
+  function nakP(i) { return P(C.NAKS[i], NAK_TA[i]); }
+  // "Saturn dasha" / "சனி தசை" as one phrase.
+  function PD(c, en, ta) { return T(C.NAME[c] + ' ' + en, C.TA[c] + ' ' + ta); }
   function ord(n) { return n + (lg() === 'ta' ? '-ஆம்' : (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th')); }
 
   /* ---------- place, time and people ---------- */
@@ -52,7 +58,7 @@
   function p2(n) { return (n < 10 ? '0' : '') + n; }
   function hm(ms, tz) { var p = parts(ms, tz); return p2(p.h) + ':' + p2(p.mi); }
   function dt(ms, tz) { var p = parts(ms, tz); return p.d + ' ' + S(MON_EN[p.m - 1], MON_TA[p.m - 1]) + ' ' + p.y; }
-  function dayName(ms, tz) { var w = parts(ms, tz).wd; return S(WD_EN[w], WD_TA[w]); }
+  function dayName(ms, tz) { var w = parts(ms, tz).wd; return T(WD_EN[w], WD_TA[w]); }
   function isoDay(ms, tz) { var p = parts(ms, tz); return p.y + '-' + p2(p.m) + '-' + p2(p.d); }
   function midnight(iso, tz) { var a = iso.split('-').map(Number); return C.localToUtc(a[0], a[1], a[2], 0, 0, tz).ms; }
   function saved() { try { var l = JSON.parse(localStorage.getItem('gaBirthList') || '[]'); return Array.isArray(l) ? l : []; } catch (e) { return []; } }
@@ -270,12 +276,12 @@
   var tools = [];
   function sel(id, opts, val) { return '<select id="' + id + '">' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (String(o[0]) === String(val) ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
   function cell(id, en, ta, input) { return '<label class="cell" for="' + id + '"><span class="cl">' + T(en, ta) + '</span>' + input + '</label>'; }
-  function starOpts() { return C.NAKS.map(function (n, i) { return [i, nak(i)]; }); }
-  function padaOpts() { return [1, 2, 3, 4].map(function (p) { return [p, S('Pada ', 'பாதம் ') + p]; }); }
+  function starOpts() { return C.NAKS.map(function (n, i) { return [i, nakP(i)]; }); }
+  function padaOpts() { return [1, 2, 3, 4].map(function (p) { return [p, P('Pada ' + p, 'பாதம் ' + p)]; }); }
   function peopleOpts(none) {
     var l = saved();
-    return [['', l.length ? S(none || 'Choose a saved person…', 'சேமித்த நபரைத் தேர்ந்தெடுங்கள்…') : S('No saved people yet (save one in Birth Chart)', 'சேமித்த நபர்கள் இல்லை (பிறப்பு ஜாதகத்தில் சேமியுங்கள்)')]]
-      .concat(l.map(function (r, i) { return [i, (r.name || S('Unnamed', 'பெயரில்லை')) + ' · ' + r.date + ' ' + String(r.time || '').slice(0, 5)]; }));
+    return [['', l.length ? P(none || 'Choose a saved person…', 'சேமித்த நபரைத் தேர்ந்தெடுங்கள்…') : P('No saved people yet (save one in Birth Chart)', 'சேமித்த நபர்கள் இல்லை (பிறப்பு ஜாதகத்தில் சேமியுங்கள்)')]]
+      .concat(l.map(function (r, i) { return [i, (r.name || P('Unnamed', 'பெயரில்லை')) + ' – ' + r.date + ' ' + String(r.time || '').slice(0, 5)]; }));
   }
   var RES = { good: ['Agrees', 'பொருந்தும்', 'good'], best: ['Best', 'உத்தமம்', 'good'], avg: ['Average', 'மத்திமம்', 'avg'], mixed: ['Mixed', 'கலப்பு', 'avg'],
     no: ['Does not agree', 'பொருந்தாது', 'bad'], bad: ['Avoid', 'தவிர்க்கவும்', 'bad'], fine: ['Good', 'நல்லது', 'good'], fav: ['Favourable', 'சாதகம்', 'good'],
@@ -283,7 +289,7 @@
     cancel: ['Cancelled (Mars in its own or exalted sign)', 'நீங்கியது (செவ்வாய் ஆட்சி/உச்சம்)', 'good'] };
   function res(r) {
     var m = RES[r];
-    return '<span class="rvt-res rvt-' + m[2] + '">' + (m[2] === 'good' ? '✓ ' : m[2] === 'bad' ? '✗ ' : '◐ ') + S(m[0], m[1]) + '</span>';
+    return '<span class="rvt-res rvt-' + m[2] + '">' + (m[2] === 'good' ? '✓ ' : m[2] === 'bad' ? '✗ ' : '◐ ') + T(m[0], m[1]) + '</span>';
   }
   function table(head, rows, cls) {
     return '<div class="tblw"><table class="rvt-tbl' + (cls ? ' ' + cls : '') + '"><thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
@@ -316,8 +322,8 @@
   function readBirth(p) {
     var ms = birthMs($(p + 'Date').value, $(p + 'Time').value || '12:00', $(p + 'Tz').value.trim());
     var lat = parseFloat($(p + 'Lat').value), lon = parseFloat($(p + 'Lon').value), tz = $(p + 'Tz').value.trim();
-    if (!isFinite(ms)) return { err: S('Enter the date of birth, or choose a saved person.', 'பிறந்த தேதியை உள்ளிடுங்கள், அல்லது சேமித்த நபரைத் தேர்ந்தெடுங்கள்.') };
-    if (!isFinite(lat) || !isFinite(lon) || !tz) return { err: S('Enter the place of birth: latitude, longitude and time zone.', 'பிறந்த இடத்தை உள்ளிடுங்கள்: அட்சரேகை, தீர்க்கரேகை, நேர மண்டலம்.') };
+    if (!isFinite(ms)) return { err: B('Enter the date of birth, or choose a saved person.', 'பிறந்த தேதியை உள்ளிடுங்கள், அல்லது சேமித்த நபரைத் தேர்ந்தெடுங்கள்.') };
+    if (!isFinite(lat) || !isFinite(lon) || !tz) return { err: B('Enter the place of birth: latitude, longitude and time zone.', 'பிறந்த இடத்தை உள்ளிடுங்கள்: அட்சரேகை, தீர்க்கரேகை, நேர மண்டலம்.') };
     var who = saved()[+$(p + 'Who').value];
     return { ms: ms, lat: lat, lon: lon, tz: tz, name: who && who.name, timeGiven: !!$(p + 'Time').value };
   }
@@ -329,7 +335,7 @@
   }
   function wireMoon(p) {
     var w = $(p + 'Who'), n = $(p + 'Nak'), pa = $(p + 'Pada'), out = $(p + 'Rasi');
-    function show() { out.textContent = sign(rasiOf(+n.value, +pa.value)); }
+    function show() { out.innerHTML = sign(rasiOf(+n.value, +pa.value)); }
     n.addEventListener('change', show); pa.addEventListener('change', show); show();
     w.addEventListener('focus', function () { var v = w.value; w.innerHTML = sel('x', peopleOpts(), v).replace(/^<select id="x">|<\/select>$/g, ''); });
     w.addEventListener('change', function () {
@@ -356,14 +362,14 @@
     t.panel = panel; t.ran = false;
     function head() {
       return '<div class="sh-head"><div><h2 id="' + t.p + 'T">' + S(t.en, t.ta) + '</h2>' + (lg() === 'bi' ? '<span class="tt">' + t.ta + '</span>' : '') + '</div>' +
-        '<button class="xbtn" id="' + t.p + 'Close" type="button" aria-label="' + S('Close', 'மூடு') + '">' + X_SVG + '</button></div>';
+        '<button class="xbtn" id="' + t.p + 'Close" type="button" aria-label="' + esc(P('Close', 'மூடு')) + '">' + X_SVG + '</button></div>';
     }
     t.render = function () {
       // Keep what was entered across a language change.
       var keep = {}; panel.querySelectorAll('input,select').forEach(function (e) { if (e.id) keep[e.id] = e.type === 'checkbox' ? e.checked : e.value; });
       var openDetails = {}; panel.querySelectorAll('details[id]').forEach(function (d) { openDetails[d.id] = d.open; });
       panel.innerHTML = head() + '<details class="howto"><summary>' + T('How It Works', 'இது எப்படி செயல்படுகிறது') + '</summary>' + t.how() + '</details>' +
-        t.form() + '<div class="btns"><button class="primary" id="' + t.p + 'Go" type="button">' + S(t.go[0], t.go[1]) + '</button></div>' +
+        t.form() + '<div class="btns"><button class="primary" id="' + t.p + 'Go" type="button">' + esc(P(t.go[0], t.go[1])) + '</button></div>' +
         '<div class="msg" id="' + t.p + 'Msg" role="status"></div><div id="' + t.p + 'Out" class="rvt-out"></div>';
       Object.keys(keep).forEach(function (id) { var e = $(id); if (e) { if (e.type === 'checkbox') e.checked = keep[id]; else if (keep[id] !== '' || e.tagName === 'SELECT') e.value = keep[id]; } });
       Object.keys(openDetails).forEach(function (id) { var d = $(id); if (d) d.open = openDetails[id]; });
@@ -375,7 +381,7 @@
     function go() {
       msg(t, ''); var out = $(t.p + 'Out');
       try { out.innerHTML = t.run() || ''; }
-      catch (e) { out.innerHTML = ''; msg(t, S('Could not work this out: ', 'கணிக்க முடியவில்லை: ') + esc(e.message), true); if (window.rvReport) rvReport(e, 'tools ' + t.p); }
+      catch (e) { out.innerHTML = ''; msg(t, esc(P('Could not work this out', 'கணிக்க முடியவில்லை')) + ': ' + esc(e.message), true); if (window.rvReport) rvReport(e, 'tools ' + t.p); }
     }
     t.go_ = go;
     btn.addEventListener('click', function () {
@@ -401,16 +407,16 @@
     wire: function () { wireMoon('rvMtG'); wireMoon('rvMtB'); },
     run: function () {
       var g = readMoon('rvMtG'), b = readMoon('rvMtB'), m = match(g, b);
-      var head = [S('Porutham', 'பொருத்தம்'), S('Result', 'முடிவு'), S('Why', 'காரணம்')];
-      var rows = m.list.map(function (x) { return '<tr' + ((x.key === 'rajju' || x.key === 'vedha') ? ' class="rvt-key"' : '') + '><td><b>' + T(x.en, x.ta) + '</b></td><td>' + res(x.res) + '</td><td>' + esc(S(x.whyEn, x.whyTa)) + '</td></tr>'; });
+      var head = [T('Porutham', 'பொருத்தம்'), T('Result', 'முடிவு'), T('Why', 'காரணம்')];
+      var rows = m.list.map(function (x) { return '<tr' + ((x.key === 'rajju' || x.key === 'vedha') ? ' class="rvt-key"' : '') + '><td><b>' + T(x.en, x.ta) + '</b></td><td>' + res(x.res) + '</td><td>' + B(esc(x.whyEn), esc(x.whyTa)) + '</td></tr>'; });
       var V = { block: ['Not recommended: ' + m.list.filter(function (x) { return (x.key === 'rajju' || x.key === 'vedha') && x.res === 'no'; }).map(function (x) { return x.en; }).join(' and ') + ' does not agree.', 'பரிந்துரைக்கப்படவில்லை: ' + m.list.filter(function (x) { return (x.key === 'rajju' || x.key === 'vedha') && x.res === 'no'; }).map(function (x) { return x.ta; }).join(', ') + ' பொருந்தவில்லை.', 'bad'],
         good: ['A good match.', 'நல்ல பொருத்தம்.', 'good'], ok: ['An acceptable match.', 'ஏற்கத்தக்க பொருத்தம்.', 'avg'], weak: ['A weak match.', 'பொருத்தம் குறைவு.', 'bad'] }[m.verdict];
-      var who = function (x, en, ta) { return esc(x.name || S(en, ta)) + ': ' + nak(x.nak) + ' ' + S('pada', 'பாதம்') + ' ' + x.pada + ', ' + sign(x.rasi); };
+      var who = function (x, en, ta) { return (x.name ? esc(x.name) : T(en, ta)) + ': ' + nak(x.nak) + ', ' + T('pada ' + x.pada, 'பாதம் ' + x.pada) + ', ' + sign(x.rasi); };
       var h = '<div class="rvt-card rvt-score rvt-' + V[2] + '"><div class="rvt-big">' + m.score + '<small>/10</small></div><div><b>' + B(V[0], V[1]) + '</b><p>' + who(g, 'Bride', 'மணமகள்') + '<br>' + who(b, 'Groom', 'மணமகன்') + '</p></div></div>';
       h += table(head, rows);
       if (g.full && b.full) {
         var cg = chevvai(g.full.ms, g.full.lat, g.full.lon, g.full.ayan || kind()), cb = chevvai(b.full.ms, b.full.lat, b.full.lon, b.full.ayan || kind());
-        var line = function (c, en, ta) { return '<li>' + T(en, ta) + ': ' + res(c.has ? 'dosham' : c.cancelled ? 'cancel' : 'free') + ' · ' + S('Mars in the ', 'செவ்வாய் லக்னத்திலிருந்து ') + S(ord(c.fromLagna) + ' from the ascendant and the ' + ord(c.fromMoon) + ' from the Moon', c.fromLagna + '-ஆம், சந்திரனிலிருந்து ' + c.fromMoon + '-ஆம் வீட்டில்') + '</li>'; };
+        var line = function (c, en, ta) { return '<li>' + T(en, ta) + ': ' + res(c.has ? 'dosham' : c.cancelled ? 'cancel' : 'free') + ' · ' + B('Mars in the ' + ord(c.fromLagna) + ' from the ascendant and the ' + ord(c.fromMoon) + ' from the Moon', 'செவ்வாய் லக்னத்திலிருந்து ' + c.fromLagna + '-ஆம், சந்திரனிலிருந்து ' + c.fromMoon + '-ஆம் வீட்டில்') + '</li>'; };
         var bal = cg.has === cb.has;
         h += '<h3>' + T('Chevvai (Mars) dosham', 'செவ்வாய் தோஷம்') + '</h3><ul class="rvt-list">' + line(cg, 'Bride', 'மணமகள்') + line(cb, 'Groom', 'மணமகன்') + '</ul>' +
           note(bal ? (cg.has ? 'Both have Chevvai dosham, so it balances out.' : 'Neither has Chevvai dosham.') : 'Only one has Chevvai dosham: most almanacs advise caution or a matching partner.',
@@ -436,12 +442,12 @@
     },
     run: function () {
       var h = home(), iso = $('rvGwDate').value || isoDay(Date.now(), h.tz), g = gowri(iso, h), now = Date.now();
-      if (!g) throw new Error(S('The Sun does not rise or set at this place on this day.', 'இந்த நாளில் இந்த இடத்தில் சூரியன் உதிக்கவோ மறையவோ இல்லை.'));
+      if (!g) throw new Error(P('The Sun does not rise or set at this place on this day.', 'இந்த நாளில் இந்த இடத்தில் சூரியன் உதிக்கவோ மறையவோ இல்லை.'));
       var tz = h.tz, row = function (x) {
         var G = GOWRI[x.k], on = now >= x.s && now < x.e;
-        return '<tr class="' + (on ? 'rvt-on ' : '') + 'rvt-g-' + G[2] + '"><td class="rvt-time">' + hm(x.s, tz) + ' – ' + hm(x.e, tz) + (on ? ' <span class="rvt-now">' + S('now', 'இப்போது') + '</span>' : '') + '</td><td><b>' + T(G[0], G[1]) + '</b></td><td>' + res(G[2] === 'bad' ? 'bad' : G[2] === 'best' ? 'best' : 'fine') + '</td></tr>';
+        return '<tr class="' + (on ? 'rvt-on ' : '') + 'rvt-g-' + G[2] + '"><td class="rvt-time">' + hm(x.s, tz) + ' – ' + hm(x.e, tz) + (on ? ' <span class="rvt-now">' + P('now', 'இப்போது') + '</span>' : '') + '</td><td><b>' + T(G[0], G[1]) + '</b></td><td>' + res(G[2] === 'bad' ? 'bad' : G[2] === 'best' ? 'best' : 'fine') + '</td></tr>';
       };
-      var head = [S('Time', 'நேரம்'), S('Gowri', 'கௌரி'), ''];
+      var head = [T('Time', 'நேரம்'), T('Gowri', 'கௌரி'), ''];
       var kal = function (en, ta, p) { return '<li><b>' + T(en, ta) + '</b> ' + hm(p[0], tz) + ' – ' + hm(p[1], tz) + '</li>'; };
       return '<div class="rvt-card"><b>' + dayName(g.rise, tz) + ', ' + dt(g.rise, tz) + '</b> · ' + esc(h.name || '') + '<p>' + T('Sunrise', 'சூரிய உதயம்') + ' ' + hm(g.rise, tz) + ' · ' + T('Sunset', 'சூரிய அஸ்தமனம்') + ' ' + hm(g.set, tz) + '</p>' +
         '<ul class="rvt-inline">' + kal('Rahu kalam', 'ராகு காலம்', g.rahu) + kal('Yamagandam', 'எமகண்டம்', g.yama) + kal('Gulikai', 'குளிகை', g.guli) + '</ul></div>' +
@@ -475,9 +481,9 @@
       }();
       var period = function (b, en, ta) {
         var cur = now >= b.s && now < b.e, past = b.e <= now;
-        return '<tr class="' + (cur ? 'rvt-on' : past ? 'rvt-past' : '') + '"><td><b>' + T(en, ta) + '</b>' + (cur ? ' <span class="rvt-now">' + S('now', 'இப்போது') + '</span>' : '') + '</td><td><span class="rvt-time">' + dt(b.s, tz) + ' – ' + dt(b.e, tz) + '</span>' +
-          (b.phases.length > 1 ? '<br><span class="rvt-age">' + b.phases.map(function (p) { return ord(p.h) + ' ' + S('from', 'முதல்') + ' ' + dt(p.s, tz); }).join(' · ') + '</span>' : '') +
-          (b.returns ? '<br><span class="rvt-age">' + b.returns.map(function (g) { return S('Saturn steps out (retrograde) ', 'சனி வக்கிரத்தில் விலகல் ') + dt(g.s, tz) + ' – ' + dt(g.e, tz); }).join('<br>') + '</span>' : '') + '</td></tr>';
+        return '<tr class="' + (cur ? 'rvt-on' : past ? 'rvt-past' : '') + '"><td><b>' + T(en, ta) + '</b>' + (cur ? ' <span class="rvt-now">' + P('now', 'இப்போது') + '</span>' : '') + '</td><td><span class="rvt-time">' + dt(b.s, tz) + ' – ' + dt(b.e, tz) + '</span>' +
+          (b.phases.length > 1 ? '<br><span class="rvt-age">' + b.phases.map(function (p) { return T(ord(p.h) + ' from ' + dt(p.s, tz), p.h + '-இல் ' + dt(p.s, tz) + ' முதல்'); }).join(' · ') + '</span>' : '') +
+          (b.returns ? '<br><span class="rvt-age">' + b.returns.map(function (g) { return T('Saturn steps out (retrograde)', 'சனி வக்கிரத்தில் விலகல்') + ' ' + dt(g.s, tz) + ' – ' + dt(g.e, tz); }).join('<br>') + '</span>' : '') + '</td></tr>';
       };
       var rows = [];
       r.sadeSati.forEach(function (b) { rows.push({ s: b.s, h: period(b, 'Sade Sati', 'ஏழரைச் சனி') }); });
@@ -487,8 +493,8 @@
       rows.sort(function (a, b) { return a.s - b.s; });
       var jg = [2, 5, 7, 9, 11].indexOf(r.jupHouse) >= 0;
       var h = '<div class="rvt-card rvt-' + status[0] + '"><b>' + sign(me.rasi) + (me.name ? ' · ' + esc(me.name) : '') + '</b><p>' + B(status[1], status[2]) + '</p>' +
-        (r.satNext ? '<p>' + T('Saturn moves into', 'சனி அடுத்து') + ' ' + sign(r.satNext.sign) + ' ' + S('on', '') + ' ' + dt(r.satNext.s, tz) + '.</p>' : '') + '</div>';
-      h += '<h3>' + T('Saturn periods', 'சனி காலங்கள்') + '</h3>' + table([S('Period', 'காலம்'), S('Dates and phases', 'தேதிகள், கட்டங்கள்')], rows.map(function (x) { return x.h; }));
+        (r.satNext ? '<p>' + B('Saturn moves into ' + C.SIGNS[r.satNext.sign][0] + ' on ' + dt(r.satNext.s, tz) + '.', 'சனி ' + dt(r.satNext.s, tz) + ' அன்று ' + C.TSIGN[r.satNext.sign] + ' ராசிக்குப் பெயர்கிறார்.') + '</p>' : '') + '</div>';
+      h += '<h3>' + T('Saturn periods', 'சனி காலங்கள்') + '</h3>' + table([T('Period', 'காலம்'), T('Dates and phases', 'தேதிகள், கட்டங்கள்')], rows.map(function (x) { return x.h; }));
       h += '<h3>' + T('Jupiter (Guru) now', 'குரு இப்போது') + '</h3><div class="rvt-card rvt-' + (jg ? 'good' : 'avg') + '"><p>' + B('Jupiter is in ' + C.SIGNS[r.jupSign][0] + ', the ' + ord(r.jupHouse) + ' from your Moon: ' + (jg ? 'a favourable transit (growth, family, money, good events).' : 'a less favourable transit; patience and care help.'),
         'குரு ' + C.TSIGN[r.jupSign] + ' ராசியில், உங்கள் ராசிக்கு ' + r.jupHouse + '-இல்: ' + (jg ? 'சாதகமான பெயர்ச்சி (வளர்ச்சி, குடும்பம், பணம், சுப நிகழ்வுகள்).' : 'குறைந்த சாதகம்; பொறுமையும் கவனமும் உதவும்.')) + '</p>' +
         (r.jupNext ? '<p>' + T('Next Guru peyarchi', 'அடுத்த குரு பெயர்ச்சி') + ': ' + sign(r.jupNext.sign) + ', ' + dt(r.jupNext.s, tz) + '.</p>' : '') + '</div>';
@@ -513,23 +519,24 @@
       var ms = today ? Date.now() : midnight(iso, tz) + 12 * HOUR, t = transits(me, ms, k), T9 = TARA[t.tara.i];
       var h = '<div class="rvt-card"><b>' + dayName(ms, tz) + ', ' + dt(ms, tz) + (today ? ' · ' + hm(ms, tz) : '') + '</b> · ' + nak(me.nak) + ', ' + sign(me.rasi) + (me.name ? ' (' + esc(me.name) + ')' : '') +
         '<ul class="rvt-inline"><li>' + T('Moon now', 'சந்திரன் இப்போது') + ': ' + nak(t.moon.nak) + ', ' + sign(t.moon.rasi) + '</li>' +
-        '<li>' + T('Tara Bala', 'தாரா பலம்') + ': <b>' + S(T9[0], T9[1]) + '</b> (' + t.tara.count + ') ' + res(T9[2] === 'good' ? 'fine' : T9[2]) + '</li>' +
-        '<li>' + T('Chandra Bala', 'சந்திர பலம்') + ': ' + S('Moon in the ' + ord(t.moonHouse), 'சந்திரன் ' + t.moonHouse + '-இல்') + ' ' + res(t.chandrashtama ? 'bad' : t.chandraBala ? 'fine' : 'avg') + '</li></ul>' +
+        '<li>' + T('Tara Bala', 'தாரா பலம்') + ': <b>' + T(T9[0], T9[1]) + '</b> (' + t.tara.count + ') ' + res(T9[2] === 'good' ? 'fine' : T9[2]) + '</li>' +
+        '<li>' + T('Chandra Bala', 'சந்திர பலம்') + ': ' + T('Moon in the ' + ord(t.moonHouse), 'சந்திரன் ' + t.moonHouse + '-இல்') + ' ' + res(t.chandrashtama ? 'bad' : t.chandraBala ? 'fine' : 'avg') + '</li></ul>' +
         (t.chandrashtama ? '<p class="rvt-warn">' + B('Chandrashtama today: the Moon is in the 8th from your sign. Avoid new beginnings and arguments.', 'இன்று சந்திராஷ்டமம்: சந்திரன் உங்கள் ராசிக்கு 8-இல். புதிய தொடக்கங்கள், வாக்குவாதங்களைத் தவிர்க்கவும்.') + '</p>' : '') + '</div>';
       var nc = nextChandrashtama(me.rasi, today ? ms : midnight(iso, tz), k);
       if (nc) h += '<p>' + T('Next Chandrashtama', 'அடுத்த சந்திராஷ்டமம்') + ': ' + dayName(nc.s, tz) + ' ' + dt(nc.s, tz) + ' ' + hm(nc.s, tz) + ' – ' + dayName(nc.e, tz) + ' ' + dt(nc.e, tz) + ' ' + hm(nc.e, tz) + '</p>';
-      h += '<h3>' + T('Planets from your Moon sign', 'உங்கள் ராசியிலிருந்து கிரகங்கள்') + '</h3>' + table([S('Planet', 'கிரகம்'), S('Sign', 'ராசி'), S('House', 'வீடு'), S('Transit', 'பலன்')], t.list.map(function (p) {
+      h += '<h3>' + T('Planets from your Moon sign', 'உங்கள் ராசியிலிருந்து கிரகங்கள்') + '</h3>' + table([T('Planet', 'கிரகம்'), T('Sign', 'ராசி'), T('House', 'வீடு'), T('Transit', 'பலன்')], t.list.map(function (p) {
         return '<tr><td><b>' + T(C.NAME[p.c], C.TA[p.c]) + '</b>' + (p.retro ? ' ℞' : '') + '</td><td>' + sign(p.sign) + '</td><td>' + p.house + '</td><td>' + res(p.good ? 'fav' : 'unfav') + '</td></tr>';
       }));
       var week = [];
       for (var i = 0; i < 7; i++) {
         var d = midnight(iso, tz) + (i * 24 + 12) * HOUR, x = transits(me, d, k), tt = TARA[x.tara.i];
-        week.push('<tr' + (x.chandrashtama ? ' class="rvt-g-bad"' : '') + '><td>' + dayName(d, tz) + ' ' + dt(d, tz) + '</td><td>' + nak(x.moon.nak) + '</td><td>' + S(tt[0], tt[1]) + ' ' + res(tt[2] === 'good' ? 'fine' : tt[2]) + '</td><td>' + (x.chandrashtama ? '<b>' + S('Chandrashtama', 'சந்திராஷ்டமம்') + '</b>' : '') + '</td></tr>');
+        week.push('<tr' + (x.chandrashtama ? ' class="rvt-g-bad"' : '') + '><td>' + dayName(d, tz) + ' ' + dt(d, tz) + '</td><td>' + nak(x.moon.nak) + '</td><td>' + T(tt[0], tt[1]) + ' ' + res(tt[2] === 'good' ? 'fine' : tt[2]) + '</td><td>' + (x.chandrashtama ? '<b>' + T('Chandrashtama', 'சந்திராஷ்டமம்') + '</b>' : '') + '</td></tr>');
       }
-      h += '<h3>' + T('The week ahead (at noon)', 'வரும் வாரம் (நண்பகல்)') + '</h3>' + table([S('Day', 'நாள்'), S('Moon’s star', 'நட்சத்திரம்'), S('Tara Bala', 'தாரா பலம்'), ''], week);
+      h += '<h3>' + T('The week ahead (at noon)', 'வரும் வாரம் (நண்பகல்)') + '</h3>' + table([T('Day', 'நாள்'), T('Moon’s star', 'நட்சத்திரம்'), T('Tara Bala', 'தாரா பலம்'), ''], week);
       if (me.full) {
         var d0 = C.bpDasha(C.lon('Mo', me.full.ms, k), me.full.ms), dn = dashaNow(d0, ms);
-        if (dn.maha) h += '<h3>' + T('Running dasha', 'நடப்பு தசை') + '</h3><p>' + pl(dn.maha.c) + ' ' + S('dasha', 'தசை') + ' · ' + pl(dn.bhukti.c) + ' ' + S('bhukti', 'புக்தி') + ' ' + S('until', 'வரை') + ' ' + dt(dn.bhukti.e, tz) + ' · ' + pl(dn.antara.c) + ' ' + S('antara', 'அந்தரம்') + ' ' + S('until', 'வரை') + ' ' + dt(dn.antara.e, tz) + '</p>';
+        if (dn.maha) h += '<h3>' + T('Running dasha', 'நடப்பு தசை') + '</h3><p>' + B(C.NAME[dn.maha.c] + ' dasha · ' + C.NAME[dn.bhukti.c] + ' bhukti until ' + dt(dn.bhukti.e, tz) + ' · ' + C.NAME[dn.antara.c] + ' antara until ' + dt(dn.antara.e, tz),
+          C.TA[dn.maha.c] + ' தசை · ' + C.TA[dn.bhukti.c] + ' புக்தி ' + dt(dn.bhukti.e, tz) + ' வரை · ' + C.TA[dn.antara.c] + ' அந்தரம் ' + dt(dn.antara.e, tz) + ' வரை') + '</p>';
       }
       return h + note('These are the classical transit rules, read from the Moon sign only; a full reading also weighs the birth chart and the dasha.', 'இவை ராசியிலிருந்து மட்டும் பார்க்கும் பாரம்பரிய கோசார விதிகள்; முழுப் பலனுக்கு ஜாதகமும் தசையும் சேர்த்துப் பார்க்க வேண்டும்.');
     }
@@ -545,7 +552,7 @@
         'KP ஆளும் கிரக முறை. தீர்ப்பு நேரத்தின் (இப்போது, உங்கள் வீட்டு இடத்தில்) ஆளும் கிரகங்கள்: லக்ன ராசி, நட்சத்திர, உப அதிபதிகள், சந்திரனின் ராசி, நட்சத்திர அதிபதிகள், கிழமை அதிபதி (நாள் சூரிய உதயத்தில் தொடங்கும்). குறித்த பிறப்பு நேரத்தைச் சுற்றியுள்ள ஒவ்வொரு நிமிடத்திற்கும் லக்ன உப பிரிவு காணப்படும்; அதன் உப, நட்சத்திர, ராசி அதிபதிகள் ஆளும் கிரகங்களாக இருந்தால் (3, 2, 1 புள்ளிகள்) அதுவே பெரும்பாலும் சரியான நேரம். திருமண தேதி போன்ற நிகழ்வுகளுடன் சரிபாருங்கள்.') + '</p>';
     },
     form: function () {
-      return birthForm('rvRt') + '<div class="group">' + cell('rvRtWin', 'Search window', 'தேடும் காலம்', sel('rvRtWin', [[15, S('± 15 minutes', '± 15 நிமிடம்')], [30, S('± 30 minutes', '± 30 நிமிடம்')], [60, S('± 1 hour', '± 1 மணி')], [120, S('± 2 hours', '± 2 மணி')]], 30)) + '</div>';
+      return birthForm('rvRt') + '<div class="group">' + cell('rvRtWin', 'Search window', 'தேடும் காலம்', sel('rvRtWin', [[15, P('± 15 minutes', '± 15 நிமிடம்')], [30, P('± 30 minutes', '± 30 நிமிடம்')], [60, P('± 1 hour', '± 1 மணி')], [120, P('± 2 hours', '± 2 மணி')]], 30)) + '</div>';
     },
     wire: function () { wireBirth('rvRt'); },
     run: function () {
@@ -559,7 +566,7 @@
       var best = r.best;
       h += '<div class="rvt-card rvt-good"><p>' + B('Likely birth time: ' + hm(best.s, tz) + ' to ' + hm(best.e + 30000, tz) + ' (' + C.SIGNS[best.ascSign][0] + ' rising, ' + C.NAME[best.sign] + ' / ' + C.NAME[best.star] + ' / ' + C.NAME[best.sub] + ').',
         'பெரும்பாலும் சரியான பிறப்பு நேரம்: ' + hm(best.s, tz) + ' முதல் ' + hm(best.e + 30000, tz) + ' வரை (' + C.TSIGN[best.ascSign] + ' லக்னம், ' + C.TA[best.sign] + ' / ' + C.TA[best.star] + ' / ' + C.TA[best.sub] + ').') + '</p></div>';
-      h += table([S('From – to', 'நேரம்'), S('Ascendant', 'லக்னம்'), S('Sign / star / sub lord', 'ராசி / நட்சத்திர / உப அதிபதி'), S('Agreement', 'பொருத்தம்')], r.rows.map(function (x) {
+      h += table([T('From – to', 'நேரம்'), T('Ascendant', 'லக்னம்'), T('Sign / star / sub lord', 'ராசி / நட்சத்திர / உப அதிபதி'), T('Agreement', 'பொருத்தம்')], r.rows.map(function (x) {
         var mark = function (c) { return r.set.indexOf(c) >= 0 ? '<b class="rvt-good">' + pl(c) + '</b>' : pl(c); };
         return '<tr class="' + (x === best ? 'rvt-on' : '') + '"><td class="rvt-time">' + hm(x.s, tz) + ' – ' + hm(x.e + 30000, tz) + '</td><td>' + sign(x.ascSign) + '</td><td>' + mark(x.sign) + ' / ' + mark(x.star) + ' / ' + mark(x.sub) + '</td><td>' + x.score + '/6</td></tr>';
       }));
@@ -587,21 +594,21 @@
       var from = function (m) { return Math.max(m.s, b.ms); };
       var bar = d.list.map(function (m) {
         var w = (m.e - from(m)) / span * 100;
-        return '<span class="rvt-seg" style="width:' + w.toFixed(3) + '%;--h:' + HUE[m.c] + '" title="' + esc(pl(m.c)) + '"><i>' + (w > 6 ? pl(m.c) : '') + '</i></span>';
+        return '<span class="rvt-seg" style="width:' + w.toFixed(3) + '%;--h:' + HUE[m.c] + '" title="' + esc(P(C.NAME[m.c], C.TA[m.c])) + '"><i>' + (w > 6 ? esc(S(C.NAME[m.c], C.TA[m.c])) : '') + '</i></span>';
       }).join('');
-      var you = now > start && now < end ? '<span class="rvt-you" style="left:' + ((now - start) / span * 100).toFixed(2) + '%"><b>' + S('Today', 'இன்று') + '</b></span>' : '';
+      var you = now > start && now < end ? '<span class="rvt-you" style="left:' + ((now - start) / span * 100).toFixed(2) + '%"><b>' + P('Today', 'இன்று') + '</b></span>' : '';
       var birthMark = '';
-      var h = '<div class="rvt-card"><b>' + esc(b.name || '') + (b.name ? ' · ' : '') + S('Born', 'பிறப்பு') + ' ' + dt(b.ms, tz) + ' ' + hm(b.ms, tz) + '</b><p>' + T('Moon', 'சந்திரன்') + ': ' + nak(Math.floor(mo / NAKW)) + ', ' + sign(Math.floor(mo / 30)) + ' · ' +
-        S('Balance at birth: ', 'பிறப்பில் இருப்பு: ') + pl(d.lord) + ' ' + d.balance.toFixed(2) + ' ' + S('years', 'ஆண்டுகள்') + '</p>' +
-        (dn.maha ? '<p><b>' + S('Now', 'இப்போது') + ':</b> ' + pl(dn.maha.c) + ' ' + S('dasha', 'தசை') + ' · ' + pl(dn.bhukti.c) + ' ' + S('bhukti', 'புக்தி') + ' · ' + pl(dn.antara.c) + ' ' + S('antara', 'அந்தரம்') + ' ' + S('until', 'வரை') + ' ' + dt(dn.antara.e, tz) + '</p>' : '') + '</div>';
-      h += '<div class="rvt-bar" role="img" aria-label="' + esc(S('Dasha periods across life', 'வாழ்நாள் தசா காலங்கள்')) + '">' + bar + birthMark + you + '</div>';
+      var h = '<div class="rvt-card"><b>' + esc(b.name || '') + (b.name ? ' · ' : '') + T('Born', 'பிறப்பு') + ' ' + dt(b.ms, tz) + ' ' + hm(b.ms, tz) + '</b><p>' + T('Moon', 'சந்திரன்') + ': ' + nak(Math.floor(mo / NAKW)) + ', ' + sign(Math.floor(mo / 30)) + ' · ' +
+        T('Balance at birth', 'பிறப்பில் இருப்பு') + ': ' + T(C.NAME[d.lord] + ' ' + d.balance.toFixed(2) + ' years', C.TA[d.lord] + ' ' + d.balance.toFixed(2) + ' ஆண்டுகள்') + '</p>' +
+        (dn.maha ? '<p><b>' + T('Now', 'இப்போது') + ':</b> ' + PD(dn.maha.c, 'dasha', 'தசை') + ' · ' + PD(dn.bhukti.c, 'bhukti', 'புக்தி') + ' · ' + T(C.NAME[dn.antara.c] + ' antara until ' + dt(dn.antara.e, tz), C.TA[dn.antara.c] + ' அந்தரம் ' + dt(dn.antara.e, tz) + ' வரை') + '</p>' : '') + '</div>';
+      h += '<div class="rvt-bar" role="img" aria-label="' + esc(P('Dasha periods across life', 'வாழ்நாள் தசா காலங்கள்')) + '">' + bar + birthMark + you + '</div>';
       h += d.list.map(function (m, i) {
         var cur = dn.maha === m, past = m.e <= now;
         var rows = m.ant.filter(function (a) { return a.e > b.ms; }).map(function (a) {
-          var on = dn.bhukti === a, ants = on ? '<tr class="rvt-sub"><td colspan="3">' + a.pr.map(function (q) { return '<span class="' + (dn.antara === q ? 'rvt-on' : '') + '">' + pl(q.c) + ' ' + S('to', 'வரை') + ' ' + dt(q.e, tz) + '</span>'; }).join(' · ') + '</td></tr>' : '';
-          return '<tr class="' + (on ? 'rvt-on' : a.e <= now ? 'rvt-past' : '') + '"><td><b>' + pl(a.c) + '</b> ' + S('bhukti', 'புக்தி') + '</td><td class="rvt-time">' + dt(Math.max(a.s, b.ms), tz) + ' – ' + dt(a.e, tz) + '</td><td>' + S('age', 'வயது') + ' ' + age(a.s).toFixed(1) + '</td></tr>' + ants;
+          var on = dn.bhukti === a, ants = on ? '<tr class="rvt-sub"><td colspan="3">' + a.pr.map(function (q) { return '<span class="' + (dn.antara === q ? 'rvt-on' : '') + '">' + T(C.NAME[q.c] + ' to ' + dt(q.e, tz), C.TA[q.c] + ' ' + dt(q.e, tz) + ' வரை') + '</span>'; }).join(' · ') + '</td></tr>' : '';
+          return '<tr class="' + (on ? 'rvt-on' : a.e <= now ? 'rvt-past' : '') + '"><td><b>' + PD(a.c, 'bhukti', 'புக்தி') + '</b></td><td class="rvt-time">' + dt(Math.max(a.s, b.ms), tz) + ' – ' + dt(a.e, tz) + '</td><td>' + T('age ' + age(a.s).toFixed(1), 'வயது ' + age(a.s).toFixed(1)) + '</td></tr>' + ants;
         });
-        return '<details class="rvt-dasha' + (cur ? ' rvt-on' : past ? ' rvt-past' : '') + '" id="rvDtM' + i + '"' + (cur ? ' open' : '') + ' style="--h:' + HUE[m.c] + '"><summary><b>' + pl(m.c) + ' ' + S('dasha', 'தசை') + '</b> <span class="rvt-time">' + dt(from(m), tz) + ' – ' + dt(m.e, tz) + '</span> <span class="rvt-age">' + S('age', 'வயது') + ' ' + age(m.s).toFixed(1) + '–' + age(m.e).toFixed(1) + '</span>' + (cur ? ' <span class="rvt-now">' + S('now', 'இப்போது') + '</span>' : '') + '</summary>' + table([S('Bhukti', 'புக்தி'), S('Dates', 'தேதிகள்'), S('Age', 'வயது')], rows) + '</details>';
+        return '<details class="rvt-dasha' + (cur ? ' rvt-on' : past ? ' rvt-past' : '') + '" id="rvDtM' + i + '"' + (cur ? ' open' : '') + ' style="--h:' + HUE[m.c] + '"><summary><b>' + PD(m.c, 'dasha', 'தசை') + '</b> <span class="rvt-time">' + dt(from(m), tz) + ' – ' + dt(m.e, tz) + '</span> <span class="rvt-age">' + T('age ' + age(m.s).toFixed(1) + '–' + age(m.e).toFixed(1), 'வயது ' + age(m.s).toFixed(1) + '–' + age(m.e).toFixed(1)) + '</span>' + (cur ? ' <span class="rvt-now">' + P('now', 'இப்போது') + '</span>' : '') + '</summary>' + table([T('Bhukti', 'புக்தி'), T('Dates', 'தேதிகள்'), T('Age', 'வயது')], rows) + '</details>';
       }).join('');
       return h + (b.timeGiven ? '' : note('No birth time was given, so 12:00 was used; the dasha balance can be off by a few months.', 'பிறப்பு நேரம் இல்லாததால் 12:00 எடுக்கப்பட்டது; தசா இருப்பு சில மாதங்கள் மாறலாம்.'));
     }

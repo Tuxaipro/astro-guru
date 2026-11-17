@@ -484,6 +484,28 @@ check('rectification: the suggested sub has the best agreement with the ruling p
   const top = Math.max(...r.rows.map((x) => x.score));
   return eq('rows', r.rows.length > 2, true) || eq('best score', r.best.score, top) || eq('day lord', rp.day, 'Me'); // 18 Nov 2026, 11:30 IST: a Wednesday, so Mercury
 });
+await check('tools: English + Tamil shows Tamil with every value, and Tamil mode shows no English', async () => {
+  const P = ['rvMt', 'rvGw', 'rvSs', 'rvGc', 'rvRt', 'rvDt'];
+  const run = async () => { for (const p of P) { if ($(p + 'Date') && !$(p + 'Date').value) { $(p + 'Date').value = '1990-06-15'; $(p + 'Time').value = '10:30'; } $(p + 'Go').click(); } await sleep(50); };
+  d.body.setAttribute('data-lang', 'bi'); await sleep(100); await run();
+  for (const p of P) {
+    // every result cell that names something carries Tamil too (dates and numbers aside)
+    const bare = [...$(p + 'Out').querySelectorAll('td, b, li')].map((e) => e.textContent.replace(/\s+/g, ' ').trim())
+      .filter((t) => /[A-Za-z]{3,}/.test(t) && !/[஀-௿]/.test(t) && !/^[\d\s:–\-.,/]*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)?[\d\s:–\-.,/A-Za-z]*\d{4}[\d\s:–\-.,]*$/.test(t) && !/Chennai|Meena/.test(t));
+    if (bare.length) return `${p} in English + Tamil has English-only values: ${JSON.stringify(bare.slice(0, 3))}`;
+  }
+  d.body.setAttribute('data-lang', 'ta'); await sleep(100); await run();
+  for (const p of P) {
+    const names = new Set(JSON.parse(w.localStorage.getItem('gaBirthList') || '[]').flatMap((r) => String(r.name || '').split(/\s+/)));
+    // names stay as typed: saved people and the home place
+    const hp = (w.GA_PLACE && w.GA_PLACE.state && w.GA_PLACE.state.cur) || JSON.parse(w.localStorage.getItem('ga_place') || '{}');
+    String((hp && hp.name) || '').split(/[\s,]+/).forEach((x) => names.add(x));
+    const en = ($(p + 'Panel').textContent.match(/\b[A-Za-z]{3,}\b/g) || []).filter((x) => !names.has(x) && !/^(Chennai|Asia|Kolkata|Read|more)$/.test(x));
+    if (en.length) return `${p} in Tamil still has English: ${JSON.stringify([...new Set(en)].slice(0, 6))}`;
+  }
+  d.body.setAttribute('data-lang', 'bi'); await sleep(100);
+  return '';
+}, true);
 // ---------- result ----------
 const scriptErrors = errors.filter((e) => !/scrollTo|getContext|Not implemented/.test(e));
 if (scriptErrors.length) { failed++; console.log(`FAIL  no script errors\n      ${scriptErrors.slice(0, 5).join('\n      ')}`); } else { passed++; console.log('PASS  no script errors'); }
