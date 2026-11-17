@@ -128,6 +128,8 @@ every calculation in the v12.3 engine stays as it was.
 - **Phone on its side** (under 500 px tall): the conversation tools (Ask, Vehicle/Agriculture, Mobile
   Numerology, Nameology) size their conversation to the screen and open scrolled to it; the header and chip
   rows are a scroll up. Chip rows wrap only on screens at least 600 px wide and 600 px tall.
+- **Live muhurtham chip** (the corner notice while a muhurtham runs): on the phone layout it rides above
+  Ask's pinned message box instead of covering Send, and on short screens the closed chip is one line.
 - **Start-up screen:** until the new layout is ready, the page shows the logo, the name and a moving bar
   in the chosen theme (the build writes it into `index.html`). The bar runs on the compositor, so it keeps
   moving while the scripts block the page. A first visit adds a line, in English and Tamil, that the next

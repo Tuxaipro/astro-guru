@@ -886,6 +886,13 @@ body.rv #gaMpLive.rv-chiplive>b{display:flex;align-items:center;gap:6px;flex-wra
 body.rv #gaMpLive.rv-chiplive .galx{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;min-height:0!important;padding:0!important;border-radius:50%!important}
 body.rv #gaMpLive.rv-chiplive.rv-open .galx{top:8px;transform:none}
 body.rv.rv-m #gaMpLive.rv-chiplive{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important;right:12px!important}
+/* Ask on the phone layout pins its message box above the tab bar; the chip sat on top of it and hid Send.
+   While Ask is open the chip rides above the message box. */
+body.rv.rv-m:has(#akPanel:not(.hide)) #gaMpLive.rv-chiplive{bottom:calc(146px + env(safe-area-inset-bottom,0px))!important}
+/* Short screens (a phone on its side): the closed chip keeps to one line (the Tamil name wrapped it to two,
+   63 px of a 330 px view); tapping it still opens the details in both languages. */
+@media (max-height:500px){body.rv #gaMpLive.rv-chiplive:not(.rv-open)>b .ta{display:none!important}
+body.rv #gaMpLive.rv-chiplive:not(.rv-open){padding-top:7px!important;padding-bottom:7px!important}}
 /* Results scrolled into view land below the page's sticky header */
 body.rv .rv-pages .sheet [id]{scroll-margin-top:96px}
 /* Phones: one field per row, so long choices (November, KP (Krishnamurti)) are not cut */
