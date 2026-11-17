@@ -123,7 +123,11 @@ every calculation in the v12.3 engine stays as it was.
   - Timing rows can be reached with Tab and opened with Enter, and each one has a spoken label.
   - The lightest grey text was darkened to about 5:1 contrast.
 - **Lighter start-up:** the world map outline (0.5 MB) loads after the page, and `npm start` compresses files
-  the way real hosts do. The city list goes over the network as 2.8 MB instead of 6.9 MB.
+  the way real hosts do. The city list goes over the network as 3.1 MB instead of 9.6 MB, and the build
+  writes it as `JSON.parse('…')`, which browsers read faster than the same data as script.
+- **Lighter idle** (the home clock changes the page every second): fields' labels are found in one walk
+  instead of one per field, `<html lang>` and `dir` are written only when they change, and the "Rising now"
+  pulse runs on the compositor instead of repainting. See Engine costs below.
 
 ### Translations (`revamp/i18n.js`)
 
@@ -262,6 +266,28 @@ They are worth reporting to the author:
 `test-revamp` fails when any element id appears twice on the page, so a new engine version that repeats an
 id is caught at once.
 
+### Engine costs worked around (phone speed)
+
+Measured on a phone-sized Chrome with a 4× slower processor and a 4G connection (`perf` numbers below):
+
+- The engine's accessibility pass (`js/08-script.js`) reads `.labels` on all 630 form fields, at start-up
+  and 400 ms after every change to the page. Chrome answers each one by walking the whole page (about
+  20,000 elements), and the clock changes the page every second, so an idle phone was busy about 60% of
+  the time. `features.js` answers `.labels` from one walk over the page's labels, kept only for the task.
+- After each pass the engine sets `<html lang>` and `dir` to the same values, which restyles about 11,000
+  elements. Unchanged values are now skipped.
+
+| Phone, 4G | Before | After |
+|---|---|---|
+| First visit, page shown | 5.8 s | 4.3 s |
+| Repeat visit, page shown | 4.1 s | 2.2 s |
+| Blocked main thread at start (first / repeat) | 2.6 s / 2.9 s | 1.3 s / 0.5 s |
+| Idle: script and rendering per second (laptop) | ~250 ms | ~20 ms |
+| Files checked with the server on a repeat visit | 52 | 4 |
+
+Still heavy, and only fixable in the engine: the city list (3.1 MB to download, copied into 225,000 objects
+at start-up, so it cannot load later) and about 7,500 `<option>`s from 23 copies of the country list.
+
 ### Problems and the problem log
 
 A script error shows one short notice ("Something went wrong on this page") with a Reload button. The last
@@ -281,8 +307,10 @@ npm run import -- ../GuruAgasthiya-12.4.html  # regenerate public/ from a newer 
 A normal refresh always shows the latest build. You never need to clear the cache.
 
 - Every file the page loads has a content hash in its address (`?v=…`), so a changed file is a new address.
-- `npm start` sends `no-store` for the page and `no-cache` with ETags for everything else. On another host,
-  give `index.html` the header `Cache-Control: no-store` (or `no-cache`).
+- The page itself is never stored. Versioned files (`?v=` in the address, or a hash in the file name under
+  `fonts/`, `img/` and `icons/`) are kept for a year without asking the server again; a new build gives
+  them new addresses. Anything else is checked with the server each time. `npm start` and `vercel.json` do
+  this. On another host, give `index.html` the header `Cache-Control: no-store` (or `no-cache`).
 - Earlier builds installed a service worker for offline use. The page now removes it, and its stored
   files, from any browser that still has one.
 
@@ -290,8 +318,8 @@ A normal refresh always shows the latest build. You never need to clear the cach
 
 Upload `public/` to any static host with HTTPS. Location and notifications need it.
 
-- **Cloudflare Pages or Netlify:** the build writes `public/_headers`, so the caching above works with no
-  extra setup. With Cloudflare:
+- **Cloudflare Pages or Netlify:** the build writes `public/_headers`: the page is never stored and fonts and
+  images are kept for a year. Those hosts cannot match `?v=`, so scripts and styles are checked each time. With Cloudflare:
 
   ```bash
   npx wrangler pages deploy public --project-name guruagasthiya

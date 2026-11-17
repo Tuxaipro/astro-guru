@@ -1070,6 +1070,58 @@
     });
   })();
 
+  /* ---------- Lighter idle: a fast answer to "which labels does this field have?" ----------
+     The engine's accessibility pass (js/08-script.js) asks every form field for its .labels, once at
+     start-up and again 400 ms after any change to the page. The home clock changes the page every
+     second, so the pass runs every second. Chrome answers each .labels by walking the whole page
+     (about 20,000 elements), so 630 fields cost ~150 ms a time on a laptop and ~600 ms on a phone:
+     the phone stayed busy most of every second while idle. Here one walk over the page's labels
+     answers every field in the same task; the answer is dropped at the end of the task, so a label
+     added later is seen next time. Only the engine's pass reads .labels. */
+  (function () {
+    var map = null;
+    function build() {
+      map = new Map();
+      var ls = document.getElementsByTagName('label');
+      for (var i = 0; i < ls.length; i++) {
+        var c = ls[i].control;
+        if (!c) continue;
+        var a = map.get(c);
+        if (a) a.push(ls[i]); else map.set(c, [ls[i]]);
+      }
+      Promise.resolve().then(function () { map = null; });
+    }
+    [window.HTMLInputElement, window.HTMLSelectElement, window.HTMLTextAreaElement].forEach(function (C) {
+      var d = C && Object.getOwnPropertyDescriptor(C.prototype, 'labels');
+      if (!d || !d.get || !d.configurable) return;
+      Object.defineProperty(C.prototype, 'labels', {
+        configurable: true, enumerable: d.enumerable,
+        get: function () {
+          if (this.type === 'hidden' || !this.isConnected || this.getRootNode() !== document) return d.get.call(this);
+          if (!map) build();
+          return map.get(this) || [];
+        }
+      });
+    });
+  })();
+
+  /* ---------- Lighter idle: the page language is written only when it changes ----------
+     After each pass the engine sets <html lang> and dir again, unchanged. Chrome still treats that as a
+     language change and restyles the whole page (about 11,000 elements, every second with the clock).
+     Writing the same value now does nothing; a real change goes through as before. */
+  (function () {
+    var root = document.documentElement, P = window.HTMLElement && HTMLElement.prototype;
+    ['lang', 'dir'].forEach(function (k) {
+      var d = P && Object.getOwnPropertyDescriptor(P, k);
+      if (!d || !d.get || !d.set) return;
+      Object.defineProperty(root, k, {
+        configurable: true, enumerable: d.enumerable,
+        get: function () { return d.get.call(this); },
+        set: function (v) { if (String(v) !== d.get.call(this)) d.set.call(this, v); }
+      });
+    });
+  })();
+
   /* ---------- Lighter start-up: the world map outline loads after the page ---------- */
   (function () {
     if (window.GA_LAND) return;

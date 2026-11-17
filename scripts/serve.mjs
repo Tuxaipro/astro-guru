@@ -39,11 +39,14 @@ createServer((req, res) => {
   const accept = req.headers['accept-encoding'] || '';
   const text = /text|json|javascript|manifest|svg/.test(type) && st.size > 1024;
   const enc = text && /\bbr\b/.test(accept) ? 'br' : text && /\bgzip\b/.test(accept) ? 'gzip' : '';
-  // The page, its build id and the service worker are never stored; everything else is revalidated
-  // (versioned files change their address when they change).
+  // The page is never stored. Versioned files (a ?v= content hash in the address, or a hash in the
+  // file name under fonts/, img/ and icons/) never change, so the browser keeps them for a year
+  // without asking again. Anything else is revalidated.
   const noStore = /(^|\/)index\.html$/.test(p);
+  const versioned = !noStore && (new URL(req.url, 'http://x').searchParams.has('v') || /^\/(fonts|img|icons)\//.test(p));
   const etag = `"${st.size.toString(36)}-${Math.round(st.mtimeMs).toString(36)}${enc ? '-' + enc : ''}"`;
-  const head = { 'Cache-Control': noStore ? 'no-store' : 'no-cache', ETag: etag, ...(text ? { Vary: 'Accept-Encoding' } : {}) };
+  const cache = noStore ? 'no-store' : versioned ? 'public, max-age=31536000, immutable' : 'no-cache';
+  const head = { 'Cache-Control': cache, ETag: etag, ...(text ? { Vary: 'Accept-Encoding' } : {}) };
   if (!noStore && req.headers['if-none-match'] === etag) { res.writeHead(304, head).end(); return; }
   const body = enc ? compressed(file, st, enc) : readFileSync(file);
   res.writeHead(200, { 'Content-Type': type, ...head, ...(enc ? { 'Content-Encoding': enc } : {}), 'Content-Length': body.length });
