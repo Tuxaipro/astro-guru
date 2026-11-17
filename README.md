@@ -198,7 +198,8 @@ Edit files in `revamp/`, then run `npm run build` (the same as `npm run import`)
 ## Tests
 
 ```bash
-npm test                 # import check + engine results (fast)
+npm test                 # import check + engine results + accuracy against the Swiss Ephemeris (fast)
+npm run test:accuracy    # only the accuracy check (tests/reference.json)
 npm run test:revamp      # the revamp layer headless: saved people, list folding, place line (fast)
 npm run test:pages       # every page in Chrome, desktop, phone, tablet and phone sideways: loads, main button works, no script errors
 npm run test:all         # all three
@@ -249,19 +250,70 @@ The unchanged v7.7 port is kept read-only in `../guruagasthiya-v7.7-original/`.
 - `revamp/i18n-ta.js`: Tamil for the long help paragraphs.
 - `revamp/i18n-ta-reports.js`: Tamil for the 11.2 reports that the engine prints in English only.
 - `revamp/place.js`: the one-line place picker.
+- `revamp/tools.js`: the web version's own tools (see Web tools).
 - `revamp/text.js`: tidying engine text. Read more, page icons, date chips, and the daily disclaimer.
 - `revamp/revamp.css`: all styles. The engine's styles are in a lower cascade layer (`@layer engine`), so
   revamp rules win without `!important`. The few left override inline styles the engine sets.
-- `revamp.js` loads first, then the others in name order, then routes start once every script has run.
+- `tools.js` loads first (its tools must be in the sidebar before the shell groups it), then `revamp.js`,
+  then the others in name order; routes start once every script has run.
+
+### Engine patches at build time
+
+The engine is replaced on every import, so it is never edited by hand. `ENGINE_PATCHES` in
+`scripts/import-apk.mjs` applies a few small, named changes to each release instead. Each must match the
+engine text exactly the expected number of times, or the build stops and names the patch, so a release
+that moves that code is noticed at once instead of shipping a silently different engine.
+
+- **Sub-lord timing list** (Ask GuruAgasthiya, "lagna timings today"): `subList()` defined a local `sg`
+  that called itself for the sign name, so the list ended in "Maximum call stack size exceeded". The
+  patch renames the local helper; the chat answers with the day's table again (`features.js` keeps a
+  pointer to Lagna Timings only for an unpatched engine).
+- **`window.GA_CORE`**: the engine keeps its astronomy inside one closure. The patch shares the core
+  (positions, ayanamsa, ascendant, Placidus cusps, the 249-sub table, Vimshottari dasha, time-zone helpers)
+  read-only, for the web tools and the accuracy test.
+
+Looked at and left alone: making the city list lazy (the engine uses its 225,000-object copy in over 100
+places, some of which change it) and filling the 23 country lists on demand. Together they cost about
+50 ms on a laptop (0.2 s on a phone) at start-up, not worth the risk.
+
+### Accuracy
+
+`npm run test:accuracy` loads the built engine headless and compares it with the Swiss Ephemeris
+(`tests/reference.json`, written by `scripts/reference/make-reference.py` with pyswisseph) for 12 charts
+from 1950 to 2040 at seven places, and four sunrise days. Worst differences found: Sun to Saturn 10″,
+Moon 6″, mean node 15″, KP and Lahiri ayanamsa 15″, ascendant and Placidus cusps 33″, sunrise and sunset
+under 20 seconds, dasha start under a day. Tolerances are 1′ (2′ for cusps), 1.5 minutes and 2 days; a KP
+sub is at least 0.2° wide, so these never change a sub lord except within seconds of a boundary.
+
+### Web tools (`revamp/tools.js`)
+
+Six tools of the web version's own, on `GA_CORE`, so they agree with the engine's tools. Each is a sidebar
+button and a page like an engine tool, in English, Tamil or both (redrawn when the language changes), and
+saved people fill them in. The rule functions are on `window.GA_RVTOOLS` and the tests check them against
+known answers.
+
+- **Marriage Matching:** the ten poruthams (Dina, Gana, Mahendra, Stree Deergha, Yoni, Rasi, Rasi
+  Adhipathi, Vasya, Rajju, Vedha), counted from the bride's star and sign. Rajju and Vedha decide whatever
+  the total. Chevvai dosham when both people come from saved birth details. Vasya follows ePanchang's
+  table (Prokerala's partial list agrees); schools differ on a few rules and each row says which is used.
+- **Gowri Panchangam:** eight Gowris by day and by night, in Drik Panchang's order for each weekday, with
+  Rahu kalam, Yamagandam and Gulikai. The test checks New Delhi on 15 Nov 2026 against Drik Panchang's
+  times (within 2 minutes).
+- **Sade Sati and Guru Transit:** Saturn's stays from the Moon sign over about 30 years each way (Sade
+  Sati with its three phases, Ashtama, Ardhashtama and Kantaka Sani), retrograde returns joined into
+  their period; Jupiter's house from the Moon and the next Guru peyarchi.
+- **My Transits Today:** Tara Bala, Chandra Bala, Chandrashtama and the next one, each planet's house from
+  the Moon with the classical good houses, the week ahead, and the running dasha for a saved person.
+- **KP Birth Time Rectification:** the ruling planets now (ascendant sign, star and sub lords, Moon sign and
+  star lords, day lord from sunrise) against the ascendant sub for each 30 seconds of the birth window.
+- **Dasha Timeline:** a bar of the whole life with today marked, every dasha with its bhuktis, and the
+  running bhukti's antaras.
 
 ### Engine bugs worked around
 
-The engine files are never edited, so these bugs in the author's own page are worked around in the revamp.
-They are worth reporting to the author:
+These bugs in the author's own page are worked around in the revamp. They are worth reporting to the
+author (the sub-lord list above too):
 
-- **Sub-lord timing list** (Ask GuruAgasthiya, "lagna timings today"): `subList()` defines a local `sg` that
-  calls itself, so the list ends in "Maximum call stack size exceeded". The chat points those questions at
-  Lagna Timings instead (`features.js`).
 - **Horary Answers custom time:** the panel title and the time field are both `#hqT`; the engine read the
   title, so every "date and time I choose" question was cast for 00:00. The title gets its own id.
 - **Mundane Astrology's map** reuses Astrocartography's `#acGo` and `#acMsg`: "Draw Astro Map" also ran a
@@ -339,6 +391,8 @@ Upload `public/` to any static host with HTTPS. Location and notifications need 
   ```
 
   It asks you to sign in to your Cloudflare account the first time.
+- **Link previews:** the build adds a description and Open Graph tags. For a preview image, build with the
+  site's address: `SITE_URL=https://your.site npm run build` (adds `og:url` and `og:image`).
 - **Vercel:** `vercel.json` skips the install and build steps (the APK is not in the repository; `public/`
   is) and sets the same headers. Import the project from GitHub and deploy; nothing else to configure.
 - **nginx and others:** set `Cache-Control: no-store` for `/` and `/index.html`. Hosts compress files themselves; `npm start` uses Brotli too, so the city list

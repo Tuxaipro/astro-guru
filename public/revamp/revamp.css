@@ -1188,3 +1188,61 @@ body.rv .rv-new-link a{display:inline-flex;align-items:center;gap:8px;padding:8p
   font:600 13.5px/1.3 var(--sf);text-decoration:none}
 body.rv .rv-new-link a:hover{background:var(--fill)}
 body.rv .rv-new-link svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;flex:none}
+
+/* ---------- The web version's own tools (tools.js) ----------
+   Engine-style pages (.panel.sheet) with result cards and tables in the theme's tokens, so light, dark,
+   phone and desktop follow the rest. Their Tamil is drawn by tools.js in Tamil mode, and the engine marks
+   all-Tamil text to hide it outside English + Tamil: kept visible here, as in the engine's 11.2 tools. */
+@layer rvfix{body.lg-x .rvt .tam60{display:revert!important}} /* layered: an !important in a layer beats an unlayered one, and rvfix comes before engine */
+body.rv .rvt .rvt-ta{display:block;font-family:var(--ta);color:var(--muted);font-size:.93em;margin-top:2px}
+body.rv .rvt h3{margin:18px 0 8px;font:600 15px/1.3 var(--sf)}
+body.rv .rvt-out{margin-top:6px}
+body.rv .rvt-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+body.rv .rvt-two>section{background:var(--surface);border-radius:14px;padding:10px 12px;box-shadow:0 0 0 1px var(--line)}
+body.rv .rvt-two>section h3{margin:2px 0 6px}
+body.rv .rvt .rvt-derived b{display:block;padding:8px 0;font-weight:600}
+body.rv .rvt-card{background:var(--surface);border-radius:14px;padding:12px 14px;margin:10px 0;box-shadow:0 0 0 1px var(--line);line-height:1.5}
+body.rv .rvt-card p{margin:4px 0 0}
+body.rv .rvt-card.rvt-good{box-shadow:0 0 0 1px var(--green),inset 4px 0 0 var(--green)}
+body.rv .rvt-card.rvt-bad{box-shadow:0 0 0 1px var(--bad),inset 4px 0 0 var(--bad)}
+body.rv .rvt-card.rvt-avg{box-shadow:0 0 0 1px var(--now),inset 4px 0 0 var(--now)}
+body.rv .rvt-score{display:flex;gap:14px;align-items:center}
+body.rv .rvt-big{font:700 34px/1 var(--sf);min-width:64px;text-align:center}
+body.rv .rvt-big small{font-size:15px;color:var(--muted);font-weight:600}
+body.rv .rvt-res{white-space:nowrap;font-weight:600}
+body.rv .rvt-res.rvt-good,body.rv .rvt b.rvt-good{color:var(--green-ink,var(--green))}
+body.rv .rvt-res.rvt-bad{color:var(--bad)}
+body.rv .rvt-res.rvt-avg{color:var(--now-ink,var(--now))}
+body.rv .rvt-tbl{width:100%;border-collapse:collapse;font-size:14px}
+body.rv .rvt-tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:12.5px;padding:6px 8px;border-bottom:1px solid var(--line)}
+body.rv .rvt-tbl td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+body.rv .rvt-tbl tr.rvt-key td:first-child b{text-decoration:underline;text-decoration-color:var(--line-strong,var(--line));text-underline-offset:3px}
+body.rv .rvt-tbl tr.rvt-on td{background:var(--now-bg)}
+body.rv .rvt-tbl tr.rvt-past td{color:var(--muted)}
+body.rv .rvt-tbl tr.rvt-g-bad td:first-child,body.rv .rvt-tbl tr.rvt-g-bad td:nth-child(2){color:var(--muted)}
+body.rv .rvt-time{white-space:nowrap;font-variant-numeric:tabular-nums}
+body.rv .rvt-now{display:inline-block;padding:1px 7px;border-radius:999px;background:var(--now);color:#fff;font:600 11px/1.5 var(--sf);vertical-align:1px}
+body.rv .rvt-note{color:var(--muted);font-size:13px;margin:12px 0 0}
+body.rv .rvt-warn{color:var(--bad);font-weight:600}
+body.rv .rvt-inline{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:4px 16px}
+body.rv .rvt-list{margin:6px 0;padding-left:18px;line-height:1.6}
+body.rv .rvt-place{margin:4px 0 8px}
+body.rv .rvt-place summary{cursor:pointer;color:var(--accent);font-weight:500}
+/* Dasha timeline: the bar spans 120 years; segments take the planet's hue in either theme */
+body.rv .rvt-bar{position:relative;display:flex;height:34px;border-radius:10px;overflow:visible;margin:14px 0 30px;box-shadow:0 0 0 1px var(--line)}
+body.rv .rvt-seg{display:flex;align-items:center;justify-content:center;overflow:hidden;background:hsl(var(--h) 60% 86%);color:hsl(var(--h) 60% 22%);font:600 11.5px/1 var(--sf);border-right:1px solid var(--surface)}
+body.rv .rvt-seg:first-child{border-radius:10px 0 0 10px}body.rv .rvt-seg:last-child{border-radius:0 10px 10px 0;border-right:0}
+body.rv .rvt-seg i{font-style:normal;white-space:nowrap;padding:0 2px}
+body.rv .rvt-you,body.rv .rvt-birth{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);transform:translateX(-1px)}
+body.rv .rvt-birth{background:var(--muted);width:1px}
+body.rv .rvt-you b{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;font:600 11px/1 var(--sf);white-space:nowrap;color:var(--ink)}
+body.rv .rvt-dasha{margin:8px 0;border-radius:12px;background:var(--surface);box-shadow:0 0 0 1px var(--line),inset 4px 0 0 hsl(var(--h) 60% 60%)}
+body.rv .rvt-dasha>summary{padding:10px 14px;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+body.rv .rvt-dasha.rvt-past>summary{color:var(--muted)}
+body.rv .rvt-dasha .tblw{padding:0 10px 10px}
+body.rv .rvt-age{color:var(--muted);font-size:13px}
+body.rv .rvt-sub td{font-size:13px;color:var(--muted);line-height:1.7}
+body.rv .rvt-sub span.rvt-on{color:var(--ink);font-weight:600;background:var(--now-bg);border-radius:6px;padding:1px 5px}
+:root[data-theme=dark] body.rv .rvt-seg{background:hsl(var(--h) 45% 30%);color:hsl(var(--h) 70% 88%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) body.rv .rvt-seg{background:hsl(var(--h) 45% 30%);color:hsl(var(--h) 70% 88%)}}
+@media (max-width:640px){body.rv .rvt-two{grid-template-columns:1fr}body.rv .rvt-score{align-items:flex-start}body.rv .rvt-tbl{font-size:13.5px}}

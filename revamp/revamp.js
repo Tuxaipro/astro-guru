@@ -101,8 +101,10 @@
   function panelOf(btnId) { return $(PANEL_OF[btnId] || btnId.replace(/Btn$/, 'Panel')); }
   var shownBy = {}; // panel id -> the button that last opened it
   var GROUPS = [
-    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'vhBtn', 'agBtn', 'ftBtn'] },
-    { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'cuspBtn', 'acBtn'] },
+    { id: 'today', name: 'Timings', ta: 'நேரங்கள்', tools: ['homeBtn', 'clBtn', 'rvGwBtn', 'm3Btn', 'cmBtn', 'rangeBtn', 'epBtn', 'gamBtn', 'vhBtn', 'agBtn', 'ftBtn'] },
+    { id: 'charts', name: 'Charts', ta: 'ஜாதகங்கள்', tools: ['bpBtn', 'rvDtBtn', 'cuspBtn', 'rvRtBtn', 'acBtn'] },
+    // The web version's own tools (tools.js), on the engine's calculation core.
+    { id: 'life', name: 'Marriage and transits', ta: 'திருமணம், கோசாரம்', tools: ['rvMtBtn', 'rvSsBtn', 'rvGcBtn'] },
     { id: 'ask', name: 'Questions', ta: 'கேள்விகள்', tools: ['akBtn', 'gpBtn', 'hqBtn', 'lostBtn'] },
     { id: 'wealth', name: 'Money and markets', ta: 'பணம், சந்தை', tools: ['mmBtn', 'mpBtn', 'tpBtn', 'ntBtn', 'mkBtn', 'nfBtn', 'spBtn', 'ltBtn'] },
     { id: 'numbers', name: 'Names and numbers', ta: 'பெயர், எண்', tools: ['nmBtn', 'mnBtn'] },
@@ -254,7 +256,9 @@
     mmBtn: 'money-manifestation', mpBtn: 'money-profit-muhurtham', tpBtn: 'trade-profit', ntBtn: 'natal-chart-trade',
     mkBtn: 'market-transit', spBtn: 'speculation-research', ltBtn: 'lottery-rules', ckBtn: 'cricket-wicket',
     raceBtn: 'horse-race', eqBtn: 'mundane-astrology', abBtn: 'about', rvNewBtn: 'whats-new',
-    vhBtn: 'vehicle-muhurtham', agBtn: 'agriculture-muhurtham', nmBtn: 'nameology-and-numerology', mnBtn: 'mobile-numerology', nfBtn: 'nifty-intraday-astro'
+    vhBtn: 'vehicle-muhurtham', agBtn: 'agriculture-muhurtham', nmBtn: 'nameology-and-numerology', mnBtn: 'mobile-numerology', nfBtn: 'nifty-intraday-astro',
+    rvMtBtn: 'marriage-matching', rvGwBtn: 'gowri-panchangam', rvSsBtn: 'sade-sati-and-guru-transit', rvGcBtn: 'my-transits-today',
+    rvRtBtn: 'kp-birth-time-rectification', rvDtBtn: 'dasha-timeline'
   };
   groupsEl.querySelectorAll('.tool').forEach(function (b) {
     var r = b.id === 'rvNowBtn' ? 'now' : SLUGS[b.id] || slugOf(b.title || '') || slugOf(b.id.replace(/Btn$/, ''));
@@ -312,6 +316,8 @@
     '</ul>' +
     '<h3>New on the web</h3>' +
     '<ul class="rv-new-list">' +
+      '<li><b>Six new tools</b> on the engine\u2019s own calculations: <a href="#/marriage-matching">Marriage Matching</a> (the ten poruthams, with Rajju, Vedha and Chevvai dosham), <a href="#/gowri-panchangam">Gowri Panchangam</a> (nalla neram, with Rahu kalam, Yamagandam and Gulikai), <a href="#/sade-sati-and-guru-transit">Sade Sati and Guru Transit</a>, <a href="#/my-transits-today">My Transits Today</a> (Tara Bala, Chandrashtama and each planet from your Moon), <a href="#/kp-birth-time-rectification">KP Birth Time Rectification</a> by the ruling planets, and a <a href="#/dasha-timeline">Dasha Timeline</a> of your whole life. Saved people fill them in.</li>' +
+      '<li><b>Checked against the Swiss Ephemeris.</b> Planet positions, the ayanamsa, the ascendant, the cusps, dasha dates and sunrise agree with it to within seconds of arc for charts from 1950 to 2040, and the tests check this on every new engine release. Sub-lord timing questions in Ask GuruAgasthiya are answered again: the engine\u2019s list is fixed at build time.</li>' +
       '<li><b>Setup and your home place.</b> On a first visit you choose a home place, language and ayanamsa. When the browser cannot give a position, the nearest listed city to where your connection appears to be is offered, marked approximate. Run it again from Settings with Set up home place; every tool then opens on that place.</li>' +
       '<li><b>Saved people.</b> People saved in <a href="#/birth-chart">Birth Chart</a> fill the birth details in <a href="#/fortuna-timing">Fortuna Timing</a>, <a href="#/natal-chart-trade">Natal Chart Trade</a> and <a href="#/ask-guruagasthiya">Ask GuruAgasthiya</a>.</li>' +
       '<li><b>Share, print and calendar.</b> Every result has Copy, Print and Share (or Save as text), and timing lists add Jump to now and Add to calendar, an .ics file with an alert at each start.</li>' +

@@ -169,6 +169,12 @@
     'Notifications are on.': 'அறிவிப்புகள் இயக்கத்தில் உள்ளன.',
     'Notifications are blocked. Allow them in your browser\'s site settings to see alarms outside this tab.': 'அறிவிப்புகள் தடுக்கப்பட்டுள்ளன. இந்தத் தாவலுக்கு வெளியேயும் அலாரங்களைக் காண, உலாவியின் தள அமைப்புகளில் அனுமதியுங்கள்.',
     'Allow notifications': 'அறிவிப்புகளை அனுமதி',
+    // Revamp: tools of the web version's own (tools.js). Their pages draw Tamil themselves; these are the
+    // sidebar names, which start in English like every other tool.
+    'Marriage Matching': 'திருமணப் பொருத்தம்', 'Gowri Panchangam': 'கௌரி பஞ்சாங்கம்',
+    'Sade Sati and Guru Transit': 'ஏழரைச் சனி, குரு பெயர்ச்சி', 'My Transits Today': 'இன்றைய கோசார பலன்',
+    'KP Birth Time Rectification': 'KP பிறப்பு நேரத் திருத்தம்', 'Dasha Timeline': 'தசா காலவரிசை',
+    'Marriage and transits': 'திருமணம், கோசாரம்',
     // Revamp: first-run setup
     'Welcome to GuruAgasthiya': 'குருஅகஸ்தியாவுக்கு வரவேற்கிறோம்',
     'Three quick choices and the app is ready. You can change them later in Settings.': 'மூன்று எளிய தேர்வுகள் போதும். இவற்றைப் பின்னர் அமைப்புகளில் மாற்றலாம்.',

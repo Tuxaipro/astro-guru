@@ -63,6 +63,9 @@
   function updatePlace(p) {
     var name = ctrlVal(cellBy(p.place, /City|Town/i)) || ctrlVal(cellBy(p.place, /Recent/i)) || '';
     if (/^(choose|select|—|-|all )/i.test(name)) name = ctrlVal(cellBy(p.place, /Recent/i)) || name;
+    // The recent-places list starts with "—" (nothing chosen): that is not a name either. Market Transit
+    // starts on Mumbai's coordinates with no city chosen, and its card read "—".
+    if (/^(choose|select|—|-|all )/i.test(name)) name = '';
     // 10.5's city list answers a miss with a sentence ("No match in the offline list. Type the latitude…"):
     // that is advice, not a place. Show what was searched for, or say the place is set by coordinates.
     var citySel = (cellBy(p.place, /City|Town/i) || p.det).querySelector('select');

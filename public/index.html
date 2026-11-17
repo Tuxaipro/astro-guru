@@ -6,6 +6,12 @@
 <script>(function(){var d=document.documentElement;d.classList.add('rv-boot');try{var a=localStorage.getItem('rvAppear');if(a)d.setAttribute('data-theme',a);if(!localStorage.getItem('rvBooted'))d.classList.add('rv-first');}catch(e){}addEventListener('load',function(){try{localStorage.setItem('rvBooted','1');}catch(e){}setTimeout(function(){d.classList.remove('rv-boot');},1500);});})();</script>
 <style>@layer rvfix, engine;html.rv-boot{background:#F4F5F9;--bt-fg:#1C1E2E;--bt-mute:#6E7290;--bt-track:rgba(110,114,144,.18)}html.rv-boot[data-theme=dark]{background:#0D1020;--bt-fg:#E9EAF4;--bt-mute:#9295B3;--bt-track:rgba(146,149,179,.2)}@media (prefers-color-scheme:dark){html.rv-boot:not([data-theme=light]){background:#0D1020;--bt-fg:#E9EAF4;--bt-mute:#9295B3;--bt-track:rgba(146,149,179,.2)}}html.rv-boot body{background:transparent!important}html.rv-boot body>:not(#rvBoot){visibility:hidden!important}#rvBoot{display:none}html.rv-boot #rvBoot{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;margin:0;padding:24px;font:400 14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--bt-mute);text-align:center}#rvBoot img{display:block;width:64px;height:64px;border-radius:18px;object-fit:cover;margin:0 0 2px;box-shadow:0 6px 20px rgba(13,16,32,.18)}#rvBoot b{display:block;font:650 21px/1.1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.015em;color:var(--bt-fg)}#rvBoot i{display:block;position:relative;width:132px;height:3px;border-radius:3px;overflow:hidden;background:var(--bt-track);animation:rvBootIn .35s .4s both}#rvBoot i::after{content:"";position:absolute;top:0;left:0;width:40%;height:100%;border-radius:3px;background:#E9A92C;transform:translateX(-100%);animation:rvBootBar 1.15s cubic-bezier(.45,0,.4,1) infinite;will-change:transform}#rvBoot p{display:none;max-width:280px;margin:4px 0 0;animation:rvBootIn .35s .6s both}html.rv-first #rvBoot p{display:block}#rvBoot p::after{content:"முதல் முறை மட்டும் சற்று நேரம் ஆகும்";display:block;margin-top:2px;font-size:13px}@keyframes rvBootBar{to{transform:translateX(250%)}}@keyframes rvBootIn{from{opacity:0}to{opacity:1}}@media (prefers-reduced-motion:reduce){#rvBoot i::after{animation:none;transform:none;width:100%;opacity:.5}}</style>
 <title>GuruAgasthiya 12.3</title>
+<meta name="description" content="KP astrology in your browser: lagna and sub-lord timings for any day and place, muhurthams, birth chart and dasha, marriage matching, Gowri nalla neram, Sade Sati and transits, horary answers and more. English and Tamil. Calculated on your device.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GuruAgasthiya">
+<meta property="og:title" content="GuruAgasthiya · KP astrology timings, muhurtham and charts">
+<meta property="og:description" content="KP astrology in your browser: lagna and sub-lord timings for any day and place, muhurthams, birth chart and dasha, marriage matching, Gowri nalla neram, Sade Sati and transits, horary answers and more. English and Tamil. Calculated on your device.">
+<meta name="twitter:card" content="summary">
 <meta name="application-name" content="GuruAgasthiya">
 <meta name="apple-mobile-web-app-title" content="GuruAgasthiya">
 <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
@@ -997,7 +1003,7 @@
 
 <script src="data/cities.js?v=764e8afd62"></script>
 <script src="js/01-astronomy-engine.js?v=f41139a879"></script>
-<script src="js/02-app.js?v=812b556ea6"></script>
+<script src="js/02-app.js?v=8fe6375957"></script>
 <script src="js/03-stage-layout.js?v=ad4ccff54f"></script>
 <script src="js/04-alarm-bell-on-every-muhurtham-v3-5.js?v=3832c57e2a"></script>
 <script src="js/05-v4-9-hover-label-for-the-sidebar-tools-s.js?v=3b25160166"></script>
@@ -1013,15 +1019,16 @@
 <button type="button" id="gaDiscOk">OK, I understand · சரி, புரிந்துகொண்டேன்</button></div></div>
 <script src="js/07-script.js?v=4b4f1b6d3d"></script>
 <link rel="stylesheet" href="css/15-style.css?v=84c760c68f">
-<link rel="stylesheet" href="revamp/revamp.css?v=1192e5a918">
+<link rel="stylesheet" href="revamp/revamp.css?v=ef25ee48d6">
 <script src="js/08-script.js?v=ec0025f15a"></script>
 
-<script src="revamp/revamp.js?v=2176e66a86"></script>
-<script src="revamp/features.js?v=7f0bf94158"></script>
+<script src="revamp/tools.js?v=2e312496d7"></script>
+<script src="revamp/revamp.js?v=1b2357fb25"></script>
+<script src="revamp/features.js?v=c5595985f4"></script>
 <script src="revamp/i18n-ta-reports.js?v=f6c905d709"></script>
-<script src="revamp/i18n-ta.js?v=9140f591a4"></script>
-<script src="revamp/i18n.js?v=ea13f7806c"></script>
-<script src="revamp/place.js?v=d72e933453"></script>
+<script src="revamp/i18n-ta.js?v=a95c5e38a6"></script>
+<script src="revamp/i18n.js?v=5800f91ed8"></script>
+<script src="revamp/place.js?v=8f9b2e0bc1"></script>
 <script src="revamp/text.js?v=fc29b9667e"></script>
 </body>
 </html>

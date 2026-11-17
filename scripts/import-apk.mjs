@@ -21,6 +21,48 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+// ---------- Engine patches ----------
+// The engine (02-app.js) is replaced on every import, so it is never edited by hand. These small, named
+// changes are applied to each release instead. Each one must match the engine text exactly the expected
+// number of times; if a release moves that code, the build stops and names the patch, instead of
+// shipping a silently different engine. Keep them few, and say why each exists.
+const ENGINE_PATCHES = [
+  {
+    name: 'sub-lord list: a helper named like the sign helper it calls',
+    why: 'subList() defined a local sg() that called sg() for the sign name, i.e. itself, so "lagna timings today" in Ask GuruAgasthiya ended in "Maximum call stack size exceeded".',
+    edits: [
+      ['const sg=k=>{ const g=SEGS[k]; return {sg:sg(g.sign),', 'const sgRow=k=>{ const g=SEGS[k]; return {sg:sg(g.sign),', 1],
+      ['.map(x=>{ const q=sg(x.k);', '.map(x=>{ const q=sgRow(x.k);', 2],
+    ],
+  },
+  {
+    name: 'GA_CORE: share the calculation core',
+    why: 'The engine keeps its astronomy inside one closure. The revamp tools (matching, Gowri, transits, rectification, dasha timeline) and the accuracy test use the same functions instead of copies.',
+    edits: [[/\}\)\(\);\s*$/, `
+/* revamp build patch: the calculation core, shared read-only */
+window.GA_CORE=Object.freeze({
+  ORDER:ORDER,NAME:NAME,TA:TA,YEARS:YEARS,SIGNS:SIGNS,NAKS:NAKS,TSIGN:TSIGN,CODES:CODES,SEGS:SEGS,BP_YRS:BP_YRS,BP_YEAR:BP_YEAR,
+  findSeg:findSeg,ayanamsa:ayanamsa,sidAsc:sidAsc,placidusCusps:placidusCusps,bpDasha:bpDasha,bpNavamsa:bpNavamsa,localToUtc:localToUtc,offsetAt:offsetAt,
+  lon:function(code,ms,kind){const o=CFG;CFG=Object.assign({},o,{kind:kind||o.kind});try{return sidLon(code,ms);}finally{CFG=o;}},
+  planets:function(ms,kind){const o=CFG;CFG=Object.assign({},o,{kind:kind||o.kind});try{return planets(ms);}finally{CFG=o;}},
+  retro:function(code,ms){return isRetro(code,ms);}
+});
+})();
+`, 1]],
+  },
+];
+function patchEngine(body) {
+  for (const p of ENGINE_PATCHES) {
+    for (const [find, repl, want] of p.edits) {
+      const n = typeof find === 'string' ? body.split(find).length - 1 : (body.match(new RegExp(find.source, 'g' + find.flags.replace('g', ''))) || []).length;
+      if (n !== want) throw new Error(`Engine patch "${p.name}" expected ${want} match(es) of ${String(find).slice(0, 60)}, found ${n}. The engine changed here: check the patch (${p.why})`);
+      body = typeof find === 'string' ? body.split(find).join(repl) : body.replace(find, repl);
+    }
+  }
+  console.log(`Engine patches applied: ${ENGINE_PATCHES.map((p) => p.name.split(':')[0]).join(', ')}`);
+  return body;
+}
 const OUT = join(ROOT, 'public');
 const src = resolve(process.argv[2] || join(ROOT, '..', 'GuruAgasthiya-12.3.html'));
 
@@ -101,6 +143,7 @@ let out = html.replace(/<(style|script)([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, at
   const label = /Astronomy library for JavaScript/.test(body) ? 'astronomy-engine'
     : slug(body, '') || (/const ORDER=\[/.test(body.slice(0, 400)) ? 'app'
     : /getElementById\('stage'\)/.test(body.slice(0, 400)) ? 'stage-layout' : 'script');
+  if (label === 'app' && existsSync(join(ROOT, 'revamp', 'revamp.js'))) body = patchEngine(body);
   const name = `js/${String(++jsN).padStart(2, '0')}-${label}.js`;
   return `<script src="${write(name, body)}"></script>`;
 });
@@ -153,6 +196,26 @@ if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
     `<b>GuruAgasthiya</b><i></i><p>First visit: getting 225,000 places ready. Next time opens faster.</p></div>\n`;
   out = out.replace(/(<body\b[^>]*>\n?)/, `$1${screen}`);
 }
+// Link previews and search listings: a description, and Open Graph tags for WhatsApp, Facebook, X and
+// others. A preview image needs the site's full address: set SITE_URL when building
+// (SITE_URL=https://your.site npm run build) to add og:url and og:image; without it the text still shows.
+if (existsSync(join(ROOT, 'revamp', 'revamp.js'))) {
+  const site = (process.env.SITE_URL || '').replace(/\/+$/, '');
+  const logo = (out.match(/<img\b[^>]*\bclass="logo"[^>]*\bsrc="([^"]+)"/) || [])[1];
+  const desc = 'KP astrology in your browser: lagna and sub-lord timings for any day and place, muhurthams, birth chart and dasha, ' +
+    'marriage matching, Gowri nalla neram, Sade Sati and transits, horary answers and more. English and Tamil. Calculated on your device.';
+  const tags = [
+    `<meta name="description" content="${desc}">`,
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="GuruAgasthiya">',
+    `<meta property="og:title" content="GuruAgasthiya · KP astrology timings, muhurtham and charts">`,
+    `<meta property="og:description" content="${desc}">`,
+    site ? `<meta property="og:url" content="${site}/">` : '',
+    site && logo ? `<meta property="og:image" content="${site}/${logo.replace(/\?.*$/, '')}">` : '',
+    `<meta name="twitter:card" content="summary">`,
+  ].filter(Boolean).join('\n');
+  out = out.replace(/(<title>[^<]*<\/title>\n?)/, `$1${tags}\n`);
+}
 // The APK's page asks iOS to open a home-screen bookmark full screen. This is a plain website now, and
 // Chrome warns about the old tag name, so drop it (the home-screen title tag is harmless and stays).
 out = out.replace(/<meta name="apple-mobile-web-app-capable"[^>]*>\n?/, '');
@@ -171,8 +234,10 @@ if (existsSync(REVAMP)) {
   // A content hash in the URL makes browsers pick up every change.
   const v = (f) => sha(readFileSync(join(REVAMP, f)));
   out = out.slice(0, cut) + `\n<link rel="stylesheet" href="revamp/revamp.css?v=${v('revamp.css')}">` + out.slice(cut);
-  // revamp.js (the shell) first, then every other script in revamp/ in name order.
-  const scripts = readdirSync(REVAMP).filter((f) => f.endsWith('.js')).sort((a, b) => (a === 'revamp.js' ? -1 : b === 'revamp.js' ? 1 : a.localeCompare(b)));
+  // tools.js first (its tools must be in the sidebar before the shell groups it), then revamp.js (the
+  // shell), then every other script in revamp/ in name order.
+  const FIRST = ['tools.js', 'revamp.js'], rank = (f) => (FIRST.indexOf(f) + 1) || 99;
+  const scripts = readdirSync(REVAMP).filter((f) => f.endsWith('.js')).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
   revampTags.js = scripts.map((f) => `<script src="revamp/${f}?v=${v(f)}"></script>\n`).join('');
 }
 // Every local file the page loads gets a content hash in its address, so a changed file is a new

@@ -267,16 +267,15 @@ await check('ask nifty: a question about days ahead gets Market Transit too; "sc
   const health = await sendAsk('my scalp itches, will it heal?');
   return health.some((n) => /Nifty Intraday/.test(n.textContent)) ? 'a health question was pointed at the Nifty tool' : '';
 }, true);
-await check('ask sub-lord timings: the engine\'s crashing list is replaced by a pointer to Lagna Timings', async () => {
+await check('ask sub-lord timings: the engine answers with the day\'s table (its crash is patched at build)', async () => {
   const added = await sendAsk('lagna timings today');
-  const bots = added.filter((n) => n.classList.contains('ak-b'));
+  await sleep(400); // the engine works the table out after a short pause
+  const bots = [...$('akLog').querySelectorAll('.ak-b')].slice(-3);
   if (!bots.length) return 'no reply';
   if (bots.some((n) => /something went wrong|Maximum call stack/i.test(n.textContent))) return 'the engine\'s crash reply still appeared';
-  const chip = bots[0].querySelector('.ak-chip');
-  if (!chip) return 'no chip in the reply';
-  const why = eq('chip', chip.textContent.trim(), 'Open: Lagna Timings'); if (why) return why;
-  chip.click(); await sleep(50);
-  return eq('chat closed', $('akPanel').classList.contains('hide'), true) || eq('address', w.location.hash, '#/lagna-timings');
+  const table = bots.map((n) => n.querySelector('table.ak-tb')).find(Boolean);
+  if (!table) return 'no sub-lord table in the reply';
+  return table.querySelectorAll('tr').length > 20 ? '' : `only ${table.querySelectorAll('tr').length} rows`;
 }, true);
 await check('lagna timings: arriving at the page (a reload, a link, the sidebar) scrolls to the running period', async () => {
   // The layout script that shows today's timings at start-up is left out above: press Show Timings here.
@@ -411,7 +410,7 @@ check('whats-new: #/whats-new shows the panel, highlights the entry and names th
   return eq('panel hidden', p.classList.contains('hide'), false) || eq('address', w.location.hash, '#/whats-new') ||
     eq('sidebar highlight', d.querySelector('.rv-groups .tool.rv-on')?.id, 'rvNewBtn') || eq('title', d.title, "What's new · GuruAgasthiya") ||
     eq('sections', [...p.querySelectorAll('h3')].map((h) => h.textContent).join(' | '), 'New in the engine 12.3 | Earlier, in 11.2 | Earlier, in 10.5 | New on the web') ||
-    eq('items', p.querySelectorAll('li').length, 26) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 16, true);
+    eq('items', p.querySelectorAll('li').length, 28) || eq('tool links', p.querySelectorAll('a[href^="#/"]').length >= 16, true);
 });
 check('whats-new: About links to it from the top', () => {
   const a = d.querySelector('#abPanel > .sh-head + .rv-new-link a');
@@ -438,6 +437,53 @@ check('whats-new: back in bilingual mode the English is back and ✕ returns to 
 await settle();
 check('whats-new: after ✕ the address is the base page again', () => (/^#\/(now|lagna-timings)$/.test(w.location.hash) ? '' : `address is ${w.location.hash}`));
 
+// ---------- the web version's own tools (tools.js) on the engine core ----------
+const RT = w.GA_RVTOOLS;
+check('tools: six new pages are in the sidebar with fixed addresses', () => {
+  if (!RT) return 'window.GA_RVTOOLS is missing (tools.js did not run, or GA_CORE is missing)';
+  const want = { rvMtBtn: 'marriage-matching', rvGwBtn: 'gowri-panchangam', rvSsBtn: 'sade-sati-and-guru-transit', rvGcBtn: 'my-transits-today', rvRtBtn: 'kp-birth-time-rectification', rvDtBtn: 'dasha-timeline' };
+  for (const [id, route] of Object.entries(want)) {
+    const b = $(id); if (!b) return `${id} missing`;
+    if (b.dataset.route !== route) return `${id} route ${b.dataset.route}`;
+    if (!b.closest('.rv-group')) return `${id} not in a sidebar group`;
+    if (!$(id.replace(/Btn$/, 'Panel'))) return `${id} has no page`;
+  }
+  return '';
+});
+check('marriage matching: Rohini bride with Anuradha groom, row by row', () => {
+  const m = RT.match({ nak: 3, rasi: 1 }, { nak: 16, rasi: 7 }); // count 14; Taurus to Scorpio is the 7th
+  return eq('results', m.list.map((x) => x.key + ':' + x.res).join(' '), 'dina:no gana:avg mahendra:no stree:good yoni:avg rasi:good lord:avg vasya:no rajju:good vedha:good') || eq('score', m.score, 7);
+});
+check('marriage matching: Rajju and Vedha decide whatever the total', () => {
+  const r = RT.match({ nak: 0, rasi: 0 }, { nak: 9, rasi: 4 });   // Ashwini and Magha: both Pada rajju
+  const v = RT.match({ nak: 0, rasi: 0 }, { nak: 17, rasi: 7 });  // Ashwini and Jyeshtha: vedha
+  return eq('rajju', r.list.find((x) => x.key === 'rajju').res + '/' + r.verdict, 'no/block') || eq('vedha', v.list.find((x) => x.key === 'vedha').res + '/' + v.verdict, 'no/block');
+});
+check('gowri panchangam: New Delhi, 15 Nov 2026 agrees with Drik Panchang', () => {
+  const g = RT.gowri('2026-11-15', { lat: 28.6139, lon: 77.2090, tz: 'Asia/Kolkata' });
+  const at = (ms) => new w.Date(ms + 5.5 * 3600000).toISOString().slice(11, 16);
+  const near = (ms, hhmm) => Math.abs((Date.parse('2026-11-15T' + hhmm + ':00Z') - 5.5 * 3600000) - ms) <= 2 * 60000;
+  // Drik Panchang: day Uthi 06:44, Amirdha 08:04, ... Visham 16:07; night Dhanam 17:28, ... Laabam 05:05.
+  if (g.day.map((x) => x.k).join('') !== 'UARLDSCV' || g.night.map((x) => x.k).join('') !== 'DSCVUARL') return 'order ' + g.day.map((x) => x.k).join('') + '/' + g.night.map((x) => x.k).join('');
+  for (const [ms, want] of [[g.day[0].s, '06:44'], [g.day[1].s, '08:04'], [g.day[7].s, '16:07'], [g.night[0].s, '17:28']]) if (!near(ms, want)) return `${at(ms)} instead of ${want}`;
+  return '';
+});
+check('sade sati: an Aquarius Moon is in its setting phase now; it began when Saturn entered Capricorn in Jan 2020', () => {
+  const now = Date.UTC(2026, 10, 18), r = RT.saturnStudy(10, now, 'lahiri');
+  const cur = r.sadeSati.find((b) => now >= b.s && now < b.e);
+  if (!cur) return 'no Sade Sati running';
+  const start = new w.Date(cur.s).toISOString().slice(0, 10);
+  return eq('house', r.satHouse, 2) || (Math.abs(cur.s - Date.UTC(2020, 0, 24)) > 5 * 86400000 ? `starts ${start}` : '') || eq('phases', cur.phases.map((p) => p.h).join(','), '12,1,2');
+});
+check('transits: Tara Bala from Purva Bhadrapada to Dhanishta is Mitra (count 26)', () => {
+  const t = RT.tara(24, 22); return eq('count', t.count, 26) || eq('tara', t.i, 7);
+});
+check('rectification: the suggested sub has the best agreement with the ruling planets', () => {
+  const place = { lat: 13.0827, lon: 80.2707, tz: 'Asia/Kolkata' }, ms = RT.birthMs('1990-06-15', '10:30', 'Asia/Kolkata');
+  const rp = RT.rulingPlanets(Date.UTC(2026, 10, 18, 6), place, 'kp'), r = RT.rectify(ms, 30, place, rp, 'kp');
+  const top = Math.max(...r.rows.map((x) => x.score));
+  return eq('rows', r.rows.length > 2, true) || eq('best score', r.best.score, top) || eq('day lord', rp.day, 'Me'); // 18 Nov 2026, 11:30 IST: a Wednesday, so Mercury
+});
 // ---------- result ----------
 const scriptErrors = errors.filter((e) => !/scrollTo|getContext|Not implemented/.test(e));
 if (scriptErrors.length) { failed++; console.log(`FAIL  no script errors\n      ${scriptErrors.slice(0, 5).join('\n      ')}`); } else { passed++; console.log('PASS  no script errors'); }

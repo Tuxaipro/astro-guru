@@ -529,9 +529,10 @@
       { rx: /^(ok|okay|k|yes|yeah|yep|no|nope|hmm+|fine|good|great|nice|super|cool|sure|சரி|ஆமாம்|ஆம்|இல்லை|ம்ம்)[\s!.]*$/i, reply: 'Go ahead and ask your question, or tap one of these:', card: true },
       { rx: /^(bye|goodbye|good ?night|see you|போய்\s*வருகிறேன்|போய்\s*வரேன்)[\s!.]*$/i, reply: 'Goodbye. Come back whenever you have a question.' }
     ];
-    // Engine 10.5 bug: its sub-lord timing list (subList, SUBRE) recurses forever (a local `sg` arrow calls
-    // itself) and every such question ends in "Sorry, something went wrong". The engine is never edited, so
-    // those questions are answered here with the tool that shows the same timings.
+    // Engine 10.5 bug: its sub-lord timing list (subList, SUBRE) recursed forever (a local `sg` arrow called
+    // itself), so every such question ended in "Sorry, something went wrong". The build now fixes it in the
+    // engine (scripts/import-apk.mjs, ENGINE_PATCHES), and the engine answers with the day's table. Only an
+    // unpatched engine (no window.GA_CORE, shared by the same build) still gets this pointer to the tool.
     var SUBLIST = { rx: /sub\s*-?\s*lords?|உப\s*அதிபதி|lagna\s*timing|ascendant\s*timing|லக்ன\s*நேரம்/i,
       when: /list|timing|\btimes?\b|today|tomorrow|yesterday|\bnext\b|this (week|month)|\d|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\b(mon|tues|wednes|thurs|fri|satur|sun)day\b|நேரம்|பட்டியல்|இன்று|நாளை/i,
       reply: 'Lagna and sub-lord timings for a day are in the Lagna Timings tool. It lists every change of lagna, star lord and sub lord at your place.',
@@ -552,7 +553,7 @@
       chips: [['Open: Nifty Intraday Astro', openTool('nfBtn')]] };
     function smallTalk(t) {
       for (var i = 0; i < SMALL.length; i++) { if (SMALL[i].rx.test(t)) return SMALL[i]; }
-      if (SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
+      if (!window.GA_CORE && SUBLIST.rx.test(t) && SUBLIST.when.test(t)) return SUBLIST;
       if (NAMES.rx.test(t)) return NAMES;
       if (NIFTY.rx.test(t)) return NIFTY.intra.test(t) ? NIFTY
         : { reply: NIFTY.replyBoth, chips: NIFTY.chips.concat([['Open: Market Transit', openTool('mkBtn')]]) };

@@ -19,6 +19,9 @@ const BASE = `http://localhost:${PORT}/`;
 const PREPARE = {
   'horary-answers': async (p) => { await p.fill('#hqNum', '108'); },
   'natal-chart-trade': async (p) => { await p.fill('#ntDob', '1990-06-15'); }, // the time field has a default
+  // The web version's own tools that need birth details (the home place is filled in).
+  'kp-birth-time-rectification': async (p) => { await p.fill('#rvRtDate', '1990-06-15'); await p.fill('#rvRtTime', '10:30'); },
+  'dasha-timeline': async (p) => { await p.fill('#rvDtDate', '1990-06-15'); await p.fill('#rvDtTime', '10:30'); },
 };
 // Pages with no result to wait for after the main button (it sets alarms or draws a map), and the
 // two reading pages, About and What's new (the revamp's own page), which have no main button.

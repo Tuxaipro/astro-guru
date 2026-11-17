@@ -13128,15 +13128,15 @@ var GA_ASK=window.GA_ASK=(function(){
         const d=new Date(r[0]+di*DAY), y=d.getUTCFullYear(), mo=d.getUTCMonth()+1, dd=d.getUTCDate(), nx=new Date(Date.UTC(y,mo-1,dd+1));
         const s0=localToUtc(y,mo,dd,0,0,P.tz).ms, e0=localToUtc(nx.getUTCFullYear(),nx.getUTCMonth()+1,nx.getUTCDate(),0,0,P.tz).ms, off=tzf(s0);
         const rows=compute(s0,e0,P.lat,P.lon,kind);
-        const sg=k=>{ const g=SEGS[k]; return {sg:sg(g.sign),l:pn(g.lord),st:pn(g.star),su:pn(g.sub)}; };
-        h+='<p><b>'+L('Lagna (ascendant) sub lords','லக்ன உப அதிபதிகள்')+' – '+dayName(s0,off)+' '+fd(s0,off)+' – '+ES(pname(P))+'</b></p><div class="ntscroll" style="overflow-x:auto"><table class="ak-tb"><tr><th>'+L('From','முதல்')+'</th><th>'+L('To','வரை')+'</th><th>'+L('Sign','ராசி')+'</th><th>'+L('Sign lord','ராசி அதிபதி')+'</th><th>'+L('Star lord','நட்சத்திர அதிபதி')+'</th><th>'+L('Sub lord','உப அதிபதி')+'</th></tr>'+rows.map(x=>{ const q=sg(x.k); return '<tr><td><b>'+hms(x.start,off)+'</b></td><td>'+hms(x.end,off)+'</td><td>'+q.sg+'</td><td>'+q.l+'</td><td>'+q.st+'</td><td><b>'+q.su+'</b></td></tr>'; }).join('')+'</table></div>';
+        const sgRow=k=>{ const g=SEGS[k]; return {sg:sg(g.sign),l:pn(g.lord),st:pn(g.star),su:pn(g.sub)}; };
+        h+='<p><b>'+L('Lagna (ascendant) sub lords','லக்ன உப அதிபதிகள்')+' – '+dayName(s0,off)+' '+fd(s0,off)+' – '+ES(pname(P))+'</b></p><div class="ntscroll" style="overflow-x:auto"><table class="ak-tb"><tr><th>'+L('From','முதல்')+'</th><th>'+L('To','வரை')+'</th><th>'+L('Sign','ராசி')+'</th><th>'+L('Sign lord','ராசி அதிபதி')+'</th><th>'+L('Star lord','நட்சத்திர அதிபதி')+'</th><th>'+L('Sub lord','உப அதிபதி')+'</th></tr>'+rows.map(x=>{ const q=sgRow(x.k); return '<tr><td><b>'+hms(x.start,off)+'</b></td><td>'+hms(x.end,off)+'</td><td>'+q.sg+'</td><td>'+q.l+'</td><td>'+q.st+'</td><td><b>'+q.su+'</b></td></tr>'; }).join('')+'</table></div>';
         /* Moon */
         const old=CFG; CFG={lat:P.lat,lon:P.lon,kind:kind}; const mr=[];
         try{ const mk=t=>findSeg(sidLon('Mo',t)); let cur=mk(s0), st=s0;
           for(let t=s0+60000;t<=e0;t+=60000){ const k=mk(t); if(k!==cur){ let lo=t-60000, hi=t; for(let i=0;i<7;i++){ const m=(lo+hi)/2; if(mk(m)===cur)lo=m; else hi=m; } mr.push({k:cur,start:st,end:hi}); st=hi; cur=k; } }
           mr.push({k:cur,start:st,end:e0});
         } finally{ CFG=old; }
-        h+='<p><b>'+L('Moon sub lord changes','சந்திரன் உப அதிபதி மாற்றங்கள்')+' – '+fd(s0,off)+'</b></p><div class="ntscroll" style="overflow-x:auto"><table class="ak-tb"><tr><th>'+L('From','முதல்')+'</th><th>'+L('To','வரை')+'</th><th>'+L('Sign','ராசி')+'</th><th>'+L('Star lord','நட்சத்திர அதிபதி')+'</th><th>'+L('Sub lord','உப அதிபதி')+'</th></tr>'+mr.map(x=>{ const q=sg(x.k); return '<tr><td><b>'+hms(x.start,off)+'</b></td><td>'+hms(x.end,off)+'</td><td>'+q.sg+'</td><td>'+q.st+'</td><td><b>'+q.su+'</b></td></tr>'; }).join('')+'</table></div>';
+        h+='<p><b>'+L('Moon sub lord changes','சந்திரன் உப அதிபதி மாற்றங்கள்')+' – '+fd(s0,off)+'</b></p><div class="ntscroll" style="overflow-x:auto"><table class="ak-tb"><tr><th>'+L('From','முதல்')+'</th><th>'+L('To','வரை')+'</th><th>'+L('Sign','ராசி')+'</th><th>'+L('Star lord','நட்சத்திர அதிபதி')+'</th><th>'+L('Sub lord','உப அதிபதி')+'</th></tr>'+mr.map(x=>{ const q=sgRow(x.k); return '<tr><td><b>'+hms(x.start,off)+'</b></td><td>'+hms(x.end,off)+'</td><td>'+q.sg+'</td><td>'+q.st+'</td><td><b>'+q.su+'</b></td></tr>'; }).join('')+'</table></div>';
       }
       h+='<p>'+L('How to read it: for an event, the lagna sub lord at that moment should signify the houses that support the event (and not the denying houses) through its star lord; the Moon’s sub lord and the day lord are the other ruling planets. Ask “muhurtham for …” and I will test every minute against these rules for you.','படிக்கும் முறை: ஒரு நிகழ்வுக்கு, அந்த நேரத்தின் லக்ன உப அதிபதி தன் நட்சத்திர அதிபதி மூலம் நிகழ்வை ஆதரிக்கும் பாவங்களைக் குறிக்க வேண்டும் (மறுக்கும் பாவங்களை அல்ல); சந்திரனின் உப அதிபதியும் கிழமை அதிபதியும் மற்ற ஆளும் கிரகங்கள். “… முகூர்த்தம்” என்று கேளுங்கள்; இந்த விதிகளுடன் ஒவ்வொரு நிமிடத்தையும் சோதித்துத் தருவேன்.')+'</p>';
       w.remove(); add('b',h);
@@ -14741,4 +14741,13 @@ window.GA_ACR=(function(){
 })();
 
 try{GA_ACR.init();}catch(e){console.error("ACR init",e);}
+
+/* revamp build patch: the calculation core, shared read-only */
+window.GA_CORE=Object.freeze({
+  ORDER:ORDER,NAME:NAME,TA:TA,YEARS:YEARS,SIGNS:SIGNS,NAKS:NAKS,TSIGN:TSIGN,CODES:CODES,SEGS:SEGS,BP_YRS:BP_YRS,BP_YEAR:BP_YEAR,
+  findSeg:findSeg,ayanamsa:ayanamsa,sidAsc:sidAsc,placidusCusps:placidusCusps,bpDasha:bpDasha,bpNavamsa:bpNavamsa,localToUtc:localToUtc,offsetAt:offsetAt,
+  lon:function(code,ms,kind){const o=CFG;CFG=Object.assign({},o,{kind:kind||o.kind});try{return sidLon(code,ms);}finally{CFG=o;}},
+  planets:function(ms,kind){const o=CFG;CFG=Object.assign({},o,{kind:kind||o.kind});try{return planets(ms);}finally{CFG=o;}},
+  retro:function(code,ms){return isRetro(code,ms);}
+});
 })();
